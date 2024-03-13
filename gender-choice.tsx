@@ -12,6 +12,9 @@ const Wrapper = styled.div`
     background-color:blue;
     width:50%;
     `;
+    const Title = styled.h1`
+    
+    `;
 
 export default function GenderChoice (){
     const navigate = useNavigate()
@@ -50,6 +53,7 @@ export default function GenderChoice (){
 
     return (
         <Wrapper>
+          <Title>성별을 선택해주세요.</Title>
             <Button onClick={onClick}>남자</Button>
             <Button onClick={onClick}>여자</Button>
         </Wrapper>

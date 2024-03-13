@@ -2,12 +2,21 @@ import { addDoc, collection } from "firebase/firestore";
 import { useState } from "react";
 import styled from "styled-components"
 import { auth, db } from "../firebase";
-import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
+width:50%;
+height: 50vh;
 display:flex;
 flex-direction: column;
 align-items: center;
+z-index:99;
+position:fixed;
+background-color:white;
+top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border:1px solid gray;
+
 `;
 const Label = styled.label`
 
@@ -21,13 +30,17 @@ text-align:center;
 font-weight:600;
 background-color: blue;
 `;
+const CloseBtn = styled.div`
+margin-right:0px;
+`;
 
 
-
-export default function ExerciseRegistration() {
+interface ExerciseRegistrationProps {
+    closeModal: () => void; // closeModal 함수의 타입을 명시적으로 선언
+}
+export default function ExerciseRegistration({closeModal}: ExerciseRegistrationProps) {
     const day = new Date()
     const user = auth.currentUser;
-    const navigate = useNavigate();
     const [exerciseType, setExerciseType] = useState("");
     const [count, setCount] = useState("");
     const [set, setSet] = useState("");
@@ -52,7 +65,7 @@ export default function ExerciseRegistration() {
                     유저아이디: user?.uid,
                     날짜: `${day.getFullYear()}-${(day.getMonth() + 1).toString().padStart(2, '0')}-${day.getDate()}`
                 });
-                navigate("/records")
+                closeModal()
             } catch {
 
             }
@@ -60,9 +73,13 @@ export default function ExerciseRegistration() {
             alert("모두 입력해주세요.")
         }
     };
+    const back = () => {
+        closeModal()
+    }
 
     return (
         <Wrapper>
+            <CloseBtn onClick={back}>X</CloseBtn>
             <Label>운동종류: <Input onChange={onChange} value={exerciseType} type="text" name="exerciseType" /></Label>
             <Label>횟수: <Input onChange={onChange} value={count} type="number" name="count" />개</Label>
             <Label>세트: <Input onChange={onChange} value={set} type="number" name="set" />세트</Label>

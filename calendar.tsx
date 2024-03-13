@@ -6,7 +6,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { useEffect, useState } from 'react';
 import { auth, db } from '../firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
+import ExerciseRegistration from './exercise-component';
 
 
 const Wrapper = styled.div`
@@ -38,9 +38,13 @@ const BtnWrapper = styled.div`
 `;
 
 export default function Calendar() {
-    const navigate = useNavigate()
+    
+    const [modal, setModal] = useState(false)
     const onClick = () => {
-        navigate("/rlfhr")
+        setModal(true)
+    }
+    const closeModal = () => {
+        setModal(false);
     }
     const user = auth.currentUser;
     const [createRecords, setCreateRecords] = useState<{ title: string; date: any }[]>([]);
@@ -65,7 +69,7 @@ export default function Calendar() {
             }
         }
         fetchRecords();
-    }, [])
+    }, [modal])
     return (
         <Wrapper>
             <BtnWrapper>기록
@@ -84,7 +88,7 @@ export default function Calendar() {
                 }
                 height={`100vh`}
             />
-
+        {modal ? <ExerciseRegistration closeModal={closeModal} /> : null}
         </Wrapper>
     )
 }
