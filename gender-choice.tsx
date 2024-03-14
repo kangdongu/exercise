@@ -2,6 +2,7 @@ import { addDoc, collection, getDocs, query, updateDoc, where } from "firebase/f
 import styled from "styled-components"
 import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 
 const Wrapper = styled.div`
@@ -19,6 +20,20 @@ const Wrapper = styled.div`
 export default function GenderChoice (){
     const navigate = useNavigate()
     const user= auth.currentUser;
+
+    useEffect(()=>{
+      const fetchLoad = async () =>{
+
+      const userDocRef = collection(db, "user");
+      const querySnapshot = await getDocs(query(userDocRef, where("유저아이디", "==", user?.uid)));
+
+      if (querySnapshot.empty) {
+        navigate("/naming")
+      }
+    }
+    fetchLoad();
+    },[])
+    
     const onClick = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         try {
           const target = event.target as HTMLDivElement;
@@ -44,7 +59,7 @@ export default function GenderChoice (){
             });
           }
     
-          navigate("/profile");
+          navigate("/");
         } catch (error) {
           console.error("Error updating gender:", error);
         }

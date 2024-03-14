@@ -35,11 +35,18 @@ width: 100%;
 const UserInfo = styled.div`
 
 `;
+const Avatar = styled.h1`
+
+`;
+
+
 export default function Profile(){
     const user = auth.currentUser;
     const [userImg, setUserImg] = useState(user?.photoURL);
     const [gender, setGender] = useState(null);
     const [nickname, setNickname] = useState("");
+    const [ment, setMent] = useState("");
+
     const onUserImg = async(e: React.ChangeEvent<HTMLInputElement>) => {
         const {files} = e.target;
         if(!user) return;
@@ -54,29 +61,54 @@ export default function Profile(){
             })
         }
     };
+
+    useEffect(() => {
+      const fetchUserData = async () => {
+          try {
+              if (user) {
+                  const currentUserUID = user.uid;
+                  
+                  const today = new Date();
+                  const formattedDate = today.toISOString().slice(0, 10);
+                  
+                  const recordsCollectionRef = collection(db, "records");
+                  const querySnapshot = await getDocs(
+                      query(recordsCollectionRef, where("날짜", "==", formattedDate),where("유저아이디", "==", currentUserUID))
+                  );
+
+                  if (!querySnapshot.empty) {
+                      setMent("만족");
+                  } else {
+                      setMent("배고파요");
+                  }
+              }
+          } catch (error) {
+              console.error("Error fetching user data:", error);
+          }
+      };
+
+      fetchUserData();
+  }, []);
+
     useEffect(() => {
         const fetchGender = async () => {
           try {
             if (user) {
-              // 현재 로그인한 사용자의 UID
+
               const currentUserUID = user.uid;
       
-              // Firestore에서 "users" 컬렉션을 사용한다고 가정
               const usersCollectionRef = collection(db, "user");
               const querySnapshot = await getDocs(
                 query(usersCollectionRef, where("유저아이디", "==", currentUserUID))
               );
       
-              // 검색된 문서가 있는 경우
               if (!querySnapshot.empty) {
-                // 여러 개의 문서 중 첫 번째 문서의 데이터에서 성별 필드를 가져옴
                 const userGender = querySnapshot.docs[0].data().성별;
                 setGender(userGender);
               } else {
                 console.error("User document does not exist");
               }
               if (!querySnapshot.empty) {
-                // 여러 개의 문서 중 첫 번째 문서의 데이터에서 성별 필드를 가져옴
                 const userNickname = querySnapshot.docs[0].data().닉네임;
                 setNickname(userNickname);
               } else {
@@ -90,6 +122,7 @@ export default function Profile(){
       
         fetchGender();
       }, []);
+      
     
     return (
         <Wrapper>
@@ -107,6 +140,9 @@ export default function Profile(){
                     {gender ? `${gender}` : '성별 정보가 없습니다.'}
                 </UserInfo>
             </Header>
+            <Avatar>
+                {ment}
+            </Avatar>
         </Wrapper>
     ) 
 }

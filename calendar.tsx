@@ -1,12 +1,10 @@
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import styled from 'styled-components'
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
 import { useEffect, useState } from 'react';
 import { auth, db } from '../firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import ExerciseRegistration from './exercise-component';
+import ExerciseRegistration from './records-registration';
 
 
 const Wrapper = styled.div`
@@ -76,12 +74,12 @@ export default function Calendar() {
                 <Btn onClick={onClick}>운동기록하기<Button>+</Button></Btn>
             </BtnWrapper>
             <FullCalendar
-                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                plugins={[dayGridPlugin]}
                 initialView="dayGridMonth"
                 events={createRecords}
                 headerToolbar={
                     {
-                        start: "dayGridMonth,timeGridWeek,timeGridDay",
+                        start: "dayGridMonth",
                         center: 'title',
                         end: 'prev,today,next'
                     }
