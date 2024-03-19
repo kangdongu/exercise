@@ -56,7 +56,7 @@ export default function Calendar() {
 
                     if (!querySnapshot.empty) {
                         const userEvents = querySnapshot.docs.map((doc) => ({
-                            title: `${doc.data().종류} ${doc.data().횟수 || ''}개 ${doc.data().세트 || ''}세트`,
+                            title: `${doc.data().종류} ${doc.data().횟수 || ''}개 ${doc.data().무게 || ''}kg`,
                             date: doc.data().날짜
                         }));
                         setCreateRecords(userEvents);
