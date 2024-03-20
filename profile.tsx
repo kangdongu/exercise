@@ -4,12 +4,18 @@ import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 import { collection, getDocs, query, where } from "firebase/firestore";
+import WeeklyExerciseStats from "../components/week-records";
+
 
 const Wrapper = styled.div`
 
 `;
 const Header = styled.div`
     border-bottom: 1px solid #333333;
+    box-sizing:border-box;
+    padding-left:30px;
+    display:flex;
+    justify-content: center;
 `;
 const UserImgUpload = styled.label`
 width: 80px;
@@ -33,7 +39,14 @@ const UserImg = styled.img`
 width: 100%;
 `;
 const UserInfo = styled.div`
-
+display: flex;
+    flex-direction: column;
+    font-size:20px;
+    font-weight:600;
+    gap:10px;
+    box-sizing:border-box;
+    padding-top:10px;
+    margin-left:30px;
 `;
 const Avatar = styled.h1`
 
@@ -123,7 +136,11 @@ export default function Profile(){
         fetchGender();
       }, []);
       
-    
+
+  function closeModal(): void {
+    throw new Error("Function not implemented.");
+  }
+
     return (
         <Wrapper>
             <Header>
@@ -135,14 +152,15 @@ export default function Profile(){
                 </UserImgUpload>
                 <UserImgInput onChange={onUserImg} id="user-img"  type="file" accept="image/" />
                 <UserInfo>
-                    {user?.displayName}
-                    {nickname ? `닉네임: ${nickname}` : `${user?.displayName}`}
-                    {gender ? `${gender}` : '성별 정보가 없습니다.'}
+                    {nickname ? <span>{nickname}</span> : <span>{user?.displayName}</span>}
+                    {gender ? <span>{gender}</span> : '성별 정보가 없습니다.'}
                 </UserInfo>
             </Header>
             <Avatar>
                 {ment}
             </Avatar>
+            <WeeklyExerciseStats closeModal={closeModal} />
+            
         </Wrapper>
     ) 
 }

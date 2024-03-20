@@ -5,11 +5,12 @@ import { useEffect, useState } from 'react';
 import { auth, db } from '../firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import ExerciseRegistration from './records-registration';
+import './calendar.css'
 
 
 const Wrapper = styled.div`
     width: 80%;
-    height:800px;
+    height:100vh;
     margin: 0 auto;
 `;
 const Button = styled.div`
@@ -26,10 +27,13 @@ const Btn = styled.div`
     font-size:24px;
     cursor:pointer;
     float:right;
+    &:hover{
+        color:red;
+    }
 `;
 const BtnWrapper = styled.div`
     width:100%;
-    height:30px;
+    height:40px;
     font-size:24px;
     border-bottom: 1px solid gray;
     margin-bottom:10px;
@@ -70,7 +74,7 @@ export default function Calendar() {
     }, [modal])
     return (
         <Wrapper>
-            <BtnWrapper>기록
+            <BtnWrapper>
                 <Btn onClick={onClick}>운동기록하기<Button>+</Button></Btn>
             </BtnWrapper>
             <FullCalendar
@@ -84,7 +88,8 @@ export default function Calendar() {
                         end: 'prev,today,next'
                     }
                 }
-                height={`100vh`}
+                height={`80vh`}
+                
             />
         {modal ? <ExerciseRegistration closeModal={closeModal} /> : null}
         </Wrapper>

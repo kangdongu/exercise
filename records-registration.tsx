@@ -65,15 +65,15 @@ interface ExerciseRegistrationProps {
   closeModal: () => void;
 }
 
-// function formatDate(date: Date): string {
-//   const year = date.getFullYear();
-//   const month = (date.getMonth() + 1).toString().padStart(2, "0");
-//   const day = date.getDate().toString().padStart(2, "0");
-//   return `${year}-${month}-${day}`;
-// }
-function formatDateToISO(date: Date): string {
-    return date.toISOString();
-  }
+function formatDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+// function formatDateToISO(date: Date): string {
+//     return date.toISOString();
+//   }
 
 export default function ExerciseRegistration({
   closeModal,
@@ -108,7 +108,8 @@ export default function ExerciseRegistration({
       try {
         const recordsRef = collection(db, "records");
         // const date = formatDate(selectedDate!);
-        const date = formatDateToISO(selectedDate!);
+        const date = selectedDate?.toISOString().slice(0,10)
+        // const date = formatDateToISO(selectedDate!);
         const promises = sets.map((set) =>
           addDoc(recordsRef, {
             이름: user?.displayName,

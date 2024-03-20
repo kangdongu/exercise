@@ -4,16 +4,22 @@ import PhotoRecords from "../components/photo-records";
 import { useState } from "react";
 
 const Wrapper = styled.div`
-
 `;
 const Menu = styled.div`
     display:flex;
-
+    width: 30%;
+    margin: 0 auto;
+    margin-bottom:20px;
+    justify-content: space-around;
 `;
-const MenuItem = styled.div`
-    width:50px;
-    height:50px;
-    border:1px solid black;
+const MenuItem = styled.span<{ selected: boolean }>`
+    height:30px;
+    border-bottom:3px solid gray;
+    cursor:pointer;
+    font-weight:600;
+    font-size:20px;
+    color: ${props => props.selected ? 'red' : 'black'};
+    border-bottom-color: ${props => props.selected ? 'red' : 'gray'};
 `;
 
 export default function Records() {
@@ -21,10 +27,10 @@ export default function Records() {
     return (
         <Wrapper>
             <Menu>
-                <MenuItem onClick={() => setSelectedMenu('calendar')}>Calendar</MenuItem>
-                <MenuItem onClick={() => setSelectedMenu('photo')}>Photo</MenuItem>
+                <MenuItem selected={selectedMenu === 'calendar'} onClick={() => setSelectedMenu('calendar')}>캘린더</MenuItem>
+                <MenuItem selected={selectedMenu === 'photo'} onClick={() => setSelectedMenu('photo')}>사진</MenuItem>
             </Menu>
-            
+
             {selectedMenu === 'calendar' && <Calendar />}
             {selectedMenu === 'photo' && <PhotoRecords />}
         </Wrapper>
