@@ -3,6 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { auth, db } from "../firebase";
 import DateChoice from "./date-picker";
+import { format } from 'date-fns';
 
 const Wrapper = styled.div`
   width: 50%;
@@ -65,16 +66,6 @@ interface ExerciseRegistrationProps {
   closeModal: () => void;
 }
 
-function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-// function formatDateToISO(date: Date): string {
-//     return date.toISOString();
-//   }
-
 export default function ExerciseRegistration({
   closeModal,
 }: ExerciseRegistrationProps) {
@@ -104,12 +95,10 @@ export default function ExerciseRegistration({
   };
 
   const onClick = async () => {
-    if (exerciseType !== "" && sets.every((set) => set.count)) {
+    if (exerciseType !== '' && sets.every((set) => set.count)) {
       try {
-        const recordsRef = collection(db, "records");
-        // const date = formatDate(selectedDate!);
-        const date = selectedDate?.toISOString().slice(0,10)
-        // const date = formatDateToISO(selectedDate!);
+        const recordsRef = collection(db, 'records');
+        const date = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
         const promises = sets.map((set) =>
           addDoc(recordsRef, {
             이름: user?.displayName,
@@ -123,10 +112,10 @@ export default function ExerciseRegistration({
         await Promise.all(promises);
         closeModal();
       } catch (error) {
-        console.error("Error adding document: ", error);
+        console.error('Error adding document: ', error);
       }
     } else {
-      alert("운동종류와 횟수를 입력해주세요.");
+      alert('운동종류와 횟수를 입력해주세요.');
     }
   };
 

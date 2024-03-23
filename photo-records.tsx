@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 import { auth, db, storage } from "../firebase";
-import { addDoc, collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import DateChoice from "./date-picker";
+import { format } from 'date-fns';
 
 
 const Wrapper = styled.div`
@@ -122,14 +123,33 @@ const ViewWrapper = styled.div`
     width:80%;
     margin: 0 auto;
 `;
+const Select = styled.select`
 
-function formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
+`;
+const Option = styled.option`
 
+`;
+const DeleteBtn = styled.div`
+    background-color:red;
+    width:100px;
+    height:30px;
+    cursor:pointer;
+    color:white;
+`;
+const EditPost = styled.div`
+    background-color:blue;
+    width:100px;
+    height:30px;
+    cursor:pointer;
+    color:white;
+`;
+const EditComplete = styled.div`
+background-color:blue;
+width:100px;
+height:30px;
+cursor:pointer;
+color:white;
+`;
 
 export default function PhotoRecords() {
     const [memo, setMemo] = useState("");
@@ -141,6 +161,13 @@ export default function PhotoRecords() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [viewDetails, setViewDetails] = useState(false);
     const [selectedPhotoDetails, setSelectedPhotoDetails] = useState<any>(null);
+    const [selectedOption, setSelectedOption] = useState("나만보기");
+    const [editView, setEditView] = useState(false);
+
+
+    const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedOption(e.target.value);
+    };
 
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setMemo(e.target.value)
@@ -162,6 +189,7 @@ export default function PhotoRecords() {
 
     const viewCloseModal = () => {
         setViewDetails(false);
+        setEditView(false);
     };
 
     const openModal = () => {
@@ -170,6 +198,7 @@ export default function PhotoRecords() {
 
     const closeModal = () => {
         setIsModalOpen(false);
+        setMemo("");
     };
 
     interface UserPhoto {
@@ -178,41 +207,49 @@ export default function PhotoRecords() {
     }
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const user = auth.currentUser
+        e.preventDefault();
+        const user = auth.currentUser;
+
         if (!user || isLoading) return;
+
         if (previewUrl === null) {
-            alert("사진을 등록해주세요.")
+            alert("사진을 등록해주세요.");
         } else {
             try {
-                setLoading(true)
-                const date = formatDate(selectedDate!);
-                const doc = await addDoc(collection(db, "photo"), {
+                setLoading(true);
+                const date = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
+                const docRef = await addDoc(collection(db, "photo"), {
                     날짜: date,
                     이름: user.displayName,
                     유저아이디: user.uid,
-                    메모:memo,
-                })
-                if (file) {
-                    const locationRef = ref(storage, `photo/${user.uid}-${user.displayName}/${doc.id}`);
+                    메모: memo,
+                    옵션: selectedOption
+                });
 
+                // 생성된 문서의 ID 가져오기
+                const docId = docRef.id;
+
+                if (file) {
+                    const locationRef = ref(storage, `photo/${user.uid}-${user.displayName}/${docId}`);
                     const result = await uploadBytes(locationRef, file);
-                    const url = await getDownloadURL(result.ref)
-                    updateDoc(doc, {
-                        사진: url,
-                    })
+                    const url = await getDownloadURL(result.ref);
+
+                    // 생성된 문서의 ID를 사용하여 문서 업데이트
+                    await updateDoc(docRef, { 사진: url });
                 }
+
                 setFile(null);
                 setPreviewUrl(null);
                 setMemo("");
+                setSelectedOption("");
                 closeModal();
-            } catch (e) {
-                console.log(e)
+            } catch (error) {
+                console.error(error);
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
         }
-    }
+    };
 
     useEffect(() => {
         const fetchUserPhotos = async () => {
@@ -224,7 +261,7 @@ export default function PhotoRecords() {
                     const querySnapshot = await getDocs(
                         query(userPhotosRef, where("유저아이디", "==", userId))
                     );
-                    const photos:any[] = [];
+                    const photos: any[] = [];
                     querySnapshot.forEach((doc) => {
                         photos.push({ id: doc.id, photoUrl: doc.data().사진 });
                     });
@@ -239,23 +276,107 @@ export default function PhotoRecords() {
 
     const handleDateChange = (date: Date | null) => {
         setSelectedDate(date);
-      };
+    };
 
-      const handlePhotoClick = async (photoId: string) => {
+    const handlePhotoClick = async (photoId: string) => {
         try {
-          const docRef = doc(db, "photo", photoId);
-          const docSnapshot = await getDoc(docRef);
-          if (docSnapshot.exists()) {
-            const data = docSnapshot.data();
-            setSelectedPhotoDetails(data);
-            setViewDetails(true);
-          } else {
-            console.log("No such document!");
-          }
+            const docRef = doc(db, "photo", photoId);
+            const docSnapshot = await getDoc(docRef);
+            if (docSnapshot.exists()) {
+                const data = docSnapshot.data();
+                console.log('사진 데이터:', data);
+                setSelectedPhotoDetails({ id: docSnapshot.id, ...data });
+                setViewDetails(true);
+            } else {
+                console.log("해당 문서가 없습니다!");
+            }
         } catch (error) {
-          console.error("Error fetching photo data:", error);
+            console.error("사진 데이터를 가져오는 중 오류가 발생했습니다:", error);
         }
-      };
+    };
+
+    const deleteClick = async () => {
+        const user = auth.currentUser;
+
+        // 사용자가 로그인되어 있는지 확인
+        if (!user) {
+            console.error('사용자가 인증되지 않았습니다.');
+            return;
+        }
+
+        // 선택한 사진 정보가 유효한지 확인
+        if (!selectedPhotoDetails) {
+            console.error('선택한 사진 정보가 정의되지 않았습니다.');
+            return;
+        }
+
+        // 사용자 확인
+        const ok = confirm("정말로 삭제하시겠습니까?");
+        if (!ok || user.uid !== selectedPhotoDetails.유저아이디) return;
+
+        try {
+            // 데이터베이스에서 사진 데이터 삭제
+            await deleteDoc(doc(db, "photo", selectedPhotoDetails.id));
+
+            // 사진이 존재할 경우 스토리지에서도 삭제
+            if (selectedPhotoDetails.사진) {
+                const photoRef = ref(storage, `photo/${user.uid}-${user.displayName}/${selectedPhotoDetails.id}`);
+                await deleteObject(photoRef);
+            }
+            setUserPhotos(prevPhotos => prevPhotos.filter(photo => photo.id !== selectedPhotoDetails.id));
+            viewCloseModal();
+        } catch (e) {
+            console.error(e);
+        }
+    };
+    const editPost = () => {
+
+
+        setEditView(true);
+    }
+    const editCompleteEvent = async () => {
+        try {
+            const user = auth.currentUser;
+            if (!user) {
+                console.error('인증되지 않은 사용자입니다.');
+                return;
+            }
+
+            // 선택한 사진의 ID 가져오기
+            const photoId = selectedPhotoDetails.id;
+
+            // 선택한 사진의 문서 가져오기
+            const photoDocRef = doc(db, "photo", photoId);
+            const photoDocSnapshot = await getDoc(photoDocRef);
+
+            // 사진이 존재하는지 확인
+            if (photoDocSnapshot.exists()) {
+                const date = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
+
+                // 수정할 데이터 준비
+                const editedData = {
+                    ...selectedPhotoDetails,
+                    날짜: date,
+                    메모: memo !== "" ? memo : selectedPhotoDetails.메모,
+                    옵션: selectedOption !== "" ? selectedOption : selectedPhotoDetails.옵션
+                };
+
+
+                // 데이터베이스 업데이트
+                await updateDoc(photoDocRef, editedData);
+
+                // 상태 초기화
+                setMemo("");
+                setSelectedOption("");
+                viewCloseModal();
+                setEditView(false);
+            } else {
+                console.error("해당하는 사진이 없습니다.");
+            }
+        } catch (error) {
+            console.error("수정 중 오류가 발생했습니다:", error);
+        }
+    }
 
     return (
         <Wrapper>
@@ -264,7 +385,11 @@ export default function PhotoRecords() {
                 <ModalBackdrop>
                     <ModalContent>
                         <Form onSubmit={onSubmit}>
-                        <DateChoice onDateChange={handleDateChange} />
+                            <Select value={selectedOption} onChange={handleOptionChange}>
+                                <Option value="나만보기">나만보기</Option>
+                                <Option value="전체공개">전체공개</Option>
+                            </Select>
+                            <DateChoice onDateChange={handleDateChange} />
                             <Memo rows={5} maxLength={180} onChange={onChange} value={memo} placeholder="오늘의 운동은 어땠나요?" />
                             <AttachFileButton htmlFor="file">{file ? "선택 완료" : "+ 사진 선택"}</AttachFileButton>
                             {previewUrl && (
@@ -279,23 +404,32 @@ export default function PhotoRecords() {
                     </ModalContent>
                 </ModalBackdrop>
             )}
-            <PhotoWrapper> 
+            <PhotoWrapper>
                 {userPhotos.map((photo) => (
                     <PhotoUpload onClick={() => handlePhotoClick(photo.id)} key={photo.id} src={photo.photoUrl} alt="User Photo" />
-                ))} 
+                ))}
             </PhotoWrapper>
             {viewDetails && (
                 <ModalBackdrop>
                     <ViewContent>
-            {selectedPhotoDetails && (
-              <ViewWrapper>
-                <CloseView onClick={viewCloseModal}>닫기</CloseView>
-                <ViewImg src={selectedPhotoDetails.사진} alt="Selected Photo" />
-                <p>{selectedPhotoDetails.날짜}</p>
-                <p>{selectedPhotoDetails.메모}</p>
-              </ViewWrapper>
-            )}
-          </ViewContent>
+                        {selectedPhotoDetails && (
+                            <ViewWrapper>
+                                <CloseView onClick={viewCloseModal}>닫기</CloseView>
+                                {editView ? <Select value={selectedPhotoDetails.옵션} onChange={handleOptionChange}>
+                                    <Option value="나만보기">나만보기</Option>
+                                    <Option value="전체공개">전체공개</Option>
+                                </Select> : <Select value={selectedPhotoDetails.옵션} onChange={handleOptionChange}>
+                                    <Option value={selectedPhotoDetails.옵션}>{selectedPhotoDetails.옵션}</Option>
+                                </Select>}
+                                <ViewImg src={selectedPhotoDetails.사진} alt="Selected Photo" />
+                                <p>{selectedPhotoDetails.날짜}</p>
+                                {editView ? <Memo rows={5} maxLength={180} onChange={onChange} value={memo} placeholder={selectedPhotoDetails.메모} /> : <p>{selectedPhotoDetails.메모}</p>}
+                                <DeleteBtn onClick={deleteClick}>삭제</DeleteBtn>
+                                <EditPost onClick={editPost}>수정</EditPost>
+                                {editView ? <EditComplete onClick={editCompleteEvent}>수정완료</EditComplete> : null}
+                            </ViewWrapper>
+                        )}
+                    </ViewContent>
                 </ModalBackdrop>
             )}
         </Wrapper>

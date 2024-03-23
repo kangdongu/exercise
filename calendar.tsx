@@ -12,6 +12,10 @@ const Wrapper = styled.div`
     width: 80%;
     height:100vh;
     margin: 0 auto;
+    @media screen and (max-width: 700px) {
+        width: 100%;
+        margin: 0 auto;
+    }
 `;
 const Button = styled.div`
     width:30px;
@@ -21,6 +25,9 @@ const Button = styled.div`
     text-align:center;
     line-height:20px;
     color:red;
+    @media screen and (max-width: 700px) {
+        font-size:30px;
+    }
 `;
 const Btn = styled.div`
     display:flex;
@@ -38,6 +45,13 @@ const BtnWrapper = styled.div`
     border-bottom: 1px solid gray;
     margin-bottom:10px;
 `;
+
+interface ExerciseData {
+    종류: string;
+    횟수?: string;
+    무게?: string;
+    날짜: string;
+}
 
 export default function Calendar() {
     
@@ -59,10 +73,31 @@ export default function Calendar() {
                     const querySnapshot = await getDocs(query(recordsCollectionRef, where("유저아이디", "==", currentUserUID)));
 
                     if (!querySnapshot.empty) {
-                        const userEvents = querySnapshot.docs.map((doc) => ({
-                            title: `${doc.data().종류} ${doc.data().횟수 || ''}개 ${doc.data().무게 || ''}kg`,
-                            date: doc.data().날짜
-                        }));
+                        const groupedEvents: { [key: string]: ExerciseData[] } = {};
+                        querySnapshot.docs.forEach(doc => {
+                            const data = doc.data() as ExerciseData;
+                            const key = `${data.종류}_${data.날짜}`;
+                            if (!groupedEvents[key]) {
+                                groupedEvents[key] = [];
+                            }
+                            groupedEvents[key].push(data);
+                        });
+
+
+                        const userEvents = Object.values(groupedEvents).map(group => {
+                            if (group.length > 1) {
+                                return {
+                                    title: group.map(item => `${item.종류} ${item.횟수 || ''}개 ${item.무게 || ''}kg`).join('<br>'),
+                                    date: group[0].날짜
+                                };
+                            } else {
+                                return {
+                                    title: `${group[0].종류} ${group[0].횟수 || ''}개 ${group[0].무게 || ''}kg`,
+                                    date: group[0].날짜
+                                };
+                            }
+                        });
+
                         setCreateRecords(userEvents);
                     }
                 }
@@ -71,7 +106,8 @@ export default function Calendar() {
             }
         }
         fetchRecords();
-    }, [modal])
+    }, [modal]);
+
     return (
         <Wrapper>
             <BtnWrapper>
