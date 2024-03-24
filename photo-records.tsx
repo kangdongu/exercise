@@ -164,7 +164,6 @@ export default function PhotoRecords() {
     const [selectedOption, setSelectedOption] = useState("나만보기");
     const [editView, setEditView] = useState(false);
 
-
     const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedOption(e.target.value);
     };
@@ -415,7 +414,7 @@ export default function PhotoRecords() {
                         {selectedPhotoDetails && (
                             <ViewWrapper>
                                 <CloseView onClick={viewCloseModal}>닫기</CloseView>
-                                {editView ? <Select value={selectedPhotoDetails.옵션} onChange={handleOptionChange}>
+                                {editView ? <Select value={selectedOption} onChange={handleOptionChange}>
                                     <Option value="나만보기">나만보기</Option>
                                     <Option value="전체공개">전체공개</Option>
                                 </Select> : <Select value={selectedPhotoDetails.옵션} onChange={handleOptionChange}>
