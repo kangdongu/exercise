@@ -38,7 +38,7 @@ export default function Naming() {
                 유저아이디: user?.uid,
                 날짜: Date.now()
             });
-            navigate("/")
+            navigate("/gender")
         }catch{
 
         }

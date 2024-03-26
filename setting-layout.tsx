@@ -7,7 +7,7 @@ width:100%;
 const Header = styled.div`
     width:100%;
     height:80px;
-    background-color:lightblue;
+    background-color:blue;
     z-index:999;
     @media screen and (max-width: 700px) {
         position:fixed;

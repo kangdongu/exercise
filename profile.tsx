@@ -4,7 +4,8 @@ import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import WeeklyExerciseStats from "../components/week-records";
+import WeekDates from "../components/week-records";
+import { format } from "date-fns";
 
 
 const Wrapper = styled.div`
@@ -48,6 +49,11 @@ display: flex;
     padding-top:10px;
     margin-left:30px;
 `;
+const AvatarWrapper = styled.div`
+width:100%;
+height:300px;
+border-bottom: 1px solid black;
+`;
 const Avatar = styled.h1`
 
 `;
@@ -82,7 +88,7 @@ export default function Profile(){
                   const currentUserUID = user.uid;
                   
                   const today = new Date();
-                  const formattedDate = today.toISOString().slice(0, 10);
+                  const formattedDate = format(today, 'yyyy-MM-dd');
                   
                   const recordsCollectionRef = collection(db, "records");
                   const querySnapshot = await getDocs(
@@ -137,10 +143,6 @@ export default function Profile(){
       }, []);
       
 
-  function closeModal(): void {
-    throw new Error("Function not implemented.");
-  }
-
     return (
         <Wrapper>
             <Header>
@@ -156,10 +158,12 @@ export default function Profile(){
                     {gender ? <span>{gender}</span> : '성별 정보가 없습니다.'}
                 </UserInfo>
             </Header>
+            <AvatarWrapper>
             <Avatar>
                 {ment}
             </Avatar>
-            <WeeklyExerciseStats closeModal={closeModal} />
+            </AvatarWrapper>
+            <WeekDates />
             
         </Wrapper>
     ) 

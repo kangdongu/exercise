@@ -133,6 +133,7 @@ export default function ExerciseRegistration({
     <Wrapper>
       <CloseBtn onClick={back}>X</CloseBtn>
       <DateChoice onDateChange={handleDateChange} />
+      
       <Label>
         운동종류:{" "}
         <Input
