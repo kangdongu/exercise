@@ -6,6 +6,9 @@ import { auth, db } from '../firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import ExerciseRegistration from './records-registration';
 import './calendar.css'
+import CalendarClickModal from './calendarClickComponent';
+import { format } from 'date-fns';
+
 
 
 const Wrapper = styled.div`
@@ -54,7 +57,8 @@ interface ExerciseData {
 }
 
 export default function Calendar() {
-    
+    const [calendarClick, setCalendarClick] = useState(false);
+    const [clickDate, setClickDate] = useState<string>("");
     const [modal, setModal] = useState(false)
     const onClick = () => {
         setModal(true)
@@ -108,6 +112,13 @@ export default function Calendar() {
         fetchRecords();
     }, [modal]);
 
+    const handleEventClick = (clickInfo: any) => { 
+        const dateClicked = clickInfo.event.start;
+        const clickDate = format(dateClicked, "yyyy-MM-dd");
+        setClickDate(clickDate); // 클릭한 날짜 저장
+        setCalendarClick(true);
+    }
+
     return (
         <Wrapper>
             <BtnWrapper>
@@ -125,9 +136,10 @@ export default function Calendar() {
                     }
                 }
                 height={`80vh`}
-                
+                eventClick={handleEventClick}
             />
         {modal ? <ExerciseRegistration closeModal={closeModal} /> : null}
+        {calendarClick ? <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} /> : null}
         </Wrapper>
     )
 }

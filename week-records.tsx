@@ -80,7 +80,11 @@ const WeekDates = () => {
 
   useEffect(() => {
     fetchExerciseCountsByWeek();
-  }, []);
+  }, [currentUserUID]);
+
+  useEffect(() => {
+    console.log(exerciseCountsByWeek); // exerciseCountsByWeek 값이 설정된 후에 실행되도록 이동
+}, [exerciseCountsByWeek]);
 
   const fetchExerciseCountsByWeek = async () => {
     try {
@@ -88,8 +92,8 @@ const WeekDates = () => {
         const currentDate = new Date();
         const weeksAgo = [4, 3, 2, 1]; // 1주부터 4주 전까지의 데이터를 가져옵니다.
         const countsByWeek = await Promise.all(weeksAgo.map(async (week) => {
-          const weekStartDate = subWeeks(currentDate, week);
-          const weekEndDate = endOfWeek(weekStartDate, { weekStartsOn: 1 });
+          const weekStartDate = startOfWeek(subWeeks(currentDate, week), { weekStartsOn: 1 }); 
+          const weekEndDate = endOfWeek(subWeeks(currentDate, week), { weekStartsOn: 1 }); 
           const startStr = format(weekStartDate, 'yyyy-MM-dd');
           const endStr = format(weekEndDate, 'yyyy-MM-dd');
           const recordsCollectionRef = collection(db, 'records');
@@ -115,7 +119,7 @@ const WeekDates = () => {
         }));
 
         setExerciseCountsByWeek(countsByWeek);
-        console.log(exerciseCountsByWeek)
+        console.log(exerciseCountsByWeek);
       }
     } catch (error) {
       console.error('Error fetching exercise counts by week:', error);
@@ -149,12 +153,6 @@ const WeekDates = () => {
           }}
           options={{
             responsive: false
-            // scales: {
-            //   y: {
-            //     type: 'linear', // 스케일 타입을 명시적으로 설정합니다.
-            //     beginAtZero: true
-            //   }
-            // }
           }}
         />
       </LineWrapper>

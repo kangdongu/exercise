@@ -5,6 +5,7 @@ import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, 
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import DateChoice from "./date-picker";
 import { format } from 'date-fns';
+import PhotoUpload from "./randerPhoto";
 
 
 const Wrapper = styled.div`
@@ -54,10 +55,6 @@ gap: 2%;
 flex-wrap: wrap;
 margin: 0 auto;
 width:100%;
-`;
-const PhotoUpload = styled.img`
-width:23.5%;
-cursor:pointer;
 `;
 const Memo = styled.textarea`
 width:80%;
