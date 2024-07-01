@@ -1,0 +1,44 @@
+/* MyCalendar.css */
+
+/* 일요일 날짜: 빨간색 */
+.fc-day-sun a {
+    color: red;
+}
+
+/* 토요일 날짜: 파란색 */
+.fc-day-sat a {
+    color: blue;
+
+}
+
+.fc-prev-button {
+    @media screen and (max-width: 700px) {
+        width: 37px;
+    }
+
+}
+
+.fc-next-button {
+    @media screen and (max-width: 700px) {
+        width: 37px;
+    }
+}
+
+.fc-button-group {
+    @media screen and (max-width: 700px) {
+        height: 38px;
+    }
+}
+
+.fc-toolbar-title {
+    @media screen and (max-width: 700px) {
+        font-size: 1.50em;
+    }
+}
+
+.fc-daygrid-day-number {
+    @media screen and (max-width: 700px) {
+        font-size: 13px;
+        
+    }
+}
