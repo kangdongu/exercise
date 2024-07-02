@@ -47,7 +47,7 @@ function App() {
       {isLoading ? (
         <LoadingScreen />
       ) : (
-        <Router basename="/exercise">
+        <Router>
           <Routes>
             <Route path="/naming" element={<Naming />} />
             <Route path="/gender" element={<GenderChoice />} />
