@@ -61,9 +61,8 @@ export default function GenderChoice() {
     fetchLoad();
   }, [])
 
-  const choiceClick = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const choiceClick = async () => {
     try {
-      const target = event.target as HTMLDivElement;
 
       const userNamingRef = collection(db, "user");
 

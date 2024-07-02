@@ -135,8 +135,8 @@ interface Challenge {
     요일선택: string[];
     유저아이디: string[];
     비밀번호: any;
-    방장프로필:string;
-    방장닉네임:string;
+    방장프로필: string;
+    방장닉네임: string;
 }
 
 const GroupList = () => {
@@ -149,8 +149,8 @@ const GroupList = () => {
     const [join, setJoin] = useState(false)
     const [joinPasswordModal, setJoinPasswordModal] = useState(false)
     const [passwordCheck, setPasswordCheck] = useState("")
-    
-  
+
+
 
 
     const createClick = () => {
@@ -161,7 +161,7 @@ const GroupList = () => {
         setGlasses(true);
     };
 
-  
+
 
     const joinClick = async (challenge: Challenge) => {
         if (user && user.uid) {
@@ -253,8 +253,8 @@ const GroupList = () => {
                     시작날짜: doc.data().시작날짜,
                     종료날짜: doc.data().종료날짜,
                     비밀번호: doc.data().비밀번호,
-                    방장프로필:doc.data().방장프로필,
-                    방장닉네임:doc.data().방장닉네임
+                    방장프로필: doc.data().방장프로필,
+                    방장닉네임: doc.data().방장닉네임
                 }));
                 setChallenges(challengesArray)
             } catch (error) {
@@ -312,7 +312,7 @@ const GroupList = () => {
                         <PeopleJoinWrapper>
                             <PeopleWrapper>{challenge.유저아이디.length}/10</PeopleWrapper>
                             <JoinButton onClick={() => joinClick(challenge)}>
-                                {challenge.유저아이디.includes(user?.uid) ? "인증" : "가입"}
+                                {challenge.유저아이디.includes(user?.uid ?? '') ? "인증" : "가입"}
                             </JoinButton>
                         </PeopleJoinWrapper>
                     </List>

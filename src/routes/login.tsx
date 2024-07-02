@@ -1,15 +1,15 @@
-import { FirebaseError } from "firebase/app";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components"
-import { auth } from "../firebase";
 import GithubButton from "../components/github-login";
 import GoogleButton from "../components/gogle-login";
 
 const Wrapper = styled.div`
+@media screen and (max-width: 700px) {
     height: 100vh;
     width:100vw;
+   }
+    width:412px;
+    height:915px;
+    margin:0 auto;
 display: flex;
 background-color:#f3f1f1;
 flex-direction: column;
@@ -60,38 +60,6 @@ export const Switcher = styled.span`
 `;
 
 export default function Login() {
-
-    const navigate = useNavigate();
-    const [isLoading, setLoading] = useState(false)
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [error, setError] = useState("")
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { target: { name, value }, } = e;
-        if (name === "email") {
-            setEmail(value)
-        } else if (name === "password") {
-            setPassword(value)
-        }
-    }
-    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        setError("");
-        if (isLoading || email === "" || password === "") return;
-        try {
-            setLoading(true)
-            await signInWithEmailAndPassword(auth, email, password);
-            if (!auth.currentUser?.emailVerified) throw setError("Not verified.");
-            navigate("/")
-        } catch (e) {
-            if (e instanceof FirebaseError) {
-                setError(e.message)
-            }
-        }
-        finally {
-            setLoading(false)
-        }
-    }
 
     return (
         <Wrapper>

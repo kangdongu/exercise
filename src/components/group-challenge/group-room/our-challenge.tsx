@@ -59,7 +59,6 @@ const getSelectedDaysCount = (startDate: string, endDate: string, selectedDays: 
 
 const OurChallenge: React.FC<OurChallengeProps> = ({ challenge, photoData }) => {
     const currentDate = new Date();
-    const endDate = parseISO(challenge.종료날짜);
 
     const selectedDays = challenge.요일선택;
     const totalDaysUntilToday = getSelectedDaysCount(challenge.시작날짜, currentDate.toISOString(), selectedDays);

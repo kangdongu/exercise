@@ -5,7 +5,7 @@ import { auth, db, storage } from "../../firebase";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { format } from "date-fns";
 import { getDownloadURL, ref } from "firebase/storage";
-import { useChallenges } from "./group-context";
+import { Challenge, useChallenges } from "./group-context";
 
 
 const Wrapper = styled.div`
@@ -326,7 +326,10 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
 
             try {
                 const docRef = await addDoc(recordsRef, newChallenge);
-                setChallenges((prevChallenges) => [...prevChallenges, { id: docRef.id, ...newChallenge }]);
+                setChallenges((prevChallenges: Challenge[]) => [
+                    ...prevChallenges,
+                    { id: docRef.id, ...newChallenge } as Challenge,
+                  ]);
                 alert("방이 생성되었습니다!");
                 onBack();
             } catch (error) {

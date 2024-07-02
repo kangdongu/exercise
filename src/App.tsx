@@ -14,7 +14,6 @@ import Records from './routes/records';
 import GenderChoice from './routes/gender-choice';
 import LoadingScreen from './components/loading-screen';
 import Sns from './routes/sns';
-import { useUser } from './components/user-context';
 
 const Wrapper = styled.div``;
 
@@ -31,7 +30,6 @@ const GlobalStyles = createGlobalStyle`
 
 function App() {
   const [isLoading, setLoading] = useState(true);
-  const { user } = useUser();
 
   const init = async () => {
     await auth.authStateReady();

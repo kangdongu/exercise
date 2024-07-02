@@ -231,7 +231,7 @@ export default function ExerciseRegistration({
   ]);
   const [selectedType, setSelectedType] = useState<string>("전체");
   const [selectedArea, setSelectedArea] = useState<String>("전체");
-  const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
+  const [bottomSheetOpen] = useState(false);
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
