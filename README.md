@@ -47,11 +47,10 @@ React + TypeScript + Vite + Firebase를 사용하였고
 
 ## 기획
 
-정보구조도
-
 ![정보구조도](https://github.com/kangdongu/exercise/assets/162076741/5f23c5cf-1948-402a-9782-32646cbe28e9)
 
-![구조](https://github.com/kangdongu/exercise/assets/162076741/5e4f1b5d-36aa-4f5a-adc2-7b17be7f8edf)
+![구조](https://github.com/kangdongu/exercise/assets/162076741/19c62779-6808-4f5f-9ec3-c3cbb542cbcc)
+
 
 
 
