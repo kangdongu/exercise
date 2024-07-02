@@ -2,6 +2,7 @@ import {  GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { auth } from "../firebase";
+import { FcGoogle } from "react-icons/fc";
 
 const Button = styled.div`
     width :100%;
@@ -18,7 +19,7 @@ const Button = styled.div`
     height:50px;
     gap: 100px;
 `
-const Logo = styled.img`
+const Logo = styled.div`
     height:30px;
     margin-left:10px;
 `
@@ -37,7 +38,9 @@ export default function GoogleButton() {
   }
   return (
       <Button onClick={onClick}>
-          <Logo src="/web_light_sq_na@1x.png" />
+          <Logo>
+            <FcGoogle style={{width:"30px", height:"30px"}} />
+          </Logo>
           <span>Google로 시작하기</span>
       </Button>
   )

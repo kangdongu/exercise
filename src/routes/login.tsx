@@ -16,7 +16,7 @@ flex-direction: column;
 padding: 50px 0px;
     `;
 const LoginButtonWrapper = styled.div`
-    width:90vw;
+    width:90%;
     margin: 0px auto;
     border-top: 0.2px solid #333333;
 `;
@@ -37,7 +37,7 @@ const TextWrapper = styled.div`
     font-weight:800;
 `;
 const ContentWrapper = styled.div`
-    width:90vw;
+    width:90%;
     margin: 0 auto;
 `;
 const Size = styled.div`
