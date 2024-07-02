@@ -96,12 +96,10 @@ const GroupUser: React.FC<GroupUser> = ({ challenge }) => {
         const userArrays = await Promise.all(fetchUserPromises);
         const mergedUsers = userArrays.flat();
 
-        // 방장아이디와 겹치는 사용자 필터링
         const filteredUsers = mergedUsers.filter(
           (user) => user.유저아이디 !== challenge.방장아이디
         );
 
-        // 방장아이디와 일치하는 사용자 찾기
         const host = mergedUsers.find(
           (user) => user.유저아이디 === challenge.방장아이디
         );
@@ -112,7 +110,7 @@ const GroupUser: React.FC<GroupUser> = ({ challenge }) => {
         console.error("Error fetching user:", error);
       }
     };
-
+    console.log(challenge)
     fetchUser();
   }, [challenge.유저아이디, challenge.방장아이디]);
 

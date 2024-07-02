@@ -200,7 +200,7 @@ const LongGoalSituation = () => {
                     setOngoingChallenges(ongoing);
                     setCompletedChallenges(completed);
                 }
-                
+
             } catch (error) {
                 console.error(error);
             }
@@ -323,16 +323,18 @@ const LongGoalSituation = () => {
                         <Situation>
                             <WeekDdayWrapper>
                                 <WeekTitle>주 {challenge.주에몇일} 챌린지</WeekTitle>
-                                {selectedTitle === "ing" ?(
+                                {selectedTitle === "ing" ? (
                                     <DdayTitle>D-{differenceInDays(parseISO(challenge.종료날짜), new Date())}</DdayTitle>
-                                ):null}
+                                ) : null}
                             </WeekDdayWrapper>
                             <ChartWrapper>
-                                <PresentChartWrapper>
-                                    <DonutChart completed={countSameDaySameChallenge(challenge)} total={differenceInDays(new Date(), currentDate(challenge))}></DonutChart>
-                                    <PresentChartPercent>{calculatePercent(countSameDaySameChallenge(challenge), differenceInDays(new Date(), currentDate(challenge)))}%</PresentChartPercent>
-                                    <PresentText>현재까지의 달성률</PresentText>
-                                </PresentChartWrapper>
+                                {selectedTitle === "ing" ? (
+                                    <PresentChartWrapper>
+                                        <DonutChart completed={countSameDaySameChallenge(challenge)} total={differenceInDays(new Date(), currentDate(challenge))}></DonutChart>
+                                        <PresentChartPercent>{calculatePercent(countSameDaySameChallenge(challenge), differenceInDays(new Date(), currentDate(challenge)))}%</PresentChartPercent>
+                                        <PresentText>현재까지의 달성률</PresentText>
+                                    </PresentChartWrapper>
+                                ) : null}
                                 <TotalChartWrapper>
                                     <DonutChart completed={countSameDaySameChallenge(challenge)} total={differenceInDays(parseISO(challenge.종료날짜), parseISO(challenge.시작날짜))}></DonutChart>
                                     <TotalChartPercent>{calculatePercent(countSameDaySameChallenge(challenge), differenceInDays(parseISO(challenge.종료날짜), parseISO(challenge.시작날짜)))}%</TotalChartPercent>
