@@ -112,6 +112,11 @@ const LikeBtn = styled.div`
 const LikeCount = styled.span`
   margin-left:10px;
 `;
+const TextTitle = styled.div`
+width:100%;
+    height:100px;
+    
+`;
 
 interface Photo {
   id: string;
@@ -374,6 +379,9 @@ export default function PublicPhotosPage() {
 
   return (
     <Wrapper>
+      <TextTitle>
+        <h4 style={{textAlign:"center", fontSize:"25px", color:"#939393"}}>사람들과 기록 공유하기</h4>
+      </TextTitle>
       {publicPhotos.map((photo) => (
         <PhotoUpload
           onClick={() => handlePhotoClick(photo.id)}
@@ -395,11 +403,11 @@ export default function PublicPhotosPage() {
                     {likedByUser ? (
                       <FaHeart style={{ width: "25px", height: "25px", color: "red" }} />)
                       : <FaRegHeart style={{ width: "25px", height: "25px" }} />}
-                      <LikeCount>{likeCount}</LikeCount>
+                    <LikeCount>{likeCount}</LikeCount>
                   </LikeBtn>
                   <OpenCommentWrapper>
-                  <FaRegComment onClick={() => { setCommentModal(true) }} style={{ width: "25px", height: "25px" }} />
-                  <span style={{marginLeft:"10px"}}>{comments.length}</span>
+                    <FaRegComment onClick={() => { setCommentModal(true) }} style={{ width: "25px", height: "25px" }} />
+                    <span style={{ marginLeft: "10px" }}>{comments.length}</span>
                   </OpenCommentWrapper>
                 </InteractionWrapper>
               </ViewWrapper>

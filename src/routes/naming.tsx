@@ -62,6 +62,7 @@ export default function Naming() {
         닉네임: nickname,
         유저아이디: user?.uid,
         날짜: Date.now(),
+        프로필안내:false,
       });
       navigate("/gender");
     } catch (error) {

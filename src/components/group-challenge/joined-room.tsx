@@ -208,9 +208,9 @@ const JoinedRoom: React.FC<RoomProps> = ({ onBack, challenge }) => {
     const [viewPhoto, setViewPhoto] = useState<Photo | null>(null)
     const [ourView, setOurView] = useState<Photo | null>(null)
 
-    const crateChallengeButton = async() => {
+    const crateChallengeButton = async () => {
         const currentUser = auth.currentUser;
-        if(!currentUser) return
+        if (!currentUser) return
 
         const week: string[] = ["일", "월", "화", "수", "목", "금", "토"]
         const weekDate = week[new Date().getDay()]
@@ -222,9 +222,9 @@ const JoinedRoom: React.FC<RoomProps> = ({ onBack, challenge }) => {
                 where("유저아이디", "==", currentUser.uid),
                 where("그룹챌린지제목", "==", challenge.그룹챌린지제목)
             );
-    
+
             const querySnapshot = await getDocs(q);
-    
+
             if (querySnapshot.empty) {
                 setCreateChallenge(true);
             } else {
@@ -252,58 +252,59 @@ const JoinedRoom: React.FC<RoomProps> = ({ onBack, challenge }) => {
             reader.readAsDataURL(selectedFile);
         }
     };
+    const fetchPhoto = async () => {
+        try {
+            const q = query(collection(db, "groupchallengephoto"))
+            const querySnapshot = await getDocs(q);
+            const user = auth.currentUser
+            const currentUserUID = user?.uid
 
+            const photoArray: Photo[] = querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                날짜: doc.data().날짜,
+                인증사진: doc.data().인증사진,
+                유저아이디: doc.data().유저아이디,
+                그룹챌린지제목: doc.data().그룹챌린지제목,
+                인증요일: doc.data().인증요일,
+                인증내용: doc.data().인증내용,
+                좋아요유저: doc.data().좋아요유저
+            }))
+
+            const filteredPhotoArray = photoArray.filter(photo => photo.그룹챌린지제목 === challenge.그룹챌린지제목);
+            setPhotoData(filteredPhotoArray);
+            const filterMyPhoto = filteredPhotoArray.filter(photo => photo.유저아이디 === currentUserUID)
+            setPhotoMyData(filterMyPhoto)
+
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    
     const createChallenge = async () => {
-            const user = auth.currentUser;
-            const recordsRef = collection(db, 'groupchallengephoto');
-            const startDate = new Date();
-            const day = format(startDate, "EEE", { locale: ko })
+        const user = auth.currentUser;
+        const recordsRef = collection(db, 'groupchallengephoto');
+        const startDate = new Date();
+        const day = format(startDate, "EEE", { locale: ko })
 
-            try {
-                await addDoc(recordsRef, {
-                    날짜: format(startDate, "yyyy-MM-dd"),
-                    인증사진: previewUrl,
-                    유저아이디: user?.uid,
-                    그룹챌린지제목: challenge.그룹챌린지제목,
-                    인증요일: day,
-                    인증내용: memo,
-                    좋아요유저: [],
-                })
-                setCreateChallenge(false)
-            } catch (error) {
-                console.log(error)
-            }
+        try {
+            await addDoc(recordsRef, {
+                날짜: format(startDate, "yyyy-MM-dd"),
+                인증사진: previewUrl,
+                유저아이디: user?.uid,
+                그룹챌린지제목: challenge.그룹챌린지제목,
+                인증요일: day,
+                인증내용: memo,
+                좋아요유저: [],
+            })
+            fetchPhoto();
+            setCreateChallenge(false)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     useEffect(() => {
-        const fetchPhoto = async () => {
-            try {
-                const q = query(collection(db, "groupchallengephoto"))
-                const querySnapshot = await getDocs(q);
-                const user = auth.currentUser
-                const currentUserUID = user?.uid
-
-                const photoArray: Photo[] = querySnapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    날짜: doc.data().날짜,
-                    인증사진: doc.data().인증사진,
-                    유저아이디: doc.data().유저아이디,
-                    그룹챌린지제목: doc.data().그룹챌린지제목,
-                    인증요일: doc.data().인증요일,
-                    인증내용: doc.data().인증내용,
-                    좋아요유저: doc.data().좋아요유저
-                }))
-
-                const filteredPhotoArray = photoArray.filter(photo => photo.그룹챌린지제목 === challenge.그룹챌린지제목);
-                setPhotoData(filteredPhotoArray);
-                const filterMyPhoto = filteredPhotoArray.filter(photo => photo.유저아이디 === currentUserUID)
-                setPhotoMyData(filterMyPhoto)
-
-
-            } catch (error) {
-                console.log(error)
-            }
-        }
         fetchPhoto()
     }, [])
 
@@ -317,7 +318,7 @@ const JoinedRoom: React.FC<RoomProps> = ({ onBack, challenge }) => {
     return (
         <Wrapper>
             <Back onClick={onBack}>
-                <FaArrowLeft style={{width:"20px" , height:"20px"}} />
+                <FaArrowLeft style={{ width: "20px", height: "20px" }} />
             </Back>
             <Title>{challenge.그룹챌린지제목}</Title>
             <h4 style={{ marginBottom: "5px", marginTop: "20px" }}>챌린지정보</h4>

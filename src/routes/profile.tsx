@@ -6,6 +6,7 @@ import { updateProfile } from "firebase/auth";
 import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
 import WeekDates from "../components/week-records";
 import { format } from "date-fns";
+import { FaArrowLeftLong } from "react-icons/fa6";
 
 
 const Wrapper = styled.div`
@@ -102,6 +103,44 @@ const BadgeImg = styled.img`
   width:20px;
   height:20px;
 `;
+const InformationWrapper = styled.div`
+  width:100vw;
+  height:100vh;
+  background-color:rgba(0,0,0,0.5);
+  position:fixed;
+  top:0;
+  left:0;
+`;
+const Information = styled.div`
+  width:100vw;
+  padding: 5px 5px;
+  height:80px;
+`;
+const InformationPhoto = styled.div`
+  width:80px;
+  height:80px;
+  border:5px solid red;
+  border-radius:50%;
+`;
+const InformationText = styled.div`
+  display: flex;
+    width: 250px;
+    margin-left: 90px;
+    font-size:20px;
+    font-weight:600;
+    gap: 10px;
+    color:white;
+`;
+const Complete = styled.div`
+    width: 100px;
+    height: 40px;
+    background-color: #990033;
+    text-align: center;
+    font-size: 20px;
+    color: white;
+    line-height: 40px;
+    margin: 40px auto;
+`;
 
 
 interface Badges {
@@ -117,6 +156,7 @@ export default function Profile() {
   const [nickname, setNickname] = useState("");
   const [ment, setMent] = useState("");
   const [badges, setBadge] = useState<Badges[]>([])
+  const [information, setInformation] = useState(false)
 
   const onUserImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
@@ -130,8 +170,6 @@ export default function Profile() {
       await updateProfile(user, {
         photoURL: userImgUrl,
       });
-
-
       const userRef = collection(db, "user");
       const docSnapshot = await getDocs(query(userRef, where("유저아이디", "==", user.uid)));
 
@@ -175,7 +213,6 @@ export default function Profile() {
     const fetchGender = async () => {
       try {
         if (user) {
-
           const currentUserUID = user.uid;
 
           const usersCollectionRef = collection(db, "user");
@@ -184,14 +221,21 @@ export default function Profile() {
           );
 
           if (!querySnapshot.empty) {
-            const userNickname = querySnapshot.docs[0].data().닉네임;
+            const userDoc = querySnapshot.docs[0];
+            const userNickname = userDoc.data().닉네임;
+            const profileGuide = userDoc.data().프로필안내;
             setNickname(userNickname);
+
+            if (profileGuide === false) {
+              setInformation(true);
+              await updateDoc(userDoc.ref, { 프로필안내: true });
+            }
           } else {
-            console.error("");
+            console.error("유저 데이터를 찾지 못했습니다.");
           }
         }
       } catch (error) {
-        console.error("성별을 찾지 못했습니다:", error);
+        console.error("유저 데이터를 찾지 못했습니다:", error);
       }
     };
 
@@ -262,6 +306,19 @@ export default function Profile() {
         <Title>5주 운동 데이터</Title>
         <WeekDates />
       </ContentWrapper>
+      {information ? (
+        <InformationWrapper>
+        <Information>
+          <InformationPhoto>
+            <InformationText>
+              <FaArrowLeftLong style={{width:"40px", height:"40px", color:"white"}} />
+              <div>해당 부분을 클릭하면 프로필사진을 설정할 수 있습니다.</div>
+            </InformationText>
+          </InformationPhoto>
+          <Complete onClick={() => setInformation(false)}>확인</Complete>
+        </Information>
+      </InformationWrapper>
+      ):null}
     </Wrapper>
   )
 }

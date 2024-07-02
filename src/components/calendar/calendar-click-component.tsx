@@ -33,8 +33,10 @@ const Wrapper = styled.div`
     box-sizing:border-box;
 `;
 const ContentWrapper = styled.div`
-    width:100%;
+    width:90vw;
+    margin: 0 auto;
     display:flex;
+    flex-direction: column;
 `;
 const Button = styled.button`
 @media screen and (max-width: 700px) {
@@ -44,7 +46,7 @@ const Button = styled.button`
     margin-left:-3%;
 `;
 const ExerciseList = styled.div`
-    width:50%;
+    width:100%;
 `;
 const ExerciseItem = styled.div`
 
@@ -72,7 +74,8 @@ left:0;
 z-index:98;
 `;
 const AreaList = styled.div`
-    width:40%;
+    width:100%;
+    height:200px;
 `;
 const DayArea = styled.span`
     font-size:25px;
