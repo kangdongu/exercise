@@ -22,6 +22,7 @@ const Button = styled.div`
 const Logo = styled.div`
     height:30px;
     margin-left:10px;
+    margin-top:10px;
 `
 
 export default function GoogleButton() {
