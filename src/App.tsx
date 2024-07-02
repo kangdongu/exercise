@@ -48,17 +48,17 @@ function App() {
       ) : (
         <Router>
           <Routes>
-            <Route path="/naming" element={<Naming />} />
-            <Route path="/gender" element={<GenderChoice />} />
-            <Route path="/" element={<ProtectedRoute><SettingLayout /></ProtectedRoute>}>
+            <Route path="https://kangdongu.github.io/exercise/naming" element={<Naming />} />
+            <Route path="https://kangdongu.github.io/exercise/gender" element={<GenderChoice />} />
+            <Route path="https://kangdongu.github.io/exercise/" element={<ProtectedRoute><SettingLayout /></ProtectedRoute>}>
               <Route index element={<Home />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="records" element={<Records />} />
-              <Route path="sns" element={<Sns />} />
+              <Route path="https://kangdongu.github.io/exercise/profile" element={<Profile />} />
+              <Route path="https://kangdongu.github.io/exercise/records" element={<Records />} />
+              <Route path="https://kangdongu.github.io/exercise/sns" element={<Sns />} />
             </Route>
-            <Route path="/start-page" element={<StartPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/create-account" element={<CreateAccount />} />
+            <Route path="https://kangdongu.github.io/exercise/start-page" element={<StartPage />} />
+            <Route path="https://kangdongu.github.io/exercise/login" element={<Login />} />
+            <Route path="https://kangdongu.github.io/exercise/create-account" element={<CreateAccount />} />
           </Routes>
         </Router>
       )}
