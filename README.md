@@ -15,21 +15,26 @@ Habit은 운동습관을 만들어 주기위한 앱입니다.
 
 ![1](https://github.com/kangdongu/exercise/assets/162076741/e73be311-a56a-4566-8308-9d51fbabc3c2)
 
+
 홈화면, 개인챌린지
 
 ![2](https://github.com/kangdongu/exercise/assets/162076741/eb5711a9-7d5a-4e1c-8433-c8e48ede5c26)
+
 
 그룹챌린지
 
 ![3](https://github.com/kangdongu/exercise/assets/162076741/479213f6-91f8-466f-963a-47813cdfbb6c)
 
+
 타이머, 뱃지, 도전과제
 
 ![4](https://github.com/kangdongu/exercise/assets/162076741/814d159f-4177-4f8a-80a9-4401555417d2)
 
+
 기록
 
 ![5](https://github.com/kangdongu/exercise/assets/162076741/f2d6607e-0a03-4785-bf7b-11e9adc060b5)
+
 
 소셜, 프로필
 
@@ -45,7 +50,7 @@ React + TypeScript + Vite + Firebase를 사용하였고
 
 라이브러리 : styled-component, chart.js, fullcalender, date-fns, framer-motion, react-icons, react-datepicker를 활용하였습니다.
 
-## 기획
+## 초기기획
 
 ![정보구조도](https://github.com/kangdongu/exercise/assets/162076741/5f23c5cf-1948-402a-9782-32646cbe28e9)
 
