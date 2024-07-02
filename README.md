@@ -15,7 +15,7 @@ Habit은 운동습관을 만들어 주기위한 앱입니다. <br />
 
 그룹챌린지
 
-![3](https://github.com/kangdongu/exercise/assets/162076741/bf5f4075-c159-4232-a1fa-f12a70821933)
+![3](https://github.com/kangdongu/exercise/assets/162076741/479213f6-91f8-466f-963a-47813cdfbb6c)
 
 타이머, 뱃지, 도전과제
 
