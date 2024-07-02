@@ -3422,6 +3422,7 @@ Content-Type: `+c.contentType+`\r
 `,xee=C.div`
     height:30px;
     margin-left:10px;
+    margin-top:10px;
 `;function $j(){const t=gl(),e=async()=>{try{const n=new wi;n.addScope("repo"),await HL(ve,n),t("/")}catch(n){console.error(n)}};return g.jsxs(_ee,{onClick:e,children:[g.jsx(xee,{children:g.jsx(mee,{style:{width:"30px",height:"30px"}})}),"Github로 시작하기"]})}function bee(t){return Le({tag:"svg",attr:{version:"1.1",x:"0px",y:"0px",viewBox:"0 0 48 48",enableBackground:"new 0 0 48 48"},child:[{tag:"path",attr:{fill:"#FFC107",d:`M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12\r
 	c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24\r
 	c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z`},child:[]},{tag:"path",attr:{fill:"#FF3D00",d:`M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657\r
@@ -3444,6 +3445,7 @@ Content-Type: `+c.contentType+`\r
 `,Eee=C.div`
     height:30px;
     margin-left:10px;
+    margin-top:10px;
 `;function Bj(){const t=gl(),e=async()=>{try{const n=new vi;await HL(ve,n),t("/")}catch(n){console.error(n)}};return g.jsxs(See,{onClick:e,children:[g.jsx(Eee,{children:g.jsx(bee,{style:{width:"30px",height:"30px"}})}),g.jsx("span",{children:"Google로 시작하기"})]})}const Cee=C.div`
 @media screen and (max-width: 700px) {
     height: 100vh;
