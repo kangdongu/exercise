@@ -1,30 +1,58 @@
-# React + TypeScript + Vite
+# Habit
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Habit은 운동습관을 만들어 주기위한 앱입니다.
 
-Currently, two official plugins are available:
+운동습관은 체력, 근력, 체지방같이 외적인 부분뿐만 아니라
+내가 하기로한 운동을 실천하면서 무기력함을 없애고 나에대한 신뢰, 성공습관, 자존감을 상승시켜주며 많은 사람들의 삶에 도움을 주기위한 앱입니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+(개인프로젝트)
 
-## Expanding the ESLint configuration
+## Habit 소개
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Habit은 운동습관을 만들어 주기위한 앱으로 뱃지, 도전과제, 개인챌린지, 그룹챌린지, 기록하기와 내 캐릭터의 성장으로 동기부여를 주며 손쉽게 운동을 기록할 수 있게 합니다.
 
-- Configure the top-level `parserOptions` property like this:
+개발자모드 Samsung Galaxy S20 Ultra에 최적화 되어있습니다.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+로그인, 닉네임설정, 성별선택
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+![1](https://github.com/kangdongu/exercise/assets/162076741/e73be311-a56a-4566-8308-9d51fbabc3c2)
+
+
+홈화면, 개인챌린지
+
+![2](https://github.com/kangdongu/exercise/assets/162076741/eb5711a9-7d5a-4e1c-8433-c8e48ede5c26)
+
+
+그룹챌린지
+
+![3](https://github.com/kangdongu/exercise/assets/162076741/479213f6-91f8-466f-963a-47813cdfbb6c)
+
+
+타이머, 뱃지, 도전과제
+
+![4](https://github.com/kangdongu/exercise/assets/162076741/814d159f-4177-4f8a-80a9-4401555417d2)
+
+
+기록
+
+![5](https://github.com/kangdongu/exercise/assets/162076741/f2d6607e-0a03-4785-bf7b-11e9adc060b5)
+
+
+소셜, 프로필
+
+![6](https://github.com/kangdongu/exercise/assets/162076741/1ec28212-7212-4cc2-9246-e910d3d5a7bc)
+
++추가할것
+
+반응형 및 전체적인 디자인 수정보완 및 운동정보, 그룹챌린지채팅방, 도전과제 뱃지, 프로필 부분에 캐릭터 추가 예정<br /> 현재 완성도(70%)
+
+## React + TypeScript + Vite + Firebase 
+
+React + TypeScript + Vite + Firebase를 사용하였고
+
+라이브러리 : styled-component, chart.js, fullcalender, date-fns, framer-motion, react-icons, react-datepicker를 활용하였습니다.
+
+
+
+
+
