@@ -52,12 +52,6 @@ React + TypeScript + Vite + Firebase를 사용하였고
 
 라이브러리 : styled-component, chart.js, fullcalender, date-fns, framer-motion, react-icons, react-datepicker를 활용하였습니다.
 
-## 초기기획
-
-![정보구조도](https://github.com/kangdongu/exercise/assets/162076741/5f23c5cf-1948-402a-9782-32646cbe28e9)
-
-![구조](https://github.com/kangdongu/exercise/assets/162076741/19c62779-6808-4f5f-9ec3-c3cbb542cbcc)
-
 
 
 
