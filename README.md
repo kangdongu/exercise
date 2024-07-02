@@ -1,4 +1,5 @@
 # Habit
+![Habit](https://github.com/kangdongu/exercise/assets/162076741/98f03caf-86a0-419e-bbab-aa9dad95807e)
 
 
 # React + TypeScript + Vite + Firebase 
