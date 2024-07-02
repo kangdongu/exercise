@@ -3439,7 +3439,7 @@ Content-Type: `+c.contentType+`\r
 `,hee=C.img`
     height:30px;
     margin-left:10px;
-`;function Lj(){const t=gl(),e=async()=>{try{const n=new vi;await H3(ve,n),t("/")}catch(n){console.error(n)}};return g.jsxs(dee,{onClick:e,children:[g.jsx(hee,{src:"/web_light_sq_na@1x.png"}),g.jsx("span",{children:"Google로 시작하기"})]})}const fee=C.div`
+`;function Lj(){const t=gl(),e=async()=>{try{const n=new vi;await H3(ve,n),t("/")}catch(n){console.error(n)}};return g.jsxs(dee,{onClick:e,children:[g.jsx(hee,{src:"/assets/web_light_sq_na@1x.png"}),g.jsx("span",{children:"Google로 시작하기"})]})}const fee=C.div`
 @media screen and (max-width: 700px) {
     height: 100vh;
     width:100vw;
@@ -3452,7 +3452,7 @@ background-color:#f3f1f1;
 flex-direction: column;
 padding: 50px 0px;
     `,pee=C.div`
-    width:90vw;
+    width:90%;
     margin: 0px auto;
     border-top: 0.2px solid #333333;
 `,gee=C.div`
