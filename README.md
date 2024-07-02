@@ -1,11 +1,13 @@
 # Habit
-![Habit](https://github.com/kangdongu/exercise/assets/162076741/98f03caf-86a0-419e-bbab-aa9dad95807e)
+![Habit](https://github.com/kangdongu/exercise/assets/162076741/b0a85213-7f34-4654-aacb-69eb5c4e55b7)
 
-Habit은 운동습관을 만들어 주기위한 앱입니다.
-운동습관은 체력, 근력, 체지방같이 외적인 부분뿐만 아니라
+
+Habit은 운동습관을 만들어 주기위한 앱입니다. <br />
+운동습관은 체력, 근력, 체지방같이 외적인 부분뿐만 아니라<br /> 
 내가 하기로한 운동을 실천하면서 무기력함을 없애고 나에대한 신뢰, 성공습관, 자존감을 상승시켜주며 많은 사람들의 삶에 도움을 주기위한 앱입니다.
 
-# React + TypeScript + Vite + Firebase 
+### React + TypeScript + Vite + Firebase 
+React + TypeScript + Vite + Firebase를 이용하였고 
 
 ## Expanding the ESLint configuration
 
