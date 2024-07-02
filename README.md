@@ -5,7 +5,11 @@ Habit은 운동습관을 만들어 주기위한 앱입니다.
 운동습관은 체력, 근력, 체지방같이 외적인 부분뿐만 아니라
 내가 하기로한 운동을 실천하면서 무기력함을 없애고 나에대한 신뢰, 성공습관, 자존감을 상승시켜주며 많은 사람들의 삶에 도움을 주기위한 앱입니다.
 
+(개인프로젝트)
+
 ## Habit 소개
+
+개발자모드 Samsung Galaxy S20 Ultra에 최적화 되어있습니다.
 
 로그인, 닉네임설정, 성별선택
 
@@ -31,11 +35,23 @@ Habit은 운동습관을 만들어 주기위한 앱입니다.
 
 ![6](https://github.com/kangdongu/exercise/assets/162076741/1ec28212-7212-4cc2-9246-e910d3d5a7bc)
 
-전체적인 디자인 수정보완 및 운동정보, 그룹챌린지채팅방, 도전과제 뱃지, 프로필 부분에 캐릭터 추가 예정<br /> 현재 완성도(70%)
++추가할것
+
+반응형 및 전체적인 디자인 수정보완 및 운동정보, 그룹챌린지채팅방, 도전과제 뱃지, 프로필 부분에 캐릭터 추가 예정<br /> 현재 완성도(70%)
 
 ### React + TypeScript + Vite + Firebase 
 
-React + TypeScript + Vite + Firebase를 사용하였고 <br />
-styled-component, chart.js, fullcalender, date-fns, framer-motion, react-icons, react-datepicker을 활용하였습니다.
+React + TypeScript + Vite + Firebase를 사용하였고
+
+라이브러리 : styled-component, chart.js, fullcalender, date-fns, framer-motion, react-icons, react-datepicker를 활용하였습니다.
+
+### 기획
+
+정보구조도
+
+![정보구조도](https://github.com/kangdongu/exercise/assets/162076741/5f23c5cf-1948-402a-9782-32646cbe28e9)
+
+![구조](https://github.com/kangdongu/exercise/assets/162076741/67428b9d-6907-4a92-94ed-4c0761d21cc6)
+
 
 
