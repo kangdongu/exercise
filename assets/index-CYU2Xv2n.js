@@ -3981,7 +3981,8 @@ margin-top:5px;
   }
 `,age=C.div`
     width: 100%;
-    height: 100vh;
+    height: 97vh;
+    overflow-y:scroll;
 `,lge=C.div`
     display:flex;
     width:89vw;
@@ -4663,6 +4664,7 @@ display:none;
     height:97vh;
     padding:15px;
     box-sizing:border-box;
+    overflow-y:scroll;
 `,cve=C.div`
     width:100%;
     display: flex;
