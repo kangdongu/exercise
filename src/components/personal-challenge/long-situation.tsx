@@ -359,9 +359,11 @@ const LongGoalSituation = () => {
                                         </WeekCount>
                                     ))}
                                 </WeekComplet>
-                                <WeekAchievedWrapper>
-                                    주 {challenge.주에몇일} 챌린지 : {countFailedOrSucceededChallenges(challenge.챌린지제목)}
-                                </WeekAchievedWrapper>
+                                {selectedTitle === "ing" ? (
+                                     <WeekAchievedWrapper>
+                                     주 {challenge.주에몇일} 챌린지 : {countFailedOrSucceededChallenges(challenge.챌린지제목)}
+                                 </WeekAchievedWrapper>
+                                ):null}
                             </WeekCompletAchievedWrapper>
                         </Situation>
                     )}

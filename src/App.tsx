@@ -15,8 +15,10 @@ import GenderChoice from './routes/gender-choice';
 import LoadingScreen from './components/loading-screen';
 import Sns from './routes/sns';
 
-
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+`;
 
 const GlobalStyles = createGlobalStyle`
   * {
