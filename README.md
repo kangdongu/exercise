@@ -13,6 +13,8 @@ Habit은 운동습관을 만들어 주기위한 앱으로 뱃지, 도전과제, 
 
 개발자모드 Samsung Galaxy S20 Ultra에 최적화 되어있습니다.
 
+## 스크린샷
+
 로그인, 닉네임설정, 성별선택
 
 ![1](https://github.com/kangdongu/exercise/assets/162076741/e73be311-a56a-4566-8308-9d51fbabc3c2)
