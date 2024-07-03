@@ -76,7 +76,7 @@ Habit의 궁극적인 목표는 사용자가 지속적으로 운동을 하여 �
 - **React**: 사용자 인터페이스를 구축하기 위해 사용된 라이브러리입니다. React의 컴포넌트 기반 아키텍처를 통해 재사용 가능한 UI 컴포넌트를 작성하였습니다.
 - **TypeScript**: 정적 타입을 지원하는 자바스크립트의 상위 집합 언어로, 코드의 안정성과 유지보수성을 높였습니다.
 - **Vite**: 빠르고 효율적인 개발 환경을 제공하는 빌드 도구로, 개발 속도를 크게 향상시켰습니다.
-- **Firebase**: Firebase Authentication을 통한 인증, Firestore를 이용한 데이터베이스 관리, Firebase Hosting을 통한 배포 등 다양한 기능을 활용하였습니다.
+- **Firebase**: Firebase Authentication을 통한 인증, Firestore를 이용한 데이터베이스 관리, Storage를 이용한 사진 업로드 등 다양한 기능을 활용하였습니다.
 
 ### 사용된 라이브러리
 
