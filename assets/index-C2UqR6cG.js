@@ -5629,6 +5629,7 @@ overflow-y:scroll;
 `,qO=C.div`
     width:80%;
     margin: 0 auto;
+    overflow-y:scroll;
 `,zl=C.select`
     
 `,ci=C.option`
@@ -5785,6 +5786,7 @@ font-weight:800;
   width:100%;
 }
   width: 70%;
+  overflow-y:sroll;
 `,LDe=C.div`
 
 `,tN=C.div`
