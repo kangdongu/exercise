@@ -61,6 +61,8 @@ const ViewImg = styled.img`
 const ViewWrapper = styled.div`
 @media screen and (max-width: 700px){
   width:100%;
+  height: 90vh;
+  overflow-y: scroll;
 }
   width: 70%;
   overflow-y:sroll;
@@ -104,6 +106,7 @@ const InteractionWrapper = styled.div`
 width: 300px;
     display: flex;
     gap:20px;
+    margin-bottom:30px;
     `;
 
 const LikeBtn = styled.div`

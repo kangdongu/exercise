@@ -7,10 +7,11 @@ const CommentContentWrapper = styled.div`
   width:100%;
   height:500px;
   overflow-y:scroll;
+      border-top: 1px solid lightgray;
 `;
 const CommentContnet = styled.div`
   width:100%;
-  height:100px;
+  height:80px;
   border-bottom:1px solid black;
 `;
 const UserInfo = styled.div`
@@ -22,6 +23,7 @@ width: 50px;
   height: 50px;
   border-radius: 50%;
   background-color: white;
+  border:0.1px solid lightgray;
   cursor: pointer;
   display: flex;
   justify-content: center;

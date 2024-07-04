@@ -12,7 +12,9 @@ import CommentRenderComponent from "../../sns_photo/comment-rander-component";
 
 
 const Wrapper = styled.div`
-
+    height: 90vh;
+    overflow-y: scroll;
+    width: 100%;
 `;
 const ImgWrapper = styled.div`
 

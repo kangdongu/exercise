@@ -23,10 +23,11 @@ const Wrapper = styled.div`
     grid-template-rows: 150px 150px 150px 150px;
     grid-column-gap: 20px;
     grid-row-gap: 30px;
-    height:100vh;
+    height:97vh;
     padding: 40px 3.5vw;
     overflow-y:scroll;
-    background: linear-gradient(to bottom, #f8f9fa, #e9ecef); 
+     background-color:#f3f1f1;
+    padding-bottom:0px;
 `;
 
 export default function Home() {

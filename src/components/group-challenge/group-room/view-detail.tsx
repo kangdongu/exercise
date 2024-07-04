@@ -2,7 +2,9 @@ import styled from "styled-components"
 
 
 const Wrapper = styled.div`
-
+    height: 90vh;
+    overflow-y: scroll;
+    width: 100%;
 `;
 const ImgWrapper = styled.div`
 

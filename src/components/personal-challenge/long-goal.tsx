@@ -7,7 +7,9 @@ import DateChoiceFuture from "../date-pick";
 import { FaHandsClapping } from "react-icons/fa6";
 
 const Wrapper = styled.div`
-
+    width: 100%;
+    height: 72.5vh;
+    overflow-y:scroll;
 `;
 const Title = styled.input`
     width:250px;
@@ -106,6 +108,8 @@ const Completion = styled.div`
     text-align: center;
     line-height: 35px;
     transform: translate(62vw, 40px);
+    color:white;
+    background-color:#D32F2F;
 `;
 const ModalWrapper = styled.div`
     position: fixed;

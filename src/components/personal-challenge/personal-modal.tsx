@@ -6,6 +6,9 @@ import TodayGoals from "./today-goal";
 import LongGoalSituation from "./long-situation";
 
 const Wrapper = styled.div`
+    width:100vw;
+    height:90vh;
+    overflow-y:scroll;
     padding-left:20px;
     box-sizing:border-box;
 `;

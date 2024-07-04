@@ -28,6 +28,8 @@ const ProfileImgWrapper = styled.div`
     width:60px;
     height:60px;
     border-radius:50%;
+    overflow:hidden;
+    border:0.1px solid lightgray;
 `;
 const ProfileImg = styled.img`
     width:100%;
