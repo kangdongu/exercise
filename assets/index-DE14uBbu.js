@@ -3869,7 +3869,7 @@ margin-top:5px;
     line-height: 35px;
     transform: translate(62vw, 40px);
     color:white;
-    background-color:#FF6F61;
+    background-color:#D32F2F;
 `,Bce=C.div`
     position: fixed;
     top: 0;
