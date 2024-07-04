@@ -5801,6 +5801,8 @@ font-weight:800;
 `,eN=C.div`
 @media screen and (max-width: 700px){
   width:100%;
+  height: 90vh;
+  overflow-y: scroll;
 }
   width: 70%;
   overflow-y:sroll;
@@ -5838,6 +5840,7 @@ font-weight:800;
 width: 300px;
     display: flex;
     gap:20px;
+    margin-bottom:30px;
     `,iN=C.div`
   cursor: pointer;
 `,sN=C.span`
