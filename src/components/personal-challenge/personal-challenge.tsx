@@ -8,9 +8,10 @@ const Wrapper = styled.div`
     gap: 5px;
     flex-direction: column;
     color:black;
-    background-color:#f8a9a9;
+    background-color:#FF6F61;
     position:relative;
     overflow:hidden;
+     background: linear-gradient(to bottom, #FF6F61, #D32F2F);
 `;
 const PersonalWrapper = styled.div`
    width:70%;
@@ -20,11 +21,11 @@ const PersonalWrapper = styled.div`
     margin-left:auto;
     z-index:10;
     gap:20px;
-    color:#990033;
+    color:white;
     span{
         font-size:14px;
         text-align:center;
-        color:#333333;
+        color:#FFF8E1;
     }
 `;
 
@@ -36,11 +37,11 @@ const PersonalChallenge: React.FC<PersonalProps> = ({ personalClick }) => {
 
     return (
         <Wrapper onClick={personalClick}>
-             <FaUser style={{ position:"absolute" ,left:"-30px",top:"20px", width: "100px",opacity:"0.8" , height: "100px",color:"white" }} />
+             <FaUser style={{ position:"absolute" ,left:"-30px",top:"20px", width: "100px",opacity:"0.8" , height: "100px",color:"E91E63" }} />
             
             <PersonalWrapper>
                
-                <div style={{ fontSize: "18px",fontWeight:"600" ,textAlign:"center",marginTop:"25px" }}>개인 챌린지</div>
+                <div style={{ fontSize: "20px",fontWeight:"600" ,textAlign:"center",marginTop:"25px" }}>개인 챌린지</div>
                 <span>혼자만의 습관을 새우고 완료해보세요</span>
             </PersonalWrapper>
         </Wrapper>

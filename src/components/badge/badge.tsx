@@ -8,9 +8,10 @@ const Wrapper = styled.div`
     gap: 5px;
     flex-direction: column;
     color:black;
-    background-color:#f8a9a9;
+    background-color:#FF6F61;
     position:relative;
     overflow:hidden;
+     background: linear-gradient(to bottom, #FF6F61, #D32F2F);
 `;
 const TimerWrapper = styled.div`
     width:70%;
@@ -20,11 +21,11 @@ const TimerWrapper = styled.div`
     margin-left:auto;
     z-index:10;
     gap:20px;
-    color:#990033;
+    color:white;
     span{
         font-size:14px;
         text-align:center;
-        color:#333333;
+        color:#FFF8E1;
     }
 `;
 interface badgeProps {
@@ -33,10 +34,10 @@ interface badgeProps {
 const Badge: React.FC<badgeProps> = ({ badgeClick }) => {
     return (
         <Wrapper onClick={badgeClick}>
-            <RiPoliceBadgeFill style={{ position:"absolute" ,left:"-30px",top:"20px", width: "100px",opacity:"0.8" , height: "100px",color:"#e6e322" }} />
+            <RiPoliceBadgeFill style={{ position:"absolute" ,left:"-30px",top:"20px", width: "100px",opacity:"0.8" , height: "100px",color:"#FFEB3B" }} />
             
             <TimerWrapper>
-                <div style={{fontSize:"18px", fontWeight:"600", textAlign:"center",marginTop:"25px"}}>뱃지 현황</div>
+                <div style={{fontSize:"20px", fontWeight:"600", textAlign:"center",marginTop:"25px"}}>뱃지 현황</div>
                 <span>운동 습관을 완료하고 뱃지를 획득해보세요</span>
             </TimerWrapper>
         </Wrapper>

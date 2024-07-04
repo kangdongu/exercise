@@ -156,14 +156,14 @@ const ViewWeekWrapper = styled.div`
     display:flex;
 `;
 const ViewContent = styled.div`
-    width:80%; 
+    width:90%; 
     height:70px;
     margin-top:10px;
     padding-left:5px;
 
 `;
 const ViewButton = styled.div`
-    width:20%;
+    width:10%;
     height:70px;
     line-height: 70px;
     text-align: center;

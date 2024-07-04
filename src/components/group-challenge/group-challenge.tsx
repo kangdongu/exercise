@@ -9,9 +9,10 @@ const Wrapper = styled.div`
     gap: 5px;
     flex-direction: column;
     color:black;
-    background-color:#f8a9a9;
+    background-color:#FF6F61;
     position:relative;
     overflow:hidden;
+     background: linear-gradient(to bottom, #FF6F61, #D32F2F);
 `;
 const GroupWrapper = styled.div`
    width:70%;
@@ -21,11 +22,11 @@ const GroupWrapper = styled.div`
     margin-left:auto;
     z-index:10;
     gap:20px;
-    color:#990033;
+    color:white;
     span{
         font-size:14px;
         text-align:center;
-        color:#333333;
+        color:#FFF8E1;
     }
 `;
 
@@ -35,9 +36,9 @@ interface GroupProps {
 const GroupChallenge: React.FC<GroupProps> = ({ GroupModal }) => {
     return (
         <Wrapper onClick={GroupModal}>
-            <FaUserGroup style={{ position: "absolute", left: "-30px", top: "20px", width: "100px", opacity: "0.8", height: "100px", color: "white" }} />
+            <FaUserGroup style={{ position: "absolute", left: "-30px", top: "20px", width: "100px", opacity: "0.8", height: "100px", color: "F48FB1" }} />
             <GroupWrapper>
-                <div style={{ fontSize: "18px", fontWeight: "600", textAlign: "center", marginTop: "25px" }}>그룹챌린지</div>
+                <div style={{ fontSize: "20px", fontWeight: "600", textAlign: "center", marginTop: "25px" }}>그룹챌린지</div>
                 <span>사람들과 함께 챌린지를 실천해보세요</span>
             </GroupWrapper>
         </Wrapper>

@@ -25,7 +25,8 @@ const Wrapper = styled.div`
     grid-row-gap: 30px;
     height:100vh;
     padding: 40px 3.5vw;
-    background-color:#f3f1f1;
+    overflow-y:scroll;
+    background: linear-gradient(to bottom, #f8f9fa, #e9ecef); 
 `;
 
 export default function Home() {

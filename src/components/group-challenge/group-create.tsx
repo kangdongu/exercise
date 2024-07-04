@@ -152,6 +152,7 @@ const PeopleCompleteWrapper = styled.div`
     display:flex;
     margin-top:20px;
     justify-content: space-around;
+    margin-bottom:30px;
 `;
 const CompleteButton = styled.div`
     width:100px;

@@ -25,7 +25,7 @@ export default function useBottomSheet() {
       touchY: 0,                                 
     },
     touchMove: {                             
-      prevTouchY: 0,                         
+      prevTouchY: 0,              
       movingDirection: "none",                   
     },
     isContentAreaTouched: false           

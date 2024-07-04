@@ -12,9 +12,10 @@ import { useChallenges } from "./group-context";
 
 const Wrapper = styled.div`
     width:100%;
-    height:97vh;
+    height:90vh;
     padding:15px;
     box-sizing:border-box;
+    overflow-y:scroll;
 `;
 const CreateButtonWrapper = styled.div`
     width:100%;
@@ -43,11 +44,11 @@ const ListWrapper = styled.div`
 `;
 const List = styled.div`
     width:100%;
-    height:65px;
+    height:60px;
     border:1px solid black;
     border-radius:5px;
     display:flex;
-    margin-top:10px;
+    margin-top:5px;
     padding: 0px 5px;
     box-sizing: border-box;
 `;

@@ -140,6 +140,7 @@ const ViewImg = styled.img`
 const ViewWrapper = styled.div`
     width:80%;
     margin: 0 auto;
+    overflow-y:scroll;
 `;
 const Select = styled.select`
     

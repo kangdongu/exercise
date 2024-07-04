@@ -37,14 +37,23 @@ const TextWrapper = styled.div`
     font-weight:800;
 `;
 const ContentWrapper = styled.div`
-    width:90%;
+@media screen and (max-width: 700px) {
+    height: 100vh;
+    width:90vw;
+   }
+    height:915px;
+    width:412px;
+    padding: 0px 5px;
     margin: 0 auto;
 `;
 const Size = styled.div`
+@media screen and (max-width: 700px) {
+       width:100%;
+   }
     position:absolute;
     bottom:50px;
     text-align:center;
-    width:100%;
+    width:412px;
 `;
 
 

@@ -18,7 +18,8 @@ const slide = keyframes`
 
 const Wrapper = styled.div`
     width: 100%;
-    height: 100vh;
+    height: 79vh;
+    overflow-y:scroll;
 `;
 const TitleWrapper = styled.div`
     display:flex;

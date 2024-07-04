@@ -48,11 +48,11 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   }
 
   if (!user) {
-    return <Navigate to="/exercise/login" />;
+    return <Navigate to="/login" />;
   }
 
   if (!isUserSetUp) {
-    return <Navigate to="/exercise/naming" />;
+    return <Navigate to="/naming" />;
   }
 
   return children;

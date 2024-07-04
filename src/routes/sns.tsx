@@ -63,6 +63,7 @@ const ViewWrapper = styled.div`
   width:100%;
 }
   width: 70%;
+  overflow-y:sroll;
 `;
 const OpenCommentWrapper = styled.div`
 
