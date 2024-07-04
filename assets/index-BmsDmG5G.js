@@ -4387,7 +4387,9 @@ width: 24.25%;
 height:400px;
 cursor: pointer;
 `,zy=({onClick:t,src:e,alt:n})=>g.jsx(Qme,{children:g.jsx(Kme,{onClick:t,src:e,alt:n})}),Xme=C.div`
-
+    height: 90vh;
+    overflow-y: scroll;
+    width: 100%;
 `,Zme=C.div`
 
 `,Jme=C.img`
@@ -4405,9 +4407,10 @@ cursor: pointer;
   width:100%;
   height:500px;
   overflow-y:scroll;
+      border-top: 1px solid lightgray;
 `,aye=C.div`
   width:100%;
-  height:100px;
+  height:80px;
   border-bottom:1px solid black;
 `,lye=C.div`
   display:flex;
@@ -4456,7 +4459,9 @@ width: 80px;
     text-align: center;
     margin-left: 86vw;
 `,Mb=({comments:t,selectedPhotoDetails:e,userProfilePicURL:n,currentUserUID:r,CommentDelete:i})=>g.jsx(oye,{children:t.map(s=>s.photoId===e.id&&g.jsxs(aye,{children:[g.jsxs(lye,{children:[n!==null?g.jsx(cye,{src:s.프로필사진,alt:"프로필 사진"}):g.jsx(uye,{htmlFor:"user-img",children:g.jsx("svg",{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24",fill:"currentColor",className:"w-6 h-6",children:g.jsx("path",{fillRule:"evenodd",d:"M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z",clipRule:"evenodd"})})}),g.jsxs(dye,{children:[g.jsx(hye,{children:s.유저닉네임}),g.jsx(fye,{children:s.댓글내용})]})]}),r===s.유저아이디&&g.jsx(pye,{onClick:()=>i(s.id),children:"삭제"})]},s.id))}),gye=C.div`
-
+    height: 90vh;
+    overflow-y: scroll;
+    width: 100%;
 `,mye=C.div`
 
 `,yye=C.img`
