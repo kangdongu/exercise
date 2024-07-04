@@ -45,7 +45,7 @@ Habit의 궁극적인 목표는 사용자가 지속적으로 운동을 하여 �
 
 홈화면, 개인챌린지
 
-![2](https://github.com/kangdongu/exercise/assets/162076741/eb5711a9-7d5a-4e1c-8433-c8e48ede5c26)
+![2-2](https://github.com/kangdongu/exercise/assets/162076741/984969ae-af57-45d4-96f5-8ffbbf6a0052)
 
 
 그룹챌린지
