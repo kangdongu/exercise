@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { FaCheck } from "react-icons/fa";
 import { FaHandsClapping } from "react-icons/fa6";
 
+
 const Wrapper = styled.div`
     width:100vw;
     height:80vh;
@@ -87,6 +88,45 @@ const ModalButton = styled.button`
     border-radius: 5px;
     cursor: pointer;
 `;
+const GuideWrapper = styled.div`
+    position:fixed;
+    top:0px;
+    left:0px;
+    width:100vw;
+    height:100vh;
+    background-color:rgba(0,0,0,0.5);
+`;
+const Box = styled.div`
+    width: 81px;
+    height: 45px;
+    margin-top: 55px;
+    border: 5px solid red;
+    margin-left: 110px;
+`;
+const GuideTextWrapper = styled.div`
+    width:50vw;
+    height:185px;
+    margin: 10px auto;
+    font-size:20px;
+    background-color:white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4vh;
+    border-radius:10px;
+    padding: 10px 10px;
+    span{
+        font-weight:600;
+    }
+`;
+const GuideButton = styled.div`
+    width:100px;
+    height:40px;
+    background-color:#990033;
+    color:white;
+    line-height:40px;
+    text-align:center;
+`;
 
 interface Goal {
     id: string;
@@ -99,13 +139,14 @@ const TodayGoals = () => {
     const [goals, setGoals] = useState<Goal[]>([]);
     const [completedCount, setCompletedCount] = useState<number>(0)
     const [showAchievements, setShowAchievements] = useState(false);
+    const [guide,setGuide] = useState(false)
 
     useEffect(() => {
         const fetchGoals = async () => {
             try {
                 const user = auth.currentUser;
                 if (!user) return;
-
+                
                 const date = format(new Date(), 'yyyy-MM-dd');
                 const personalGoalsQuery = query(collection(db, 'personalgoals'), where('유저아이디', '==', user.uid), where('날짜', '==', date));
                 const longGoalsQuery = query(collection(db, 'personallonggoals'), where('유저아이디', '==', user.uid), where('날짜', '==', date));
@@ -144,6 +185,36 @@ const TodayGoals = () => {
     const handleModalConfirm = () => {
         setShowAchievements(false)
     }
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const currentUser = auth.currentUser;
+            if (!currentUser) return;
+
+            try {
+                const usersCollectionRef = collection(db, "user");
+                const querySnapshot = await getDocs(
+                    query(usersCollectionRef, where("유저아이디", "==", currentUser.uid))
+                );
+
+                if (!querySnapshot.empty) {
+                    const userDoc = querySnapshot.docs[0];
+                    const guide = userDoc.data().개인챌린지가이드;
+
+                    if (guide === false) {
+                        setGuide(true);
+                        await updateDoc(userDoc.ref, { 개인챌린지가이드: true });
+                    }
+                } else {
+                    console.error("유저 데이터를 찾지 못했습니다.");
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchUser();
+    }, []);
 
     const toggleCompletion = async (id: string, currentStatus: string) => {
         try {
@@ -190,6 +261,10 @@ const TodayGoals = () => {
         }
     };
 
+    const GuideClick = () => {
+        setGuide(false);
+    }
+
     return (
         <Wrapper>
             {goals.map((goal, index) => (
@@ -214,6 +289,15 @@ const TodayGoals = () => {
                     </ModalContent>
                 </ModalWrapper>
             )}
+            {guide ? (
+                 <GuideWrapper>
+                 <Box></Box>
+                 <GuideTextWrapper>
+                     <span>목표설정을 눌러 개인목표를 생성하여 보세요.</span>
+                 <GuideButton onClick={GuideClick}>확인</GuideButton>
+                 </GuideTextWrapper>
+             </GuideWrapper>
+            ):null}
         </Wrapper>
     );
 }

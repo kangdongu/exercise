@@ -6,6 +6,7 @@ import { db } from "../../../firebase";
 import { LuCrown } from "react-icons/lu";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { FaLink } from "react-icons/fa6";
+import { FaUserAlt } from "react-icons/fa";
 
 
 const Wrapper = styled.div`
@@ -116,21 +117,30 @@ const GroupUser: React.FC<GroupUser> = ({ challenge }) => {
     fetchUser();
   }, [challenge.유저아이디, challenge.방장아이디]);
 
+  const alertClick = () => {
+    alert("추가예정입니다.")
+  }
+
   return (
     <Wrapper>
       <InvitationTalkRoom>
-        <LinkWrapper>
+        <LinkWrapper onClick={alertClick}>
           <RiKakaoTalkFill style={{ marginTop: "10px", width: "30px", height: "30px" }} />
         </LinkWrapper>
-        <LinkWrapper>
+        <LinkWrapper onClick={alertClick}>
           <FaLink style={{ marginTop: "10px", width: "30px", height: "30px" }} />
         </LinkWrapper>
-        <TalkRoom>채팅방</TalkRoom>
+        <TalkRoom onClick={alertClick}>채팅방</TalkRoom>
       </InvitationTalkRoom>
       <RenderUserWrapper>
         <GroupUserWrapper style={{ paddingRight: "10px" }}>
           <ProfileImgWrapper>
-            <ProfileImg src={hostUser?.프로필사진} />
+            {hostUser?.프로필사진 === "" ? (
+             <FaUserAlt />
+            ):
+              <ProfileImg src={hostUser?.프로필사진} />
+            }
+            
           </ProfileImgWrapper>
           <ProfileNickname>{hostUser?.닉네임}</ProfileNickname>
           <LuCrown style={{ marginLeft: "auto ", width: "30px", height: "30px", color: "#FFC81E" }} />
@@ -138,7 +148,11 @@ const GroupUser: React.FC<GroupUser> = ({ challenge }) => {
         {groupUser.map((user) => (
           <GroupUserWrapper key={user.id}>
             <ProfileImgWrapper>
+            {user.프로필사진 === "" ? (
+             <FaUserAlt style={{width:"45px", height:"45px", marginTop:"15px", marginLeft:"7.5px", color:"gray"}} />
+            ):
               <ProfileImg src={user.프로필사진} />
+            }
             </ProfileImgWrapper>
             <ProfileNickname>{user.닉네임}</ProfileNickname>
           </GroupUserWrapper>

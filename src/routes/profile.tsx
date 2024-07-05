@@ -6,7 +6,7 @@ import { updateProfile } from "firebase/auth";
 import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
 import WeekDates from "../components/week-records";
 import { format } from "date-fns";
-import { FaArrowLeftLong } from "react-icons/fa6";
+import { FaArrowUp } from "react-icons/fa";
 
 
 const Wrapper = styled.div`
@@ -114,7 +114,7 @@ const InformationWrapper = styled.div`
 const Information = styled.div`
   width:100vw;
   padding: 5px 5px;
-  height:80px;
+  height:100vh;
 `;
 const InformationPhoto = styled.div`
   width:80px;
@@ -125,11 +125,13 @@ const InformationPhoto = styled.div`
 const InformationText = styled.div`
   display: flex;
     width: 250px;
-    margin-left: 90px;
-    font-size:20px;
+    font-size:18px;
     font-weight:600;
     gap: 10px;
-    color:white;
+    background-color:white;
+    padding: 10px 10px;
+    border-radius:10px;
+    flex-direction: column;
 `;
 const Complete = styled.div`
     width: 100px;
@@ -139,7 +141,7 @@ const Complete = styled.div`
     font-size: 20px;
     color: white;
     line-height: 40px;
-    margin: 40px auto;
+    margin: 5px auto;
 `;
 
 
@@ -309,13 +311,12 @@ export default function Profile() {
       {information ? (
         <InformationWrapper>
         <Information>
-          <InformationPhoto>
+          <InformationPhoto />
+          <FaArrowUp style={{width:"40px", height:"40px", color:"white", marginLeft:"20px"}} />
             <InformationText>
-              <FaArrowLeftLong style={{width:"40px", height:"40px", color:"white"}} />
               <div>해당 부분을 클릭하면 프로필사진을 설정할 수 있습니다.</div>
+              <Complete onClick={() => setInformation(false)}>확인</Complete>
             </InformationText>
-          </InformationPhoto>
-          <Complete onClick={() => setInformation(false)}>확인</Complete>
         </Information>
       </InformationWrapper>
       ):null}

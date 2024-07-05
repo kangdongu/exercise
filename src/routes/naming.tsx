@@ -64,6 +64,8 @@ export default function Naming() {
         날짜: Date.now(),
         프로필안내:false,
         개인챌린지가이드:false,
+        프로필사진:"",
+        그룹챌린지가이드:false,
       });
       navigate("/gender");
     } catch (error) {

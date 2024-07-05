@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import DateChoice from "../date-picker";
 import { useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
 import { format } from "date-fns";
 import { auth, db } from "../../firebase";
+import DateChoiceToday from "../date-picker-today";
 
 const Wrapper = styled.div``;
 const GoalPlus = styled.div`
@@ -98,25 +98,30 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
     };
 
     const completClick = async () => {
-        try {
-            const user = auth.currentUser;
-            const recordsRef = collection(db, 'personalgoals');
-            const date = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
-            const promises = goals.map((goal) =>
-                addDoc(recordsRef, {
-                    챌린지내용: goal.memo,
-                    유저아이디: user?.uid,
-                    날짜: date,
-                    완료여부: '미완',
-                    기한선택: '일일챌린지',
-                })
-            );
-            await Promise.all(promises);
-            complet();
-        } catch (error) {
-            console.error(error);
-        }
+        if (goals.every(goal => goal.memo.trim() !== "")) {
+            try {
+                const user = auth.currentUser;
+                const recordsRef = collection(db, 'personalgoals');
+                const date = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
+                const promises = goals.map((goal) =>
+                    addDoc(recordsRef, {
+                        챌린지내용: goal.memo,
+                        유저아이디: user?.uid,
+                        날짜: date,
+                        완료여부: '미완',
+                        기한선택: '일일챌린지',
+                    })
+                );
+                await Promise.all(promises);
+                complet();
+            } catch (error) {
+                console.error(error);
+            }
+        }else if(goals.some(goal => goal.memo.trim() === ""))(
+            alert("목표의 내용을 작성해주세요")
+        )
     };
+
 
     const handleQuickAdd = (memo: string) => {
         addGoal(memo);
@@ -124,8 +129,8 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
 
     return (
         <Wrapper>
-            <span style={{border:"0.3px solid lightgray"}}><DateChoice onDateChange={handleDateChange} /></span>
-            <GoalsTitle>챌린지 목표를 설정해주세요</GoalsTitle>
+            <span style={{ border: "0.3px solid lightgray" }}><DateChoiceToday onDateChange={handleDateChange} /></span>
+            <GoalsTitle>챌린지 목표를 설정해주세요 *</GoalsTitle>
             <GoalPlus onClick={() => addGoal()}>목표 추가<span>+</span></GoalPlus>
             <QuickWrapper>
                 <QuickList onClick={() => handleQuickAdd("헬스장가기")}>헬스장가기</QuickList>

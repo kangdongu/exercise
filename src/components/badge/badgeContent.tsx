@@ -48,8 +48,10 @@ const BadgeHeader = styled.div`
     margin-top:5px;
 `;
 const BadgeText = styled.div`
-    font-size:18px;
+    font-size:16px;
     padding:6px 3px;
+    display: flex;
+    align-items: center;
 `;
 const BadgeImgWrapper = styled.div`
     width:60px;

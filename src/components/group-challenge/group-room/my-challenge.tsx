@@ -47,7 +47,7 @@ const MyChallenge: React.FC<MyChallengeProps> = ({ challenge, photoMyData }) => 
     return (
         <MyChallengeWrapper>
             <WeekWrapper>
-                <h4 style={{marginBottom:"10px"}}>주간 챌린지 근황</h4>
+                <h4 style={{marginBottom:"10px"}}>주간 인증 현황</h4>
                 <WeekDataWrapper>
                     {getWeekDates().map(date => (
                         <Week key={date}>

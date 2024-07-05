@@ -54,6 +54,8 @@ const DetailWrapper = styled.div`
     height:70px;
     background-color:#efebeb;
     padding:10px;
+    display: flex;
+    align-items: center;
 `;
 
 

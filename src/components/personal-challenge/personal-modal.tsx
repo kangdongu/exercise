@@ -48,7 +48,7 @@ const PersonalContent = () => {
             <MenuWrapper>
                 <Menu selected={selectedMenu === 'goal'} onClick={() => setSelectedMenu('goal')}>오늘의 목표</Menu>
                 <Menu selected={selectedMenu === 'goalsetting'} onClick={() => setSelectedMenu('goalsetting')}>목표설정</Menu>
-                <Menu selected={selectedMenu === 'longgoal'} onClick={() => setSelectedMenu('longgoal')}>장기챌린지</Menu>
+                <Menu selected={selectedMenu === 'longgoal'} onClick={() => setSelectedMenu('longgoal')}>장기챌린지현황</Menu>
             </MenuWrapper>
             {selectedMenu === 'goal' && (
                 <GoalWrapper>

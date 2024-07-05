@@ -304,7 +304,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
     }, [currentUser]);
 
     const createRoom = async () => {
-        if (password === rePassword && title !== "" && contentText !== "") {
+        if (password === rePassword && title !== "" && contentText !== "" && selectedDays.length !== 0) {
             const user = auth.currentUser;
             const recordsRef = collection(db, "groupchallengeroom");
             const startDate = new Date();
@@ -338,6 +338,16 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
             }
         } else if (password !== rePassword) {
             alert("비밀번호가 다릅니다");
+        }else if (title === "" && contentText === "" && selectedDays.length == 0){
+            alert("챌린지 제목과 내용을 작성해주시고 요일을 선택해주세요")
+        }else if (title === "" && contentText == ""){
+            alert("챌린지 제목과 내용을 작성해주세요")
+        }else if (title === "" && selectedDays.length == 0){
+            alert("챌린지 제목을 작성해주시고 요일을 선택해주세요")
+        }else if (contentText === "" && selectedDays.length == 0){
+            alert("챌린지 내용을 작성해주시고 요일을 선택해주세요")
+        }else if (selectedDays.length == 0){
+            alert("요일을 선택해주세요")
         }
     };
     
@@ -351,13 +361,27 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
             </Back>
             <h3>챌린지 그룹방을 생성해주세요</h3>
             <TitleWrapper>
-                <TitleTitle>챌린지 제목을 적어주세요</TitleTitle>
+                <TitleTitle>챌린지 제목을 적어주세요 *</TitleTitle>
                 <Title placeholder="챌린지 제목 입력" onChange={TitleChange} value={title} type="text" name="title" />
             </TitleWrapper>
             <ContentWrapper>
-                <ContentTitle>챌린지 내용을 입력해주세요</ContentTitle>
+                <ContentTitle>챌린지 내용을 입력해주세요 *</ContentTitle>
                 <ContentText placeholder="챌린지 내용 입력" onChange={contentChange} value={contentText} name="content_text" />
             </ContentWrapper>
+            <DaysChoiceWrapper>
+                <DaysChoiceTitle>매주 진행할 요일을 선택해주세요 *<span> (복수선택가능)</span></DaysChoiceTitle>
+                <DaysChoiceListWrapper>
+                    {["월", "화", "수", "목", "금", "토", "일"].map((day) => (
+                        <DaysChoiceList
+                            key={day}
+                            selected={selectedDays.includes(day)}
+                            onClick={() => handleDayClick(day)}
+                        >
+                            {day}
+                        </DaysChoiceList>
+                    ))}
+                </DaysChoiceListWrapper>
+            </DaysChoiceWrapper>
             <WeekWrapper>
                 <WeekTitle>주에 몇일</WeekTitle>
                 <WeekListWrapper>
@@ -372,22 +396,8 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                     ))}
                 </WeekListWrapper>
             </WeekWrapper>
-            <DaysChoiceWrapper>
-                <DaysChoiceTitle>매주 진행할 요일을 선택해주세요<span> (복수선택가능)</span></DaysChoiceTitle>
-                <DaysChoiceListWrapper>
-                    {["월", "화", "수", "목", "금", "토", "일"].map((day) => (
-                        <DaysChoiceList
-                            key={day}
-                            selected={selectedDays.includes(day)}
-                            onClick={() => handleDayClick(day)}
-                        >
-                            {day}
-                        </DaysChoiceList>
-                    ))}
-                </DaysChoiceListWrapper>
-            </DaysChoiceWrapper>
             <DateChoiceWrapper>
-                <DateChoiceTitle>종료기간설정</DateChoiceTitle>
+                <DateChoiceTitle>종료기간설정 *</DateChoiceTitle>
                 <DateChoiceFuture onDateChange={EndDateChange} /> 까지
             </DateChoiceWrapper>
             <SecretWrapper>

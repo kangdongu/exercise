@@ -21,9 +21,7 @@ const Title = styled.input`
 const DateWrapper = styled.div`
     margin-bottom:25px;
 `;
-const DateTitle = styled.h5`
-    font-size:14px;
-    font-weight:500;
+const DateTitle = styled.h4`
     margin-bottom:10px;
 `;
 const WeekWrapper = styled.div`
@@ -35,8 +33,8 @@ display: flex;
 gap:10px;
 margin-top:5px;
 `;
-const WeekTitle = styled.span`
-    font-size:14px;
+const WeekTitle = styled.h4`
+    margin-bottom:10px;
 `;
 const WeekList = styled.div<{ selected: boolean }>`
     width:45px;
@@ -182,7 +180,7 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
     }
 
     const completClick = async () => {
-        if (title !== "" && goals.length !== 0) {
+        if (title !== "" && goals.length !== 0 && goals.every(goal => goal.memo.trim() !== "")) {
             try {
                 const user = auth.currentUser;
                 const recordsRef = collection(db, 'personallonggoals');
@@ -238,12 +236,14 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
                 console.error(error);
             }
         } else {
-            if (title === "" && goals.length == 0) {
-                alert("제목을 입력하고 목표를 추가해주세요")
+            if (title === "" && goals.length == 0 && selectedWeek === "") {
+                alert("제목과 주에 몇일을 입력하고 목표를 추가해주세요")
             } else if (title === "") {
                 alert("제목을 입력해주세요")
             } else if (goals.length == 0) {
                 alert("목표를 추가해주세요")
+            }else if (goals.some(goal => goal.memo.trim() === "")){
+                alert("목표의 내용을 입력해주세요")
             }
 
         }
@@ -262,13 +262,14 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
 
     return (
         <Wrapper>
+            <h4 style={{marginTop:"5px", marginBottom:"5px"}}>장기 챌린지 제목 *</h4>
             <Title onChange={TitleChange} type="text" value={title} name="title" placeholder="챌린지 제목을 적어주세요"></Title>
             <DateWrapper>
                 <DateTitle>종료날짜를 입력해주세요</DateTitle>
                 <span style={{ border: "0.3px solid lightgray" }}><DateChoiceFuture onDateChange={EndDateChange} /></span> 까지
             </DateWrapper>
             <WeekWrapper>
-                <WeekTitle>주에 몇일</WeekTitle>
+                <WeekTitle>주에 몇일 *</WeekTitle>
                 <WeekListWrapper>
                     <WeekList selected={selectedWeek === '1일'} onClick={() => setSelectedWeek('1일')}>1일</WeekList>
                     <WeekList selected={selectedWeek === '2일'} onClick={() => setSelectedWeek('2일')}>2일</WeekList>
@@ -279,7 +280,7 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
                     <WeekList selected={selectedWeek === '7일'} onClick={() => setSelectedWeek('7일')}>7일</WeekList>
                 </WeekListWrapper>
             </WeekWrapper>
-            <GoalsTitle>챌린지 목표를 설정해주세요</GoalsTitle>
+            <GoalsTitle>챌린지 목표를 설정해주세요 *</GoalsTitle>
             <GoalPlus onClick={() => addGoal()}>목표추가+</GoalPlus>
             <QuickWrapper>
                 <QuickList onClick={() => handleQuickAdd("헬스장가기")}>헬스장가기</QuickList>

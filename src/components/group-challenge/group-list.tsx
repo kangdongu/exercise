@@ -5,10 +5,11 @@ import GroupGlasses from "./group-glasses";
 import { IoSearch } from "react-icons/io5";
 import { CiLock } from "react-icons/ci";
 import { auth, db } from "../../firebase";
-import { arrayUnion, collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
+import { arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { User, onAuthStateChanged } from "firebase/auth";
 import JoinedRoom from "./joined-room";
 import { useChallenges } from "./group-context";
+import { FaArrowUp } from "react-icons/fa";
 
 const Wrapper = styled.div`
     width:100%;
@@ -123,6 +124,128 @@ const PasswordButton = styled.div`
     background-color:lightblue;
     margin-top:10px;
 `;
+const GuideBackground = styled.div`
+    width:100vw;
+    height:100vh;
+    position:fixed;
+    top:0px;
+    left:0px;
+    background-color:rgba(0,0,0,0.5);
+`;
+const SelectBox = styled.div`
+    margin-left: 5px;
+    border: 5px solid red;
+    width: 130px;
+    height: 40px;
+`;
+const SelectText = styled.div`
+    background-color:white;
+    width:50vw;
+    margin-left:10px;
+    border-radius:10px;
+    padding: 10px 10px;
+    font-size:18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+`;
+const GuideButton = styled.div`
+    width: 100px;
+    height: 40px;
+    background-color: #990033;
+    text-align:center;
+    line-height:40px;
+    color:white;
+`;
+const SelectGuide = styled.div`
+    margin-top:146px;
+`;
+const CreateGuide = styled.div`
+    margin-top:115px;
+`;
+const CreateBox = styled.div`
+    width:130px;
+    height:40px;
+    border:5px solid red;
+    margin-left:calc(100vw - 135px);
+`;
+const CreateText = styled.div`
+    background-color:white;
+    width:50vw;
+    margin-left:calc(100vw - 53vw);
+    border-radius:10px;
+    padding: 10px 10px;
+    font-size:18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+`;
+const GuideRoom = styled.div`
+    width:95vw;
+    height:80px;
+    margin: 0 auto;
+    background-color:white;
+    border-radius:10px;
+    padding:10px 5px;
+`;
+const GuideList = styled.div`
+     width:100%;
+    height:60px;
+    border:1px solid black;
+    border-radius:5px;
+    display:flex;
+    margin-top:5px;
+    padding:0px 5px;
+    box-sizing: border-box;
+    align-items: center;
+`;
+const GlassGuide = styled.div`
+    transform: translateY(180px);
+`;
+const GlassBox = styled.div`
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    border: 5px solid red;
+    transform: translate(124px, -57px);
+`;
+const GlassText = styled.div`
+     background-color:white;
+    width:50vw;
+    margin-left:50px;
+    margin-top:-30px;
+    border-radius:10px;
+    padding: 10px 10px;
+    font-size:18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+`;
+const JoinGuide = styled.div`
+    transform: translateY(180px);
+`;
+const JoinBox = styled.div`
+    width:100px;
+    height:50px;
+    border:5px solid red;
+    transform: translate(307px, -47px);
+`;
+const JoinText = styled.div`
+    background-color: white;
+    width: 50vw;
+    margin-left: 187px;
+    margin-top: -32px;
+    border-radius: 10px;
+    padding: 10px 10px;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+`;
 
 interface Challenge {
     id: string;
@@ -150,9 +273,11 @@ const GroupList = () => {
     const [join, setJoin] = useState(false)
     const [joinPasswordModal, setJoinPasswordModal] = useState(false)
     const [passwordCheck, setPasswordCheck] = useState("")
-
-
-
+    const [guideStart, setGuideStart] = useState(false);
+    const [guide1, setGuide1] = useState(false)
+    const [guide2, setGuide2] = useState(false)
+    const [guide3, setGuide3] = useState(false)
+    const [guide4, setGuide4] = useState(false)
 
     const createClick = () => {
         setCreate(true)
@@ -284,6 +409,53 @@ const GroupList = () => {
         }
     }
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            const currentUser = auth.currentUser;
+            if (!currentUser) return;
+
+            try {
+                const usersCollectionRef = collection(db, "user");
+                const querySnapshot = await getDocs(
+                    query(usersCollectionRef, where("유저아이디", "==", currentUser.uid))
+                );
+
+                if (!querySnapshot.empty) {
+                    const userDoc = querySnapshot.docs[0];
+                    const guide = userDoc.data().그룹챌린지가이드;
+
+                    if (guide === false) {
+                        setGuideStart(true);
+                        setGuide1(true)
+                        await updateDoc(userDoc.ref, { 그룹챌린지가이드: true });
+                    }
+                } else {
+                    console.error("유저 데이터를 찾지 못했습니다.");
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchUser();
+    }, []);
+
+    const guide1Clcik = () => {
+        setGuide1(false)
+        setGuide2(true)
+    }
+    const guide2Clcik = () => {
+        setGuide2(false)
+        setGuide3(true)
+    }
+    const guide3Clcik = () => {
+        setGuide3(false)
+        setGuide4(true)
+    }
+    const guide4Clcik = () => {
+        setGuide4(false)
+        setGuideStart(false)
+    }
 
     return (
         <Wrapper>
@@ -331,6 +503,80 @@ const GroupList = () => {
                     </PasswordWrapper>
                 </PasswordBack>
             )}
+
+            {guideStart ? (
+                <GuideBackground>
+                    {guide1 ? (
+                        <SelectGuide>
+                            <SelectBox />
+                            <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginLeft: "20px", marginTop: "5px" }} />
+                            <SelectText>
+                                <div>이 부분을 클릭하면 전체그룹방리스트와 가입되어있는 그룹방 리스트를 선택하여 볼 수 있습니다.</div>
+                                <GuideButton onClick={guide1Clcik}>다음</GuideButton>
+                            </SelectText>
+                        </SelectGuide>
+                    ) : null}
+                    {guide2 ? (
+                        <CreateGuide>
+                            <CreateBox />
+                            <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginLeft: "calc(100vw - 100px)", marginTop: "5px" }} />
+                            <CreateText>
+                                <div>챌린지 생성을 클릭하면 새로운 그룹챌린지방을 만들 수 있습니다.</div>
+                                <GuideButton onClick={guide2Clcik}>다음</GuideButton>
+                            </CreateText>
+                        </CreateGuide>
+                    ) : null}
+                    {guide3 ? (
+                        <GlassGuide>
+                            <GuideRoom>
+                                <GuideList>
+                                    <ListTitle>주4일 운동하기</ListTitle>
+                                    <span style={{ marginLeft: "5px" }}>
+                                        <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px" }} />
+                                    </span>
+                                    <PeopleJoinWrapper>
+                                        <PeopleWrapper>5/10</PeopleWrapper>
+                                        <JoinButton>
+                                            인증
+                                        </JoinButton>
+                                    </PeopleJoinWrapper>
+                                </GuideList>
+                            </GuideRoom>
+                            <GlassBox />
+                            <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginLeft: "20px", marginTop: "5px", transform: "translate(110px, -47px)" }} />
+                            <GlassText>
+                                <div>돋보기를 눌러 그룹방의 상세정보를 확인해보세요</div>
+                                <GuideButton onClick={guide3Clcik}>다음</GuideButton>
+                            </GlassText>
+                        </GlassGuide>
+                    ) : null}
+                    {guide4 ? (
+                        <JoinGuide>
+                            <GuideRoom>
+                                <GuideList>
+                                    <ListTitle>주4일 운동하기</ListTitle>
+                                    <span style={{ marginLeft: "5px" }}>
+                                        <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px" }} />
+                                    </span>
+                                    <PeopleJoinWrapper>
+                                        <PeopleWrapper>5/10</PeopleWrapper>
+                                        <JoinButton>
+                                            인증
+                                        </JoinButton>
+                                    </PeopleJoinWrapper>
+                                </GuideList>
+                            </GuideRoom>
+                            <JoinBox />
+                            <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginTop: "5px", transform: "translate(0px, -47px)", marginLeft: "calc(100vw - 84px)" }} />
+
+                            <JoinText>
+                                <div>가입버튼을 눌러 가입하고 인증버튼을 눌러 인증해보세요</div>
+                                <GuideButton onClick={guide4Clcik}>완료</GuideButton>
+                            </JoinText>
+                        </JoinGuide>
+                    ) : null}
+                </GuideBackground>
+            ) : null}
         </Wrapper>
     );
 };
