@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
 import { format } from "date-fns";
 import { auth, db } from "../../firebase";
 import DateChoiceToday from "../date-picker-today";
+import { FaHandsClapping } from "react-icons/fa6";
 
 const Wrapper = styled.div``;
 const GoalPlus = styled.div`
@@ -67,12 +68,40 @@ const Completion = styled.div`
     line-height: 35px;
     transform: translate(62vw, 40px);
 `;
+const ModalWrapper = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+const ModalContent = styled.div`
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+`;
+
+const ModalButton = styled.button`
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #FF3232;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+`;
 
 interface DailyProps {
     complet: () => void;
 }
 
 const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
+    const [showAchievements, setShowAchievements] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
     const [goals, setGoals] = useState<{ memo: string }[]>([{ memo: "" }]);
 
@@ -97,6 +126,11 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
         setGoals(newGoals);
     };
 
+    const handleModalConfirm = () => {
+        setShowAchievements(false)
+        complet()
+    }
+
     const completClick = async () => {
         if (goals.every(goal => goal.memo.trim() !== "")) {
             try {
@@ -113,7 +147,23 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
                     })
                 );
                 await Promise.all(promises);
-                complet();
+
+                const achievementsRef = collection(db, 'achievements');
+                const q = query(achievementsRef);
+                const querySnapshot = await getDocs(q);
+
+                const achievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 생성하기");
+
+                if (achievementDoc && !achievementDoc.data().유저아이디.includes(user?.uid)) {
+                    const achievementRef = doc(db, 'achievements', achievementDoc.id);
+                    await updateDoc(achievementRef, {
+                        유저아이디: [...achievementDoc.data().유저아이디, user?.uid]
+                    });
+                    setShowAchievements(true);
+                } else {
+                    alert("개인챌린지를 성공적으로 생성하였습니다.")
+                    complet();
+                }
             } catch (error) {
                 console.error(error);
             }
@@ -146,6 +196,16 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
                 </GoalList>
             ))}
             <Completion onClick={completClick}>완료</Completion>
+            {showAchievements && (
+                <ModalWrapper>
+                    <ModalContent>
+                        <div><FaHandsClapping style={{ color: "FBCEB1", width: "50px", height: "50px" }} /></div>
+                        <h2>도전과제 달성!</h2>
+                        <p>개인 챌린지 생성 도전과제를 완료했습니다.</p>
+                        <ModalButton onClick={handleModalConfirm}>확인</ModalButton>
+                    </ModalContent>
+                </ModalWrapper>
+            )}
         </Wrapper>
     );
 };

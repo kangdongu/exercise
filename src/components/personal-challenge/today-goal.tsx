@@ -99,22 +99,22 @@ const GuideWrapper = styled.div`
 const Box = styled.div`
     width: 81px;
     height: 45px;
-    margin-top: 55px;
+    margin-top: -28px;
+    margin-left: -8px;
     border: 5px solid red;
-    margin-left: 110px;
 `;
 const GuideTextWrapper = styled.div`
     width:50vw;
-    height:185px;
     margin: 10px auto;
-    font-size:20px;
+    font-size:18px;
     background-color:white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4vh;
+    gap: 20px;
     border-radius:10px;
     padding: 10px 10px;
+    transform: translate(0px, 90px);
     span{
         font-weight:600;
     }
@@ -127,26 +127,40 @@ const GuideButton = styled.div`
     line-height:40px;
     text-align:center;
 `;
+const GuideMenu = styled.div`
+    width:90vw;
+    height:30px;
+    background-color:white;
+    border-radius:5px;
+    margin: 0 auto;
+    display:flex;
+    gap:15px;
+    transform: translate(0px, 65px);
+
+`;
+const GuideMenuList = styled.div`
+
+`;
 
 interface Goal {
     id: string;
     챌린지내용: string;
     완료여부: string;
-    기한선택:string;
+    기한선택: string;
 }
 
 const TodayGoals = () => {
     const [goals, setGoals] = useState<Goal[]>([]);
     const [completedCount, setCompletedCount] = useState<number>(0)
     const [showAchievements, setShowAchievements] = useState(false);
-    const [guide,setGuide] = useState(false)
+    const [guide, setGuide] = useState(false)
 
     useEffect(() => {
         const fetchGoals = async () => {
             try {
                 const user = auth.currentUser;
                 if (!user) return;
-                
+
                 const date = format(new Date(), 'yyyy-MM-dd');
                 const personalGoalsQuery = query(collection(db, 'personalgoals'), where('유저아이디', '==', user.uid), where('날짜', '==', date));
                 const longGoalsQuery = query(collection(db, 'personallonggoals'), where('유저아이디', '==', user.uid), where('날짜', '==', date));
@@ -241,20 +255,20 @@ const TodayGoals = () => {
             }));
 
             const achievementsRef = collection(db, 'achievements');
-                const q = query(achievementsRef);
-                const querySnapshot = await getDocs(q);
+            const q = query(achievementsRef);
+            const querySnapshot = await getDocs(q);
 
-                const achievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 완료");
+            const achievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 완료");
 
-                if (achievementDoc && !achievementDoc.data().유저아이디.includes(currentUser?.uid)) {
-                    const achievementRef = doc(db, 'achievements', achievementDoc.id);
-                    await updateDoc(achievementRef, {
-                        유저아이디: [...achievementDoc.data().유저아이디, currentUser?.uid]
-                    });
-                    setShowAchievements(true);
-                } else {
+            if (achievementDoc && !achievementDoc.data().유저아이디.includes(currentUser?.uid)) {
+                const achievementRef = doc(db, 'achievements', achievementDoc.id);
+                await updateDoc(achievementRef, {
+                    유저아이디: [...achievementDoc.data().유저아이디, currentUser?.uid]
+                });
+                setShowAchievements(true);
+            } else {
 
-                }
+            }
 
         } catch (error) {
             console.error(error);
@@ -271,7 +285,7 @@ const TodayGoals = () => {
                 <DailyGoalsWrapper key={index} completed={goal.완료여부 === '완료'}>
                     <GoalText>{goal.챌린지내용}</GoalText>
                     <GoalComplet onClick={() => toggleCompletion(goal.id, goal.완료여부)}>
-                        {goal.완료여부 === '완료' ? <FaCheck style={{ fontSize:"30px", color: 'green' }} /> : <FaCheck style={{ fontSize:"30px", color: '#dcdcdc' }} />}
+                        {goal.완료여부 === '완료' ? <FaCheck style={{ fontSize: "30px", color: 'green' }} /> : <FaCheck style={{ fontSize: "30px", color: '#dcdcdc' }} />}
                     </GoalComplet>
                 </DailyGoalsWrapper>
             ))}
@@ -290,14 +304,18 @@ const TodayGoals = () => {
                 </ModalWrapper>
             )}
             {guide ? (
-                 <GuideWrapper>
-                 <Box></Box>
-                 <GuideTextWrapper>
-                     <span>목표설정을 눌러 개인목표를 생성하여 보세요.</span>
-                 <GuideButton onClick={GuideClick}>확인</GuideButton>
-                 </GuideTextWrapper>
-             </GuideWrapper>
-            ):null}
+                <GuideWrapper>
+                    <GuideMenu>
+                        <GuideMenuList style={{color:"#990033"}}>오늘의 목표</GuideMenuList>
+                        <GuideMenuList style={{ color:"#939393",position: "relative" }}>목표설정<Box style={{ position: "absolute" }}></Box></GuideMenuList>
+                        <GuideMenuList style={{color:"#939393"}}>장기챌린지현황</GuideMenuList>
+                    </GuideMenu>
+                    <GuideTextWrapper>
+                        <span>목표설정을 눌러 개인목표를 생성하여 보세요.</span>
+                        <GuideButton onClick={GuideClick}>확인</GuideButton>
+                    </GuideTextWrapper>
+                </GuideWrapper>
+            ) : null}
         </Wrapper>
     );
 }

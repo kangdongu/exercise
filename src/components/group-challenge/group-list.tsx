@@ -209,13 +209,15 @@ const GlassBox = styled.div`
     height:50px;
     border-radius:50%;
     border: 5px solid red;
-    transform: translate(124px, -57px);
+    position: absolute;
+    top: -5px;
+    left: -10px;
 `;
 const GlassText = styled.div`
      background-color:white;
     width:50vw;
     margin-left:50px;
-    margin-top:-30px;
+    margin-top:0px;
     border-radius:10px;
     padding: 10px 10px;
     font-size:18px;
@@ -231,13 +233,15 @@ const JoinBox = styled.div`
     width:100px;
     height:50px;
     border:5px solid red;
-    transform: translate(307px, -47px);
+    position: absolute;
+    left: -20px;
+    top: -10px;
 `;
 const JoinText = styled.div`
     background-color: white;
     width: 50vw;
     margin-left: 187px;
-    margin-top: -32px;
+    margin-top: 0px;
     border-radius: 10px;
     padding: 10px 10px;
     font-size: 18px;
@@ -531,8 +535,10 @@ const GroupList = () => {
                             <GuideRoom>
                                 <GuideList>
                                     <ListTitle>주4일 운동하기</ListTitle>
-                                    <span style={{ marginLeft: "5px" }}>
-                                        <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px" }} />
+                                    <span style={{position:"relative" ,marginLeft: "5px" }}>
+                                    <GlassBox />
+                                        <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px",color:"black" }} />
+                                       
                                     </span>
                                     <PeopleJoinWrapper>
                                         <PeopleWrapper>5/10</PeopleWrapper>
@@ -542,8 +548,7 @@ const GroupList = () => {
                                     </PeopleJoinWrapper>
                                 </GuideList>
                             </GuideRoom>
-                            <GlassBox />
-                            <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginLeft: "20px", marginTop: "5px", transform: "translate(110px, -47px)" }} />
+                            <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginLeft: "20px", marginTop: "5px", transform: "translate(110px, 0px)" }} />
                             <GlassText>
                                 <div>돋보기를 눌러 그룹방의 상세정보를 확인해보세요</div>
                                 <GuideButton onClick={guide3Clcik}>다음</GuideButton>
@@ -560,14 +565,15 @@ const GroupList = () => {
                                     </span>
                                     <PeopleJoinWrapper>
                                         <PeopleWrapper>5/10</PeopleWrapper>
-                                        <JoinButton>
+                                        <JoinButton style={{position:"relative"}}>
                                             인증
+                                            <JoinBox />
                                         </JoinButton>
+
                                     </PeopleJoinWrapper>
                                 </GuideList>
                             </GuideRoom>
-                            <JoinBox />
-                            <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginTop: "5px", transform: "translate(0px, -47px)", marginLeft: "calc(100vw - 84px)" }} />
+                            <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginTop: "5px", marginLeft: "calc(100vw - 84px)" }} />
 
                             <JoinText>
                                 <div>가입버튼을 눌러 가입하고 인증버튼을 눌러 인증해보세요</div>

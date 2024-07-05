@@ -44,12 +44,19 @@ const MyChallenge: React.FC<MyChallengeProps> = ({ challenge, photoMyData }) => 
         return photoMyData.some(photo => photo.그룹챌린지제목 === 그룹챌린지제목 && photo.날짜 === date);
     };
 
+    const getSelectedWeekDates = (): string[] => {
+        const selectedDays = challenge.요일선택;
+        const weekDates = getWeekDates();
+
+        return weekDates.filter(date => selectedDays.includes(format(new Date(date), 'EEE', { locale: ko })));
+    };
+
     return (
         <MyChallengeWrapper>
             <WeekWrapper>
                 <h4 style={{marginBottom:"10px"}}>주간 인증 현황</h4>
                 <WeekDataWrapper>
-                    {getWeekDates().map(date => (
+                    {getSelectedWeekDates().map(date => (
                         <Week key={date}>
                             {format(new Date(date), 'EEE', { locale: ko })}
                             <span>{completedForDate(date, challenge.그룹챌린지제목) ? <IoCheckmarkCircleOutline style={{ color: "green" }} /> : <CgCloseO style={{ color: "red" }} />}</span>
