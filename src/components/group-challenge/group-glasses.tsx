@@ -129,6 +129,7 @@ interface Challenge {
     유저아이디: string[];
     방장프로필:string;
     방장닉네임:string;
+    인원수:number;
 }
 interface GlassesProps {
     onBack: () => void;
@@ -156,7 +157,7 @@ const GroupGlasses: React.FC<GlassesProps> = ({ onBack, challenge }) => {
                         <Secret>
                             <CiLock style={{ width: "20px", height: "20px", }} />
                         </Secret>) : null}
-                    <People>인원수: {challenge.유저아이디.length}/10</People>
+                    <People>인원수: {challenge.유저아이디.length}/{challenge.인원수}</People>
                 </PeopleSecret>
                 <ChallengeContentWrapper>
                     <ChallengeTitle>{challenge.그룹챌린지제목}</ChallengeTitle>

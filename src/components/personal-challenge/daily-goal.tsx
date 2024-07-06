@@ -20,19 +20,23 @@ const GoalsTitle = styled.h5`
     margin-bottom:0px;
 `;
 const QuickWrapper = styled.div`
-    margin-bottom:15px;
-        display: flex;
+   margin-bottom:15px;
+    display: flex;
     gap: 2%;
+    flex-wrap: wrap;
 `;
 const QuickList = styled.div`
-    cursor: pointer;
+   cursor: pointer;
     height: 27px;
-    width: 100px;
+    padding: 0 5px;
     border: 1px solid black;
     font-size: 13px;
     text-align: center;
     line-height: 27px;
     border-radius: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `;
 const GoalList = styled.div`
     width: 320px;

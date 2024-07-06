@@ -20,6 +20,8 @@ const RenderUserWrapper = styled.div`
     overflow-y: scroll;
     border-top: 0.1px solid #333333;
     padding-top: 10px;
+     flex: 1;
+     overflow-y: scroll;
 `;
 const GroupUserWrapper = styled.div`
     display: flex;

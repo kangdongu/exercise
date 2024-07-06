@@ -8,46 +8,49 @@ import { FaHandsClapping } from "react-icons/fa6";
 
 
 const Wrapper = styled.div`
-    width:100vw;
-    height:80vh;
+   width:100%;
+    height:calc(100vh - 125px);
+    overflow-y: scroll;
+    padding: 15px;
+    box-sizing: border-box;
 `;
 
 const DailyGoalsWrapper = styled.div<{ completed: boolean }>`
-    width: 80%;
+    width: 90%;
     height: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 15px 0;
+    margin: 15px auto;
     background-color: ${props => (props.completed ? '#d4edda' : 'white')};
     padding: 0 10px;
-    border-radius:15px;
-    box-sizing:border-box;
-    border: 0.1px solid lightgray;
+    border-radius: 15px;
+    box-sizing: border-box;
+    border: 1px solid lightgray;
 `;
 const CompletCountWrapper = styled.div`
-    width:153px;
-    height:37px;
-    border:1px solid black;
-    border-radius:13px;
+    width: 153px;
+    height: 37px;
+    border: 1px solid black;
+    border-radius: 13px;
     margin: 0 auto;
     display: flex;
     position: fixed;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%, 165px);
+    top: calc(90vh - 60px);
+    transform: translate(-50%, -50%);
 
 `;
 const Complet = styled.div`
-    width:50%;
-    border-right:1px solid black;
-    text-align:center;
-    line-height:37px;
+     width: 50%;
+    border-right: 1px solid black;
+    text-align: center;
+    line-height: 37px;
 `;
 const TotalComplet = styled.div`
-    width:50%;
-    text-align:center;
-    line-height:37px;
+    width: 50%;
+    text-align: center;
+    line-height: 37px;
 `;
 const GoalText = styled.div`
     width:80%;
@@ -61,7 +64,7 @@ const GoalComplet = styled.div`
     text-align:center;
 `;
 const ModalWrapper = styled.div`
-    position: fixed;
+   position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
@@ -89,43 +92,43 @@ const ModalButton = styled.button`
     cursor: pointer;
 `;
 const GuideWrapper = styled.div`
-    position:fixed;
-    top:0px;
-    left:0px;
-    width:100vw;
-    height:100vh;
-    background-color:rgba(0,0,0,0.5);
+     position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
 `;
 const Box = styled.div`
-    width: 81px;
+     width: 81px;
     height: 45px;
     margin-top: -28px;
     margin-left: -8px;
     border: 5px solid red;
 `;
 const GuideTextWrapper = styled.div`
-    width:50vw;
+     width: 50vw;
     margin: 10px auto;
-    font-size:18px;
-    background-color:white;
+    font-size: 18px;
+    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    border-radius:10px;
+    border-radius: 10px;
     padding: 10px 10px;
     transform: translate(0px, 90px);
-    span{
-        font-weight:600;
+    span {
+        font-weight: 600;
     }
 `;
 const GuideButton = styled.div`
-    width:100px;
-    height:40px;
-    background-color:#990033;
-    color:white;
-    line-height:40px;
-    text-align:center;
+    width: 100px;
+    height: 40px;
+    background-color: #990033;
+    color: white;
+    line-height: 40px;
+    text-align: center;
 `;
 const GuideMenu = styled.div`
     width:90vw;

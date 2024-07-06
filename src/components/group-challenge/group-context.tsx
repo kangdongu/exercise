@@ -14,6 +14,7 @@ export interface Challenge {
     비밀번호: any;
     방장프로필: string;
     방장닉네임: string;
+    인원수: number;
 }
 
 interface ChallengeContextType {

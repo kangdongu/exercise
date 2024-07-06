@@ -11,7 +11,7 @@ const Wrapper = styled.div`
     width:100vw;
     height:90vh;
     overflow-y:scroll;
-    padding-left:20px;
+    padding:20px;
     box-sizing:border-box;
 `;
 const MenuWrapper = styled.div`

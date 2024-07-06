@@ -276,6 +276,7 @@ interface Challenge {
     비밀번호: any;
     방장프로필: string;
     방장닉네임: string;
+    인원수:number;
 }
 
 const GroupList = () => {
@@ -399,7 +400,8 @@ const GroupList = () => {
                     종료날짜: doc.data().종료날짜,
                     비밀번호: doc.data().비밀번호,
                     방장프로필: doc.data().방장프로필,
-                    방장닉네임: doc.data().방장닉네임
+                    방장닉네임: doc.data().방장닉네임,
+                    인원수:doc.data().인원수
                 }));
                 setChallenges(challengesArray)
             } catch (error) {
@@ -504,7 +506,7 @@ const GroupList = () => {
                                 <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px" }} />
                             </span>
                             <PeopleJoinWrapper>
-                                <PeopleWrapper>{challenge.유저아이디.length}/10</PeopleWrapper>
+                                <PeopleWrapper>{challenge.유저아이디.length}/{challenge.인원수}</PeopleWrapper>
                                 <JoinButton onClick={() => joinClick(challenge)}>
                                     {challenge.유저아이디.includes(user?.uid ?? '') ? "인증" : "가입"}
                                 </JoinButton>

@@ -6,6 +6,7 @@ import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { format } from "date-fns";
 import { getDownloadURL, ref } from "firebase/storage";
 import { Challenge, useChallenges } from "./group-context";
+import PeopleModal from "./people-modal";
 
 
 const Wrapper = styled.div`
@@ -151,7 +152,7 @@ const PassWordInput = styled.input`
 const PeopleCompleteWrapper = styled.div`
     display:flex;
     margin-top:20px;
-    justify-content: space-around;
+    gap:20px;
     margin-bottom:30px;
 `;
 const CompleteButton = styled.div`
@@ -162,6 +163,7 @@ const CompleteButton = styled.div`
     line-height:50px;
     color:white;
     border-radius:15px;
+    font-size:18px;
 `;
 const PasswordReWrapper = styled.div`
       display:flex;
@@ -175,10 +177,13 @@ const People = styled.div`
  width:100px;
     height:50px;
     background-color:lightgray;
-    text-align:center;
+    justify-content:center;
     line-height:50px;
     color:white;
     border-radius:15px;
+    display:flex;
+    gap:5px;
+    font-size:18px;
 `;
 
 interface CreateProps {
@@ -196,9 +201,11 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
     const [rePassword, setRePassword] = useState("")
     const [userProfileUrl, setUserProfileUrl] = useState("")
     const [nickname, setNickname] = useState("")
+    const [isPeopleModalOpen, setIsPeopleModalOpen] = useState(false);
+    const [peopleCount, setPeopleCount] = useState(0);
     const currentUser = auth.currentUser
 
-   
+
 
     const TitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -323,6 +330,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                 비밀번호: rePassword,
                 방장프로필: userProfileUrl,
                 방장닉네임: nickname,
+                인원수: peopleCount,
             };
 
             try {
@@ -330,7 +338,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                 setChallenges((prevChallenges: Challenge[]) => [
                     ...prevChallenges,
                     { id: docRef.id, ...newChallenge } as Challenge,
-                  ]);
+                ]);
                 alert("방이 생성되었습니다!");
                 onBack();
             } catch (error) {
@@ -338,19 +346,19 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
             }
         } else if (password !== rePassword) {
             alert("비밀번호가 다릅니다");
-        }else if (title === "" && contentText === "" && selectedDays.length == 0){
+        } else if (title === "" && contentText === "" && selectedDays.length == 0) {
             alert("챌린지 제목과 내용을 작성해주시고 요일을 선택해주세요")
-        }else if (title === "" && contentText == ""){
+        } else if (title === "" && contentText == "") {
             alert("챌린지 제목과 내용을 작성해주세요")
-        }else if (title === "" && selectedDays.length == 0){
+        } else if (title === "" && selectedDays.length == 0) {
             alert("챌린지 제목을 작성해주시고 요일을 선택해주세요")
-        }else if (contentText === "" && selectedDays.length == 0){
+        } else if (contentText === "" && selectedDays.length == 0) {
             alert("챌린지 내용을 작성해주시고 요일을 선택해주세요")
-        }else if (selectedDays.length == 0){
+        } else if (selectedDays.length == 0) {
             alert("요일을 선택해주세요")
         }
     };
-    
+
     return (
         <Wrapper>
 
@@ -423,9 +431,26 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                 </SecretCheckWrapper>
             </SecretWrapper>
             <PeopleCompleteWrapper>
-                <People>인원수 선택</People>
+                {peopleCount !== 0 ? (
+                    <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                        <span style={{fontWeight:'600'}}>인원수 설정 필수 *</span>
+                        <People style={{ backgroundColor: "#326FFC", justifyContent: "center" }} onClick={() => setIsPeopleModalOpen(true)}>인원수: {peopleCount}</People>
+                    </div>
+                ) : (
+                    <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                        <span>인원수 설정 필수 *</span>
+                        <People onClick={() => setIsPeopleModalOpen(true)}>인원수 선택</People>
+                    </div>
+                )}
                 <CompleteButton onClick={createRoom}>방 생성</CompleteButton>
             </PeopleCompleteWrapper>
+            {isPeopleModalOpen && (
+                <PeopleModal
+                    onClose={() => setIsPeopleModalOpen(false)}
+                    peopleCount={peopleCount}
+                    setPeopleCount={setPeopleCount}
+                />
+            )}
         </Wrapper>
     )
 }

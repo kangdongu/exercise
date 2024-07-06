@@ -14,6 +14,7 @@
 .fc-prev-button {
     @media screen and (max-width: 700px) {
         width: 37px;
+        height: 37px;
     }
 
 }
@@ -21,6 +22,7 @@
 .fc-next-button {
     @media screen and (max-width: 700px) {
         width: 37px;
+        height: 37px;
     }
 }
 
@@ -40,5 +42,24 @@
     @media screen and (max-width: 700px) {
         font-size: 13px;
         
+    }
+}
+.fc-daygrid-day {
+    @media screen and (max-width: 700px) {
+        height: 50px;
+    }
+}
+
+.fc-daygrid-event {
+    @media screen and (max-width: 700px) {
+        font-size: 10px;
+        padding: 2px;
+    }
+}
+
+.fc-scroller-harness,
+.fc-scroller-harness-liquid {
+    @media screen and (max-width: 700px) {
+        height: calc(100% - 100px) !important;
     }
 }

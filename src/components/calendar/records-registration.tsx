@@ -71,6 +71,8 @@ const Button = styled.button`
 `;
 const CloseBtn = styled.div`
   margin-bottom: 10px;
+  width:20px;
+  height:20px;
   cursor:pointer;
 `;
 const ListSetButtonWrapper = styled.div`
@@ -164,7 +166,7 @@ const AreaMenu = styled.li<{ selected: boolean }>`
   border:1px solid gray;
   text-align:center;
   border-radius:10px;
-  padding: 5px 15px;
+  padding: 5px 10px;
   cursor: pointer;
   background-color: ${(props) => props.selected ? "#ff0000" : "transparent"};
   color: ${(props) => props.selected ? "white" : "black"};
