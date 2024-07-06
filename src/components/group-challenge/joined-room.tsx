@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 import MyChallenge from "./group-room/my-challenge";
-import { auth, db } from "../../firebase";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { auth, db, storage } from "../../firebase";
+import { addDoc, collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { differenceInDays, format, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
 import MoSlideLeft from "../slideModal/mo-slide-left";
@@ -13,6 +13,9 @@ import OurChallenge from "./group-room/our-challenge";
 import { IoIosArrowForward } from "react-icons/io";
 import GroupUser from "./group-room/group-user";
 import { FaArrowLeft } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
+import LoadingScreen from "../loading-screen";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const Wrapper = styled.div`
     width:100vw;
@@ -191,36 +194,87 @@ export interface Photo {
     인증요일: string;
     인증내용: string;
     좋아요유저: string[];
+    챌린지아이디:string;
 }
 
-interface RoomProps {
-    onBack: () => void;
-    challenge: Challenge;
-}
-const JoinedRoom: React.FC<RoomProps> = ({ onBack, challenge }) => {
-    const [selectedMenu, setSelectedMenu] = useState("mychallenge")
-    const [crateChallenge, setCreateChallenge] = useState(false)
+const JoinedRoom: React.FC = () => {
+    const { challengeId } = useParams<{ challengeId: string }>();
+    const [challenge, setChallenge] = useState<Challenge | null>(null);
+    const [selectedMenu, setSelectedMenu] = useState("mychallenge");
+    const [crateChallenge, setCreateChallenge] = useState(false);
     const [memo, setMemo] = useState("");
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [file, setFile] = useState<File | null>(null);
-    const [photoData, setPhotoData] = useState<Photo[]>([])
-    const [photoMyData, setPhotoMyData] = useState<Photo[]>([])
-    const [viewPhoto, setViewPhoto] = useState<Photo | null>(null)
-    const [ourView, setOurView] = useState<Photo | null>(null)
+    const [photoData, setPhotoData] = useState<Photo[]>([]);
+    const [photoMyData, setPhotoMyData] = useState<Photo[]>([]);
+    const [viewPhoto, setViewPhoto] = useState<Photo | null>(null);
+    const [ourView, setOurView] = useState<Photo | null>(null);
+    const navigate = useNavigate();
 
-    const crateChallengeButton = async () => {
+    useEffect(() => { 
+        const fetchChallenge = async () => { 
+          if (challengeId) { 
+            const challengeRef = doc(db, "groupchallengeroom", challengeId); 
+            const challengeSnap = await getDoc(challengeRef); 
+            if (challengeSnap.exists()) { 
+              const challengeData = challengeSnap.data() as Challenge; 
+              setChallenge({ ...challengeData, id: challengeSnap.id }); 
+            } else { 
+              console.error("No such document!"); 
+            } 
+          } 
+        }; 
+        fetchChallenge(); 
+      }, [challengeId]); 
+
+      const fetchPhotos = async () => {
+        if (!challengeId) return;
+
+        try {
+            const q = query(collection(db, "groupchallengephoto"), where("챌린지아이디", "==", challengeId));
+            const querySnapshot = await getDocs(q);
+            const user = auth.currentUser;
+            const currentUserUID = user?.uid;
+
+            const photoArray: Photo[] = querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                날짜: doc.data().날짜,
+                인증사진: doc.data().인증사진,
+                유저아이디: doc.data().유저아이디,
+                그룹챌린지제목: doc.data().그룹챌린지제목,
+                인증요일: doc.data().인증요일,
+                인증내용: doc.data().인증내용,
+                좋아요유저: doc.data().좋아요유저,
+                챌린지아이디: doc.data().챌린지아이디,
+            }));
+
+            setPhotoData(photoArray);
+            const filterMyPhoto = photoArray.filter(photo => photo.유저아이디 === currentUserUID);
+            setPhotoMyData(filterMyPhoto);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        if (challengeId) {
+            fetchPhotos();
+        }
+    }, [challengeId]);
+
+    const createChallengeButton = async () => {
         const currentUser = auth.currentUser;
-        if (!currentUser) return
+        if (!currentUser) return;
 
-        const week: string[] = ["일", "월", "화", "수", "목", "금", "토"]
-        const weekDate = week[new Date().getDay()]
-        if (challenge.요일선택.includes(weekDate)) {
+        const week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
+        const weekDate = week[new Date().getDay()];
+        if (challenge?.요일선택.includes(weekDate)) {
             const today = format(new Date(), "yyyy-MM-dd");
             const q = query(
                 collection(db, "groupchallengephoto"),
                 where("날짜", "==", today),
                 where("유저아이디", "==", currentUser.uid),
-                where("그룹챌린지제목", "==", challenge.그룹챌린지제목)
+                where("챌린지아이디", "==", challengeId)
             );
 
             const querySnapshot = await getDocs(q);
@@ -252,34 +306,15 @@ const JoinedRoom: React.FC<RoomProps> = ({ onBack, challenge }) => {
             reader.readAsDataURL(selectedFile);
         }
     };
-    const fetchPhoto = async () => {
-        try {
-            const q = query(collection(db, "groupchallengephoto"))
-            const querySnapshot = await getDocs(q);
-            const user = auth.currentUser
-            const currentUserUID = user?.uid
 
-            const photoArray: Photo[] = querySnapshot.docs.map((doc) => ({
-                id: doc.id,
-                날짜: doc.data().날짜,
-                인증사진: doc.data().인증사진,
-                유저아이디: doc.data().유저아이디,
-                그룹챌린지제목: doc.data().그룹챌린지제목,
-                인증요일: doc.data().인증요일,
-                인증내용: doc.data().인증내용,
-                좋아요유저: doc.data().좋아요유저
-            }))
+   
 
-            const filteredPhotoArray = photoArray.filter(photo => photo.그룹챌린지제목 === challenge.그룹챌린지제목);
-            setPhotoData(filteredPhotoArray);
-            const filterMyPhoto = filteredPhotoArray.filter(photo => photo.유저아이디 === currentUserUID)
-            setPhotoMyData(filterMyPhoto)
-
-
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    const uploadFile = async (file: File): Promise<string> => { 
+        const fileRef = ref(storage, `groupchallengephotos/${challengeId}/${file.name}`);
+        await uploadBytes(fileRef, file); 
+        const fileURL = await getDownloadURL(fileRef); 
+        return fileURL; 
+    }; 
     
     const createChallenge = async () => {
         const user = auth.currentUser;
@@ -287,26 +322,33 @@ const JoinedRoom: React.FC<RoomProps> = ({ onBack, challenge }) => {
         const startDate = new Date();
         const day = format(startDate, "EEE", { locale: ko })
 
+        let fileURL = "";
+        if (file) { 
+            fileURL = await uploadFile(file); 
+        } 
+
         try {
             await addDoc(recordsRef, {
                 날짜: format(startDate, "yyyy-MM-dd"),
-                인증사진: previewUrl,
+                인증사진: fileURL,
                 유저아이디: user?.uid,
-                그룹챌린지제목: challenge.그룹챌린지제목,
+                그룹챌린지제목: challenge?.그룹챌린지제목,
                 인증요일: day,
                 인증내용: memo,
                 좋아요유저: [],
+                챌린지아이디: challengeId,
             })
-            fetchPhoto();
+            fetchPhotos();
             setCreateChallenge(false)
+            setMemo("") 
+            setPreviewUrl(null) 
+            setFile(null)  
         } catch (error) {
             console.log(error)
         }
     }
 
-    useEffect(() => {
-        fetchPhoto()
-    }, [])
+   
 
     const handlePhotoClick = (photo: Photo) => {
         setViewPhoto(photo)
@@ -315,9 +357,13 @@ const JoinedRoom: React.FC<RoomProps> = ({ onBack, challenge }) => {
         setOurView(photo)
     }
 
+    if (!challenge) { 
+        return <LoadingScreen />; 
+      } 
+
     return (
         <Wrapper>
-            <Back onClick={onBack}>
+            <Back onClick={() => navigate(-1)}>
                 <FaArrowLeft style={{ width: "20px", height: "20px" }} />
             </Back>
             <Title>{challenge.그룹챌린지제목}</Title>
@@ -354,7 +400,7 @@ const JoinedRoom: React.FC<RoomProps> = ({ onBack, challenge }) => {
             {selectedMenu === "mychallenge" || selectedMenu === "ourchallenge" ? (
                 <ChallengeTitleWrapper>
                     <ChallengeTitle>인증사진</ChallengeTitle>
-                    <CreateChallenge onClick={crateChallengeButton}>+</CreateChallenge>
+                    <CreateChallenge onClick={createChallengeButton}>+</CreateChallenge>
                 </ChallengeTitleWrapper>
             ) : null}
             <PhotoWrapper>
@@ -387,7 +433,6 @@ const JoinedRoom: React.FC<RoomProps> = ({ onBack, challenge }) => {
                         <h4>오늘의 목표달성 내용작성하기</h4>
                         <Memo rows={5} maxLength={180} onChange={memoChange} value={memo} />
                         <SubmitBtn onClick={createChallenge}>인증</SubmitBtn>
-
                     </CreateWrapper>
                 </MoSlideLeft>
             ) : null}

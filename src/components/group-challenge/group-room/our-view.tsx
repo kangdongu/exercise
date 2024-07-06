@@ -39,6 +39,8 @@ const Like = styled.div`
 const CommentWrapper = styled.div`
 
 `;
+const CommentIcon = styled.div`
+`;
 
 interface Photo {
     id: string;
@@ -57,7 +59,7 @@ interface ourDetailProps {
 const OurViewDetails: React.FC<ourDetailProps> = ({ photo }) => {
     const [currentUser, setCurrentUser] = useState<any>(null);
     const [comment, setComment] = useState(false);
-    const [likes, setLikes] = useState(photo.좋아요유저);
+    const [likes, setLikes] = useState<string[]>([]);
     const [commentWrite, setCommentWrite] = useState("");
     const [comments, setComments] = useState<any[]>([]);
     const [userNickname, setNickname] = useState("");
@@ -71,6 +73,10 @@ const OurViewDetails: React.FC<ourDetailProps> = ({ photo }) => {
             setCurrentUserUID(user.uid);
         }
     }, []);
+
+    useEffect(() => {
+        setLikes(photo.좋아요유저);
+    }, [photo.좋아요유저]);
 
     const commentOpen = () => {
         setComment(true);
@@ -216,9 +222,12 @@ const OurViewDetails: React.FC<ourDetailProps> = ({ photo }) => {
                     ) : (
                         <FaRegHeart style={{ width: "25px", height: "25px" }} />
                     )}
-                    <span>{likes.length}</span>
+                    <span style={{marginLeft:"5px"}}>{likes.length}</span>
                 </Like>
+                <CommentIcon>
                 <FaRegComment onClick={commentOpen} style={{ width: "25px", height: "25px" }} />
+                <span style={{marginLeft:"5px"}}>{comments.length}</span>
+                </CommentIcon>
             </LikeCommentWrapper>
             <MemoWrapper>{photo.인증내용}</MemoWrapper>
             {comment ? (

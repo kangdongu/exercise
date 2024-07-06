@@ -41,145 +41,130 @@ padding:2%;
 box-sizing:border-box;
 `;
 const Label = styled.label`
-  width: 100%;
-  height: 50px;
-  margin-top: 20px;
+   display: block;
+  margin: 10px 0;
+  font-size: 16px;
+  color: #333;
 `;
 const Input = styled.input`
-  width:100px;
-  height: 30px;
-  padding: 0;
-  margin-top: 10px;
-  border-radius:5px;
+ width: 80px;
+  padding: 5px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  text-align: center;
 `;
 const Button = styled.button`
-width:90%;
-margin: 0 auto;
-  font-size: 30px;
-  text-align: center;
-  background-color: #FF3232;
-  color:white;
-  border-radius:10px;
-      position: absolute;
-    bottom: 10px;
+ width: 100%;
+  padding: 15px;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 20px;
+  &:hover {
+    background-color: #ff7875;
+  }
 `;
 const CloseBtn = styled.div`
   margin-bottom: 10px;
   cursor:pointer;
 `;
+const ListSetButtonWrapper = styled.div`
+  width:100%;
+  display:flex;
+  flex-direction: column;
+  gap:10px;
+`;
 const SetList = styled.div``;
 const ListBody = styled.div`
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-    height: 50px;
-    line-height: 50px;
+   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
 `;
 const SetPlus = styled.div`
-@media screen and (max-width: 700px) {
-  margin-left:65%;
-}
-width:120px;
-height:30px;
-text-align:center;
-border-radius:5px;
-color:#5882FA;
-line-height:30px;
-cursor:pointer;
-color:white;
-background-color:#5882FA;
-margin-left:80%;
-margin-bottom:20px;
-span{
-  font-size:23px;
-  font-weight:600;
-  margin-left:10px;
-}
+ width: 35%;
+  padding: 10px;
+  background-color: #55a38d;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  display:flex;
+  margin-left:auto;
+  &:hover {
+    background-color: #66bb99;
+  }
 `;
 const SetDelete = styled.div`
-width:30px;
-height:30px;
-text-align:center;
-font-size:35px;
-color:red;
-border:1px solid red;
-border-radius:50%;
-font-weight:900;
-cursor:pointer;
-margin-top:10px;
-line-height:18px;
+ padding: 5px 10px;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  &:hover {
+    background-color: #ff7875;
+  }
 `;
 const ExerciseDataBtn = styled.div`
-@media screen and (max-width: 700px) {
-  margin-left:65%;
-}
-  width:120px;
-  height:30px;
-  cursor:pointer;
-  line-height:30px;
-  border-radius:5px;
-  color:white;
-  background-color:#55a38d;
-  margin-bottom:10px;
-  text-align:center;
-  margin-left:80%;
-  span{
-    font-size:23px;
-    font-weight:600;
-    margin-left:10px;
+ width: 35%;
+  padding: 10px;
+  background-color: #55a38d;
+  margin-left:auto;
+  color: white;
+  border: none;
+  display:flex;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  &:hover {
+    background-color: #66bb99;
   }
 `;
 const ExerciseChoiceModal = styled.div`
-@media screen and (max-width: 700px) {
-  position:relative;
-  width:100vw;
-  height:90vh;
-  top:0;
-  left:0;
-  transform: translate(0px,0px);
-}
-  width:70%;
-  height:80vh;
-  overflow-y:scroll;
-  background-color:white;
-  position:fixed;
-  z-index:100;
-  top:50%;
-  left:50%;
-  transform: translate(-50%, -50%);
+ padding: 20px;
+  background-color: #f9f9f9;
+  height: 100vh;
+  overflow-y: scroll;
 `;
 const TypeWrapper = styled.ul`
 @media screen and (max-width: 700px) {
   width:100%;
-  height:20px;
   gap:5px;
   padding:0px;
 }
   width:80%;
   height:20px;
   display:flex;
+  align-items: center;
   list-style: none;
   gap:15px;
 `;
 const TypeMenu = styled.li<{ selected: boolean }>`
-width:70px;
-  height:20px;
   font-size:13px;
   font-weight:600;
   border:1px solid gray;
   text-align:center;
-  border-radius:30px;
+  border-radius:10px;
+  padding: 5px 15px;
   cursor: pointer;
   background-color: ${(props) => props.selected ? "#ff0000" : "transparent"};
   color: ${(props) => props.selected ? "white" : "black"};
 `;
 const AreaMenu = styled.li<{ selected: boolean }>`
-width:70px;
-  height:20px;
   font-size:13px;
   font-weight:600;
   border:1px solid gray;
   text-align:center;
-  border-radius:30px;
+  border-radius:10px;
+  padding: 5px 15px;
   cursor: pointer;
   background-color: ${(props) => props.selected ? "#ff0000" : "transparent"};
   color: ${(props) => props.selected ? "white" : "black"};
@@ -188,15 +173,14 @@ const ExerciseList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width:94%;
-margin:0 auto;
 `;
 
 const ExerciseItem = styled.div`
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  cursor:pointer;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 `;
 const DateChoiceWrapper = styled.div`
   margin-top:20px;
@@ -337,26 +321,30 @@ export default function ExerciseRegistration({
               />
             </Label>
           </ExerciseNameWrapper>
-          <ExerciseDataBtn onClick={ExerciseChoice}>운동선택<span>&gt;</span></ExerciseDataBtn>
-          <SetPlus onClick={addSet}>세트추가<span>+</span></SetPlus>
+          <ListSetButtonWrapper>
+          <ExerciseDataBtn onClick={ExerciseChoice}>운동선택<span style={{marginLeft:"auto",fontSize:"20px", fontWeight:'600'}}>&gt;</span></ExerciseDataBtn>
+          <SetPlus onClick={addSet}>세트추가<span style={{marginLeft:"auto", fontSize:"20px", fontWeight:'600'}}>+</span></SetPlus>
+          </ListSetButtonWrapper>
           <SetList>
             {sets.map((set, index) => (
               <ListBody key={index}>
-                {index + 1}.세트
-                <Input
-                  onChange={(e) => onChange(index, e)}
-                  value={set.kg}
-                  type="number"
-                  name="kg"
-                />kg
-                <Input
-                  onChange={(e) => onChange(index, e)}
-                  value={set.count}
-                  type="number"
-                  name="count"
-                />회/ 분
-                <SetDelete onClick={(event) => onDelete(index, event)}>-</SetDelete>
-              </ListBody>
+              <span>{index + 1}. 세트</span>
+              <Input
+                type="number"
+                name="kg"
+                value={set.kg}
+                onChange={(e) => onChange(index, e)}
+                placeholder="kg"
+              />
+              <Input
+                type="number"
+                name="count"
+                value={set.count}
+                onChange={(e) => onChange(index, e)}
+                placeholder="회/분"
+              />
+              <SetDelete onClick={(event) => onDelete(index, event)}>-</SetDelete>
+            </ListBody>
             ))}
           </SetList>
           <Button onClick={onClick}>운동 완료</Button>

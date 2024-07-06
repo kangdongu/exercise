@@ -14,6 +14,14 @@ import Records from './routes/records';
 import GenderChoice from './routes/gender-choice';
 import LoadingScreen from './components/loading-screen';
 import Sns from './routes/sns';
+import PersonalContent from './components/personal-challenge/personal-modal';
+import TimerContent from './components/timer/timer-content';
+import BadgeContent from './components/badge/badgeContent';
+import GroupList from './components/group-challenge/group-list';
+import AchievementsContent from './components/achievements/achievements-content';
+import EfficacyContent from './components/efficacy/efficacy-content';
+import { ChallengeProvider } from './components/group-challenge/group-context';
+import JoinedRoom from './components/group-challenge/joined-room';
 
 const Wrapper = styled.div`
 `;
@@ -56,6 +64,21 @@ function App() {
               <Route path="profile" element={<Profile />} />
               <Route path="records" element={<Records />} />
               <Route path="sns" element={<Sns />} />
+              <Route path="timer" element={<TimerContent />} />
+              <Route path="badge" element={<BadgeContent />} />
+              <Route path="personal-challenge" element={<PersonalContent />} />
+              <Route path="group-challenge" element={
+                <ChallengeProvider>
+                  <GroupList />
+                </ChallengeProvider>
+              } />
+              <Route path="group-challenge/:challengeId" element={
+                <ChallengeProvider>
+                  <JoinedRoom />
+                </ChallengeProvider>
+              } />
+              <Route path="achievements" element={<AchievementsContent />} />
+              <Route path="efficacy" element={<EfficacyContent />} />
             </Route>
             <Route path="/start-page" element={<StartPage />} />
             <Route path="/login" element={<Login />} />

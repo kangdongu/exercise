@@ -10,6 +10,8 @@ import { User, onAuthStateChanged } from "firebase/auth";
 import JoinedRoom from "./joined-room";
 import { useChallenges } from "./group-context";
 import { FaArrowUp } from "react-icons/fa";
+import MoSlideModal from "../slideModal/mo-slide-modal";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
     width:100%;
@@ -44,45 +46,54 @@ const ListWrapper = styled.div`
     margin-top:20px;
 `;
 const List = styled.div`
-    width:100%;
-    height:60px;
-    border:1px solid black;
-    border-radius:5px;
-    display:flex;
-    margin-top:5px;
-    padding: 0px 5px;
+    width: 100%;
+    height: 60px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    margin-top: 5px;
+    padding: 0 10px;
     box-sizing: border-box;
+    align-items: center;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 `;
 const ListTitle = styled.span`
-    font-size:16px;
-    font-weight:600;
-    line-height:65px;
+   font-size: 16px;
+    font-weight: 600;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
 `;
 const Secret = styled.div`
-    line-height:70px;
+    margin-right: 10px;
 `;
 const PeopleJoinWrapper = styled.div`
-    margin-left:auto;
-    display: flex;
+   display: flex;
     flex-direction: column;
-    padding-top:3px;
+    align-items: flex-end;
 `;
 const PeopleWrapper = styled.div`
-    widht:50px;
-    height:15px;
-    margin-bottom:5px;
-    text-align:center;
+    width: 50px;
+    height: 15px;
+    margin-bottom: 5px;
+    text-align: center;
+    font-size: 12px;
+    color: #666;
 `;
 const JoinButton = styled.div`
-background-color:#003187;
-    width:70px;
-    height:30px;
-    border:1px solid black;
-    box-sizing:border-box;
-    text-align:center;
-    line-height:30px;
-    margin-top:auto;
-    color:white;
+    background-color: #003187;
+    width: 70px;
+    height: 30px;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 30px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+        background-color: #002766;
+    }
 `;
 const PasswordBack = styled.div`
    width:100vw;
@@ -268,6 +279,7 @@ interface Challenge {
 }
 
 const GroupList = () => {
+    const navigate = useNavigate();
     const { challenges, setChallenges } = useChallenges();
     const [create, setCreate] = useState(false)
     const [glasses, setGlasses] = useState(false)
@@ -318,12 +330,14 @@ const GroupList = () => {
                     }
                     setSelectedChallenge(challenge);
                     setJoin(true);
+                    navigate(`/group-challenge/${challenge.id}`);
                 } else {
                     setJoinPasswordModal(true);
                 }
             } else {
                 setSelectedChallenge(challenge);
                 setJoin(true);
+                navigate(`/group-challenge/${challenge.id}`);
             }
         }
     };
@@ -355,6 +369,7 @@ const GroupList = () => {
             setJoin(true);
             setJoinPasswordModal(false);
             setPasswordCheck("");
+            navigate(`/group-challenge/${selectedChallenge.id}`);
         } else {
             alert("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
             setPasswordCheck("");
@@ -460,130 +475,133 @@ const GroupList = () => {
         setGuide4(false)
         setGuideStart(false)
     }
+    
 
     return (
-        <Wrapper>
-            <h4>챌린지를 통해 사람들과 목표를 달성해보세요</h4>
-            <CreateButtonWrapper>
-                <CreateChallengeButton onClick={createClick}>
-                    챌린지 생성 <span>+</span>
-                </CreateChallengeButton>
-            </CreateButtonWrapper>
-            {create && <GroupCreate onBack={() => setCreate(false)} />}
-            <SelectRender value={selectedRender} onChange={renderChange}>
-                <RenderOption value="total">전체</RenderOption>
-                <RenderOption value="join">가입된 그룹방</RenderOption>
-            </SelectRender>
-            <ListWrapper>
-                {filteredChallenges.map((challenge) => (
-                    <List key={challenge.id}>
-                        {challenge.비밀방여부 && (
-                            <Secret>
-                                <CiLock style={{ width: "20px", height: "20px" }} />
-                            </Secret>
-                        )}
-                        <ListTitle>{challenge.그룹챌린지제목}</ListTitle>
-                        <span style={{ marginLeft: "5px" }} onClick={() => glassesClick(challenge)}>
-                            <IoSearch style={{ width: "25px", height: "25px", marginTop: "17px" }} />
-                        </span>
-                        <PeopleJoinWrapper>
-                            <PeopleWrapper>{challenge.유저아이디.length}/10</PeopleWrapper>
-                            <JoinButton onClick={() => joinClick(challenge)}>
-                                {challenge.유저아이디.includes(user?.uid ?? '') ? "인증" : "가입"}
-                            </JoinButton>
-                        </PeopleJoinWrapper>
-                    </List>
-                ))}
-            </ListWrapper>
-            {join && selectedChallenge && <JoinedRoom onBack={() => setJoin(false)} challenge={selectedChallenge} />}
-            {glasses && selectedChallenge && <GroupGlasses onBack={() => setGlasses(false)} challenge={selectedChallenge} />}
-            {joinPasswordModal && (
-                <PasswordBack>
-                    <BackWrapper onClick={() => setJoinPasswordModal(false)}></BackWrapper>
-                    <PasswordWrapper>
-                        <h4 style={{ textAlign: "center" }}>비번방입니다. 비밀번호를 입력해주세요</h4>
-                        <PasswordInput onChange={passwordChange} type="password" name="password-check" value={passwordCheck} />
-                        <PasswordButton onClick={passwordButton}>확인</PasswordButton>
-                    </PasswordWrapper>
-                </PasswordBack>
-            )}
+        <MoSlideModal onClose={() => navigate("/")}>
+            <Wrapper>
+                <h4>챌린지를 통해 사람들과 목표를 달성해보세요</h4>
+                <CreateButtonWrapper>
+                    <CreateChallengeButton onClick={createClick}>
+                        챌린지 생성 <span>+</span>
+                    </CreateChallengeButton>
+                </CreateButtonWrapper>
+                {create && <GroupCreate onBack={() => setCreate(false)} />}
+                <SelectRender value={selectedRender} onChange={renderChange}>
+                    <RenderOption value="total">전체</RenderOption>
+                    <RenderOption value="join">가입된 그룹방</RenderOption>
+                </SelectRender>
+                <ListWrapper>
+                    {filteredChallenges.map((challenge) => (
+                        <List key={challenge.id}>
+                            {challenge.비밀방여부 && (
+                                <Secret>
+                                    <CiLock style={{ width: "20px", height: "20px" }} />
+                                </Secret>
+                            )}
+                            <ListTitle>{challenge.그룹챌린지제목}</ListTitle>
+                            <span style={{ marginLeft: "5px" }} onClick={() => glassesClick(challenge)}>
+                                <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px" }} />
+                            </span>
+                            <PeopleJoinWrapper>
+                                <PeopleWrapper>{challenge.유저아이디.length}/10</PeopleWrapper>
+                                <JoinButton onClick={() => joinClick(challenge)}>
+                                    {challenge.유저아이디.includes(user?.uid ?? '') ? "인증" : "가입"}
+                                </JoinButton>
+                            </PeopleJoinWrapper>
+                        </List>
+                    ))}
+                </ListWrapper>
+                {join && selectedChallenge && <JoinedRoom />}
+                {glasses && selectedChallenge && <GroupGlasses onBack={() => setGlasses(false)} challenge={selectedChallenge} />}
+                {joinPasswordModal && (
+                    <PasswordBack>
+                        <BackWrapper onClick={() => setJoinPasswordModal(false)}></BackWrapper>
+                        <PasswordWrapper>
+                            <h4 style={{ textAlign: "center" }}>비번방입니다. 비밀번호를 입력해주세요</h4>
+                            <PasswordInput onChange={passwordChange} type="password" name="password-check" value={passwordCheck} />
+                            <PasswordButton onClick={passwordButton}>확인</PasswordButton>
+                        </PasswordWrapper>
+                    </PasswordBack>
+                )}
 
-            {guideStart ? (
-                <GuideBackground>
-                    {guide1 ? (
-                        <SelectGuide>
-                            <SelectBox />
-                            <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginLeft: "20px", marginTop: "5px" }} />
-                            <SelectText>
-                                <div>이 부분을 클릭하면 전체그룹방리스트와 가입되어있는 그룹방 리스트를 선택하여 볼 수 있습니다.</div>
-                                <GuideButton onClick={guide1Clcik}>다음</GuideButton>
-                            </SelectText>
-                        </SelectGuide>
-                    ) : null}
-                    {guide2 ? (
-                        <CreateGuide>
-                            <CreateBox />
-                            <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginLeft: "calc(100vw - 100px)", marginTop: "5px" }} />
-                            <CreateText>
-                                <div>챌린지 생성을 클릭하면 새로운 그룹챌린지방을 만들 수 있습니다.</div>
-                                <GuideButton onClick={guide2Clcik}>다음</GuideButton>
-                            </CreateText>
-                        </CreateGuide>
-                    ) : null}
-                    {guide3 ? (
-                        <GlassGuide>
-                            <GuideRoom>
-                                <GuideList>
-                                    <ListTitle>주4일 운동하기</ListTitle>
-                                    <span style={{position:"relative" ,marginLeft: "5px" }}>
-                                    <GlassBox />
-                                        <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px",color:"black" }} />
-                                       
-                                    </span>
-                                    <PeopleJoinWrapper>
-                                        <PeopleWrapper>5/10</PeopleWrapper>
-                                        <JoinButton>
-                                            인증
-                                        </JoinButton>
-                                    </PeopleJoinWrapper>
-                                </GuideList>
-                            </GuideRoom>
-                            <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginLeft: "20px", marginTop: "5px", transform: "translate(110px, 0px)" }} />
-                            <GlassText>
-                                <div>돋보기를 눌러 그룹방의 상세정보를 확인해보세요</div>
-                                <GuideButton onClick={guide3Clcik}>다음</GuideButton>
-                            </GlassText>
-                        </GlassGuide>
-                    ) : null}
-                    {guide4 ? (
-                        <JoinGuide>
-                            <GuideRoom>
-                                <GuideList>
-                                    <ListTitle>주4일 운동하기</ListTitle>
-                                    <span style={{ marginLeft: "5px" }}>
-                                        <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px" }} />
-                                    </span>
-                                    <PeopleJoinWrapper>
-                                        <PeopleWrapper>5/10</PeopleWrapper>
-                                        <JoinButton style={{position:"relative"}}>
-                                            인증
-                                            <JoinBox />
-                                        </JoinButton>
+                {guideStart ? (
+                    <GuideBackground>
+                        {guide1 ? (
+                            <SelectGuide>
+                                <SelectBox />
+                                <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginLeft: "20px", marginTop: "5px" }} />
+                                <SelectText>
+                                    <div>이 부분을 클릭하면 전체그룹방리스트와 가입되어있는 그룹방 리스트를 선택하여 볼 수 있습니다.</div>
+                                    <GuideButton onClick={guide1Clcik}>다음</GuideButton>
+                                </SelectText>
+                            </SelectGuide>
+                        ) : null}
+                        {guide2 ? (
+                            <CreateGuide>
+                                <CreateBox />
+                                <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginLeft: "calc(100vw - 100px)", marginTop: "5px" }} />
+                                <CreateText>
+                                    <div>챌린지 생성을 클릭하면 새로운 그룹챌린지방을 만들 수 있습니다.</div>
+                                    <GuideButton onClick={guide2Clcik}>다음</GuideButton>
+                                </CreateText>
+                            </CreateGuide>
+                        ) : null}
+                        {guide3 ? (
+                            <GlassGuide>
+                                <GuideRoom>
+                                    <GuideList>
+                                        <ListTitle>주4일 운동하기</ListTitle>
+                                        <span style={{ position: "relative", marginLeft: "5px" }}>
+                                            <GlassBox />
+                                            <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px", color: "black" }} />
 
-                                    </PeopleJoinWrapper>
-                                </GuideList>
-                            </GuideRoom>
-                            <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginTop: "5px", marginLeft: "calc(100vw - 84px)" }} />
+                                        </span>
+                                        <PeopleJoinWrapper>
+                                            <PeopleWrapper>5/10</PeopleWrapper>
+                                            <JoinButton>
+                                                인증
+                                            </JoinButton>
+                                        </PeopleJoinWrapper>
+                                    </GuideList>
+                                </GuideRoom>
+                                <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginLeft: "20px", marginTop: "5px", transform: "translate(110px, 0px)" }} />
+                                <GlassText>
+                                    <div>돋보기를 눌러 그룹방의 상세정보를 확인해보세요</div>
+                                    <GuideButton onClick={guide3Clcik}>다음</GuideButton>
+                                </GlassText>
+                            </GlassGuide>
+                        ) : null}
+                        {guide4 ? (
+                            <JoinGuide>
+                                <GuideRoom>
+                                    <GuideList>
+                                        <ListTitle>주4일 운동하기</ListTitle>
+                                        <span style={{ marginLeft: "5px" }}>
+                                            <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px" }} />
+                                        </span>
+                                        <PeopleJoinWrapper>
+                                            <PeopleWrapper>5/10</PeopleWrapper>
+                                            <JoinButton style={{ position: "relative" }}>
+                                                인증
+                                                <JoinBox />
+                                            </JoinButton>
 
-                            <JoinText>
-                                <div>가입버튼을 눌러 가입하고 인증버튼을 눌러 인증해보세요</div>
-                                <GuideButton onClick={guide4Clcik}>완료</GuideButton>
-                            </JoinText>
-                        </JoinGuide>
-                    ) : null}
-                </GuideBackground>
-            ) : null}
-        </Wrapper>
+                                        </PeopleJoinWrapper>
+                                    </GuideList>
+                                </GuideRoom>
+                                <FaArrowUp style={{ width: "35px", height: "35px", color: "white", marginTop: "5px", marginLeft: "calc(100vw - 84px)" }} />
+
+                                <JoinText>
+                                    <div>가입버튼을 눌러 가입하고 인증버튼을 눌러 인증해보세요</div>
+                                    <GuideButton onClick={guide4Clcik}>완료</GuideButton>
+                                </JoinText>
+                            </JoinGuide>
+                        ) : null}
+                    </GuideBackground>
+                ) : null}
+            </Wrapper>
+        </MoSlideModal>
     );
 };
 export default GroupList

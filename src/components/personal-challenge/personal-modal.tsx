@@ -4,6 +4,8 @@ import DailyGoal from "./daily-goal";
 import LongGoal from "./long-goal";
 import TodayGoals from "./today-goal";
 import LongGoalSituation from "./long-situation";
+import { useNavigate } from "react-router-dom";
+import MoSlideModal from "../slideModal/mo-slide-modal";
 
 const Wrapper = styled.div`
     width:100vw;
@@ -36,6 +38,7 @@ const PeriodOption = styled.option`
 `;
 
 const PersonalContent = () => {
+    const navigate = useNavigate()
     const [selectedMenu, setSelectedMenu] = useState('goal');
     const [selectedPeriod, setSelectedPeriod] = useState('dailyGoal')
 
@@ -44,6 +47,7 @@ const PersonalContent = () => {
     }
 
     return (
+        <MoSlideModal onClose={() => navigate("/")}>
         <Wrapper>
             <MenuWrapper>
                 <Menu selected={selectedMenu === 'goal'} onClick={() => setSelectedMenu('goal')}>오늘의 목표</Menu>
@@ -71,6 +75,7 @@ const PersonalContent = () => {
                 <LongGoalSituation />
             )}
         </Wrapper>
+        </MoSlideModal>
     )
 }
 

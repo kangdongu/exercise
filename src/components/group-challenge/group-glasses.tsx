@@ -17,7 +17,6 @@ const BackWrapper = styled.div`
 `;
 const GlassesWrapper = styled.div`
     width:80vw;
-    height:70vh;
     position:fixed;
     background-color:white;
     top:50%;
@@ -93,6 +92,7 @@ const Week = styled.div`
     
 `;
 const DaysWrapper = styled.div`
+    margin-bottom:20px;
     h4{
         margin-bottom:0px;
     }
