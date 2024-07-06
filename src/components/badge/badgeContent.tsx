@@ -2,6 +2,8 @@ import { collection, getDocs, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 import { auth, db } from "../../firebase";
+import { useNavigate } from "react-router-dom";
+import MoSlideModal from "../slideModal/mo-slide-modal";
 
 const Wrapper = styled.div`
     background-color:#f3f1f1;
@@ -69,6 +71,7 @@ interface Badges {
 }
 
 const BadgeContent = () => {
+    const navigate = useNavigate()
     const [selectedMenu, setSelectedMenu] = useState("total")
     const [badges, setBadge] = useState<Badges[]>([])
     const currentUser = auth.currentUser;
@@ -98,6 +101,7 @@ const BadgeContent = () => {
         : badges;
 
     return (
+        <MoSlideModal onClose={() => navigate("/")}>
         <Wrapper>
             <ContentWrapper>
                 <MenuWrapper>
@@ -124,6 +128,7 @@ const BadgeContent = () => {
                 </BadgesWrapper>
             </ContentWrapper>
         </Wrapper>
+        </MoSlideModal>
     )
 }
 export default BadgeContent

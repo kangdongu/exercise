@@ -9,6 +9,7 @@ import { FaLink } from "react-icons/fa6";
 import { FaUserAlt } from "react-icons/fa";
 import { useChallenges } from "../group-context";
 import { useNavigate } from "react-router-dom";
+import ChatModal from "./chat-modal";
 
 
 const Wrapper = styled.div`
@@ -113,6 +114,7 @@ const GroupUser: React.FC<GroupUser> = ({ challenge }) => {
   const [groupUser, setGroupUser] = useState<UserData[]>([])
   const [hostUser, setHostUser] = useState<UserData | null>(null);
   const navigate = useNavigate()
+  const [chattingOpen, setChattingOpen] = useState(false)
   const currentUser = auth.currentUser
 
   useEffect(() => {
@@ -149,7 +151,6 @@ const GroupUser: React.FC<GroupUser> = ({ challenge }) => {
         console.error("Error fetching user:", error);
       }
     };
-    console.log(challenge)
     fetchUser();
   }, [challenge.유저아이디, challenge.방장아이디]);
 
@@ -211,7 +212,7 @@ const GroupUser: React.FC<GroupUser> = ({ challenge }) => {
         <LinkWrapper onClick={alertClick}>
           <FaLink style={{ width: "24px", height: "24px" }} />
         </LinkWrapper>
-        <TalkRoom onClick={alertClick}>채팅방</TalkRoom>
+        <TalkRoom onClick={() => setChattingOpen(true)}>채팅방</TalkRoom>
       </InvitationTalkRoom>
       <RenderUserWrapper>
         <GroupUserWrapper style={{ paddingRight: "10px" }}>
@@ -245,6 +246,7 @@ const GroupUser: React.FC<GroupUser> = ({ challenge }) => {
           </GroupUserWrapper>
         ))}
       </RenderUserWrapper>
+      {chattingOpen && <ChatModal onClose={() => setChattingOpen(false)} roomId={challenge.id} />}
     </Wrapper>
   )
 }

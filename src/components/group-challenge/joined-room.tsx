@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components"
 import MyChallenge from "./group-room/my-challenge";
 import { auth, db, storage } from "../../firebase";
-import { addDoc, collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
 import { differenceInDays, format, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
 import MoSlideLeft from "../slideModal/mo-slide-left";
@@ -211,27 +211,27 @@ const JoinedRoom: React.FC = () => {
     const [ourView, setOurView] = useState<Photo | null>(null);
     const navigate = useNavigate();
 
-    useEffect(() => { 
-        const fetchChallenge = async () => { 
-          if (challengeId) { 
-            const challengeRef = doc(db, "groupchallengeroom", challengeId); 
-            const challengeSnap = await getDoc(challengeRef); 
-            if (challengeSnap.exists()) { 
-              const challengeData = challengeSnap.data() as Challenge; 
-              setChallenge({ ...challengeData, id: challengeSnap.id }); 
-            } else { 
-              console.error("No such document!"); 
-            } 
-          } 
-        }; 
-        fetchChallenge(); 
-      }, [challengeId]); 
+    useEffect(() => {
+        const fetchChallenge = async () => {
+            if (challengeId) {
+                const challengeRef = doc(db, "groupchallengeroom", challengeId);
+                const challengeSnap = await getDoc(challengeRef);
+                if (challengeSnap.exists()) {
+                    const challengeData = challengeSnap.data() as Challenge;
+                    setChallenge({ ...challengeData, id: challengeSnap.id });
+                } else {
+                    console.error("No such document!");
+                }
+            }
+        };
+        fetchChallenge();
+    }, [challengeId]);
 
       const fetchPhotos = async () => {
         if (!challengeId) return;
 
         try {
-            const q = query(collection(db, "groupchallengephoto"), where("챌린지아이디", "==", challengeId));
+            const q = query(collection(db, "groupchallengeroom", challengeId, "photos"), orderBy("날짜", "asc")); 
             const querySnapshot = await getDocs(q);
             const user = auth.currentUser;
             const currentUserUID = user?.uid;
@@ -265,13 +265,14 @@ const JoinedRoom: React.FC = () => {
     const createChallengeButton = async () => {
         const currentUser = auth.currentUser;
         if (!currentUser) return;
+        if (!challengeId) return;
 
         const week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
         const weekDate = week[new Date().getDay()];
         if (challenge?.요일선택.includes(weekDate)) {
             const today = format(new Date(), "yyyy-MM-dd");
             const q = query(
-                collection(db, "groupchallengephoto"),
+                collection(db, "groupchallengeroom", challengeId, "photos"),
                 where("날짜", "==", today),
                 where("유저아이디", "==", currentUser.uid),
                 where("챌린지아이디", "==", challengeId)
@@ -318,7 +319,8 @@ const JoinedRoom: React.FC = () => {
     
     const createChallenge = async () => {
         const user = auth.currentUser;
-        const recordsRef = collection(db, 'groupchallengephoto');
+        if (!user || !challengeId) return;
+        const recordsRef = collection(db, 'groupchallengeroom', challengeId, "photos");
         const startDate = new Date();
         const day = format(startDate, "EEE", { locale: ko })
 

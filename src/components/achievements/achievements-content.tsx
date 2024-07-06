@@ -4,6 +4,8 @@ import styled  from "styled-components";
 import { auth, db } from "../../firebase";
 import { GiAchievement } from "react-icons/gi";
 import { FaAngleDown } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import MoSlideModal from "../slideModal/mo-slide-modal";
 
 
 const Wrapper = styled.div`
@@ -66,6 +68,7 @@ interface Achievements {
 }
 
 const AchievementsContent = () => {
+    const navigate = useNavigate()
     const [achievements, setAchievements] = useState<Achievements[]>([])
     const [selectedMenu, setSelectedMenu] = useState("total")
     const [selectedAchievement, setSelectedAchievement] = useState<string | null>(null)
@@ -99,6 +102,7 @@ const AchievementsContent = () => {
     };
 
     return (
+        <MoSlideModal onClose={() => navigate("/")}>
         <Wrapper>
             <MenuWrapper>
                 <Menu selected={selectedMenu === 'total'} onClick={() => setSelectedMenu('total')}>전체 도전과제</Menu>
@@ -129,6 +133,7 @@ const AchievementsContent = () => {
             )}
 
         </Wrapper>
+        </MoSlideModal>
     )
 }
 export default AchievementsContent

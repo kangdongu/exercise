@@ -56,10 +56,3 @@
         padding: 2px;
     }
 }
-
-.fc-scroller-harness,
-.fc-scroller-harness-liquid {
-    @media screen and (max-width: 700px) {
-        height: calc(100% - 100px) !important;
-    }
-}

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import MoSlideModal from "../../slideModal/mo-slide-modal";
 import { FaRegHeart } from "react-icons/fa";
 import { auth, db, storage } from "../../../firebase";
-import { Timestamp, addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { Timestamp, addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import CommentFormComponent from "../../sns_photo/comment-form";
 import { getDownloadURL, ref } from "firebase/storage";
 import CommentRenderComponent from "../../sns_photo/comment-rander-component";
@@ -37,7 +37,7 @@ const Like = styled.div`
 
 `;
 const CommentWrapper = styled.div`
-
+    position:relative;
 `;
 const CommentIcon = styled.div`
 `;
@@ -51,6 +51,7 @@ interface Photo {
     인증요일: string;
     인증내용: string;
     좋아요유저: string[];
+    챌린지아이디:string;
 }
 interface ourDetailProps {
     photo: Photo;
@@ -75,8 +76,22 @@ const OurViewDetails: React.FC<ourDetailProps> = ({ photo }) => {
     }, []);
 
     useEffect(() => {
-        setLikes(photo.좋아요유저);
-    }, [photo.좋아요유저]);
+        const fetchPhotoLikes = async () => {
+            try {
+                const photoDocRef = doc(db, "groupchallengeroom", photo.챌린지아이디, "photos", photo.id);
+                const photoDoc = await getDoc(photoDocRef);
+                if (photoDoc.exists()) {
+                    const photoData = photoDoc.data();
+                    setLikes(photoData.좋아요유저 || []);
+                    console.log("좋아요유저:", photoData.좋아요유저);
+                }
+            } catch (error) {
+                console.error("좋아요유저를 가져오는 중 오류가 발생했습니다:", error);
+            }
+        };
+
+        fetchPhotoLikes();
+    }, [photo]);
 
     const commentOpen = () => {
         setComment(true);
@@ -84,7 +99,7 @@ const OurViewDetails: React.FC<ourDetailProps> = ({ photo }) => {
 
     const likeBtnClick = async () => {
         if (currentUser && currentUser.uid) {
-            const challengeRef = doc(db, "groupchallengephoto", photo.id);
+            const challengeRef = doc(db, "groupchallengeroom", photo.챌린지아이디 , "photos", photo.id);
             if (likes.includes(currentUser.uid)) {
             
                 try {
@@ -151,7 +166,7 @@ const OurViewDetails: React.FC<ourDetailProps> = ({ photo }) => {
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const commentsCollectionRef = collection(db, "groupchallengecomments");
+                const commentsCollectionRef = collection(db, "groupchallengeroom", photo.챌린지아이디, "photos", photo.id, "comments");
                 const querySnapshot = await getDocs(query(commentsCollectionRef, where("photoId", "==", photo.id)));
                 const commentsData = querySnapshot.docs.map(doc => ({
                     id: doc.id,
@@ -164,14 +179,14 @@ const OurViewDetails: React.FC<ourDetailProps> = ({ photo }) => {
         };
 
         fetchComments();
-    }, [photo.id]);
+    }, [photo.id, photo.챌린지아이디]);
 
     const CommentFormEvent = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (commentWrite !== "") {
             try {
                 const photoId = photo.id;
-                const commentRef = collection(db, "groupchallengecomments");
+                const commentRef = collection(db, "groupchallengeroom", photo.챌린지아이디, "photos", photo.id, "comments");
                 const newComment = {
                     photoId: photoId,
                     유저아이디: currentUser?.uid,
@@ -199,7 +214,7 @@ const OurViewDetails: React.FC<ourDetailProps> = ({ photo }) => {
         try {
             const ok = confirm("정말로 삭제하시겠습니까?");
             if (!ok) return;
-            await deleteDoc(doc(db, "groupchallengecomments", commentId));
+            await deleteDoc(doc(db, "groupchallengeroom", photo.챌린지아이디, "photos", photo.id, "comments", commentId));
             setComments(comments.filter(comment => comment.id !== commentId));
             console.log("댓글이 성공적으로 삭제되었습니다.");
         } catch (error) {

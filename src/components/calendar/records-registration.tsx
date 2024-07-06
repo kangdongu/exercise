@@ -162,11 +162,12 @@ const TypeMenu = styled.li<{ selected: boolean }>`
 `;
 const AreaMenu = styled.li<{ selected: boolean }>`
   font-size:13px;
+  width:16.5%;
   font-weight:600;
   border:1px solid gray;
   text-align:center;
   border-radius:10px;
-  padding: 5px 10px;
+  padding: 5px 0px;
   cursor: pointer;
   background-color: ${(props) => props.selected ? "#ff0000" : "transparent"};
   color: ${(props) => props.selected ? "white" : "black"};
@@ -401,7 +402,7 @@ export default function ExerciseRegistration({
             <TypeMenu onClick={() => setSelectedType("수영")}
               selected={selectedType === "수영"}>수영</TypeMenu>
           </TypeWrapper>
-          <TypeWrapper>
+          <TypeWrapper style={{gap:"0.5%"}}>
             <AreaMenu onClick={() => setSelectedArea("전체")}
               selected={selectedArea === "전체"}>전체</AreaMenu>
             <AreaMenu onClick={() => setSelectedArea("가슴")}

@@ -1,37 +1,32 @@
 import styled from "styled-components";
 
 const CommentContentWrapper = styled.div`
-@media screen and (max-width: 700px) {
-  
-}
-  width:100%;
-  height:500px;
-  overflow-y:scroll;
-      border-top: 1px solid lightgray;
+ width: 100%;
+height: calc(100vh - 150px);
+  overflow-y: auto;
+  border-top: 1px solid lightgray;
+  padding: 10px;
+  box-sizing: border-box;
 `;
 const CommentContnet = styled.div`
-  width:100%;
-  height:80px;
-  border-bottom:1px solid black;
+  width: 100%;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 const UserInfo = styled.div`
-  display:flex;
+  display: flex;
+  align-items: center;
 `;
 const UserImg = styled.img`
-width: 50px;
-  overflow: hidden;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background-color: white;
-  border:0.1px solid lightgray;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  svg {
-    width: 50px;
-    fill: black;
-  }
+  border: 0.1px solid lightgray;
+  margin-right: 10px;
 `;
 const UserImgUpload = styled.label`
 width: 80px;
@@ -49,24 +44,25 @@ width: 80px;
   }
 `;
 const CommeentTextWrapper = styled.div`
-
+  display: flex;
+  flex-direction: column;
 `;
 const CommentNic = styled.span`
-  font-size:14px;
-  color:gray;
+  font-size: 14px;
+  color: gray;
+  font-weight: bold;
 `;
 const CommentText = styled.p`
-  margin-top:10px;
-  margin-bottom:0px;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  font-size: 16px;
+  color: #333;
 `;
 const DeleteComment = styled.div`
-  color:#FF0000	;
-  cursor:pointer;
-  font-weight:600;
-  margin-bottom:5px;
-  width: 50px;
-    text-align: center;
-    margin-left: 86vw;
+  color: #ff0000;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
 `;
 
 interface CommentRenderProps {

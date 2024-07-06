@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import TimerSettingComponent from "./timer-setting";
 import Select from 'react-select';
+import MoSlideModal from "../slideModal/mo-slide-modal";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -63,6 +65,7 @@ transform:translate(50px, 0);
 `;
 
 const TimerContent = () => {
+  const navigate = useNavigate();
   const [TimerStart, setTimerStart] = useState(false);
   const [timerSetting, setTimerSetting] = useState(false);
   const [currentTimer, setCurrentTimer] = useState('exercise');
@@ -164,6 +167,7 @@ const TimerContent = () => {
   };
 
   return (
+    <MoSlideModal onClose={() => navigate("/")}>
     <Wrapper>
       <TimerRound>
         <span>라운드<br /></span>
@@ -213,6 +217,7 @@ const TimerContent = () => {
         리셋
       </ResetWrapper>
     </Wrapper>
+    </MoSlideModal>
   );
 };
 

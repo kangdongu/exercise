@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components"
+import MoSlideModal from "../slideModal/mo-slide-modal";
 
 const Wrapper = styled.div`
     width:100vw;
@@ -34,6 +36,7 @@ const ModalWrapper = styled.div`
 `;
 
 const EfficacyContent = () => {
+    const navigate = useNavigate();
     const [modal,setModal] = useState(false)
 
     const modalOpen = () => {
@@ -44,6 +47,7 @@ const EfficacyContent = () => {
     }
 
     return (
+        <MoSlideModal onClose={() => navigate("/")}>
         <Wrapper>
             <h4 style={{fontSize:"24px", marginTop:"10px", marginLeft:"2.5vw", marginBottom:"10px"}}>운동 정보</h4>
             <ContentWrapper>
@@ -62,6 +66,7 @@ const EfficacyContent = () => {
                 </ModalWrapper>
             )}
         </Wrapper>
+        </MoSlideModal>
     )
 }
 export default EfficacyContent
