@@ -8,6 +8,7 @@ import { auth, db, storage } from "../../../firebase";
 import { Timestamp, addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import CommentFormComponent from "../../sns_photo/comment-form";
 import { getDownloadURL, ref } from "firebase/storage";
+import { FaUserAlt } from "react-icons/fa";
 import CommentRenderComponent from "../../sns_photo/comment-rander-component";
 
 
@@ -41,6 +42,25 @@ const CommentWrapper = styled.div`
 `;
 const CommentIcon = styled.div`
 `;
+const UserProfileWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 10px;
+    margin-bottom: 10px;
+    border-top: 1px solid gray;
+`;
+const UserprogileImg = styled.div`
+    width:50px;
+    height:50px;
+    border:0.1px solid gray;
+    border-radius:50%;
+    overflow:hidden;
+`;
+const UserNickname = styled.div`
+
+`;
+
 
 interface Photo {
     id: string;
@@ -52,6 +72,8 @@ interface Photo {
     인증내용: string;
     좋아요유저: string[];
     챌린지아이디:string;
+    닉네임:string;
+    프로필사진:string;
 }
 interface ourDetailProps {
     photo: Photo;
@@ -224,6 +246,18 @@ const OurViewDetails: React.FC<ourDetailProps> = ({ photo }) => {
 
     return (
         <Wrapper>
+            <UserProfileWrapper>
+                <UserprogileImg>
+                    {photo.프로필사진 !== "" ? (
+                        <img style={{width:'100%'}} src={photo.프로필사진} />
+                    ): (
+                        <FaUserAlt style={{width:'35px',height:'35px', marginLeft:'7.5px', marginTop:'15px'}} />
+                    )}
+                </UserprogileImg>
+                <UserNickname>
+                    {photo.닉네임}
+                </UserNickname>
+            </UserProfileWrapper>
             <ImgWrapper>
                 <Img src={photo.인증사진} />
             </ImgWrapper>
