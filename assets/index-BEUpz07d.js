@@ -5657,7 +5657,7 @@ font-size:25px;
     padding: 20px;
     border-radius: 10px;
     width: 95%;
-    height: 90%;
+    height: 80%;
     display: flex;
     flex-direction: column;
 `,pDe=C.div`
@@ -6176,7 +6176,7 @@ margin: 25px 0px;
     padding:10px;
     display: flex;
     align-items: center;
-`,OAe=()=>{const t=Bn(),[e,n]=S.useState([]),[r,i]=S.useState("total"),[s,o]=S.useState(null),a=we.currentUser;S.useEffect(()=>{(async()=>{try{const d=ke(le(te,"achievements")),f=(await Te(d)).docs.map(g=>({도전과제이름:g.data().도전과제이름,도전과제설명:g.data().도전과제설명,유저아이디:g.data().유저아이디}));n(f)}catch{}})()},[]);const l=r==="attainment"?e.filter(u=>u.유저아이디.includes((a==null?void 0:a.uid)||"")):e,c=u=>{o(s===u?null:u)};return p.jsx(li,{onClose:()=>t("/"),children:p.jsxs(kAe,{children:[p.jsxs(RAe,{children:[p.jsx(R4,{selected:r==="total",onClick:()=>i("total"),children:"전체 도전과제"}),p.jsx(R4,{selected:r==="attainment",onClick:()=>i("attainment"),children:"달성한 도전과제"})]}),l.length===0&&r==="attainment"?p.jsx(IAe,{children:"현재까지 달성한 도전과제가 없습니다"}):l.map(u=>p.jsxs(TAe,{children:[p.jsxs(DAe,{onClick:()=>c(u.도전과제이름),children:[p.jsx(AAe,{children:p.jsx(EAe,{style:{width:"30px",height:"30px",marginTop:"10px",color:"#e8d058"}})}),p.jsx(PAe,{completed:u.유저아이디.includes((a==null?void 0:a.uid)||""),children:u.도전과제이름}),p.jsx(sF,{style:{width:"20px",height:"20px",marginTop:"15px"}})]}),s===u.도전과제이름&&p.jsx(MAe,{children:u.도전과제설명})]},u.도전과제이름))]})})},NAe=C.div`
+`,OAe=()=>{const t=Bn(),[e,n]=S.useState([]),[r,i]=S.useState("total"),[s,o]=S.useState(null),a=we.currentUser;S.useEffect(()=>{(async()=>{try{const d=ke(le(te,"achievements")),f=(await Te(d)).docs.map(g=>({도전과제이름:g.data().도전과제이름,도전과제설명:g.data().도전과제설명,유저아이디:g.data().유저아이디}));n(f)}catch{}})()},[]);const l=r==="attainment"?e.filter(u=>u.유저아이디.includes((a==null?void 0:a.uid)||"")):e,c=u=>{o(s===u?null:u)};return p.jsx(li,{onClose:()=>t("/"),children:p.jsxs(kAe,{children:[p.jsxs(RAe,{children:[p.jsx(R4,{selected:r==="total",onClick:()=>i("total"),children:"전체 도전과제"}),p.jsx(R4,{selected:r==="attainment",onClick:()=>i("attainment"),children:"달성한 도전과제"})]}),l.length===0&&r==="attainment"?p.jsx(IAe,{children:"현재까지 달성한 도전과제가 없습니다"}):l.map(u=>p.jsxs(TAe,{children:[p.jsxs(DAe,{onClick:()=>c(u.도전과제이름),children:[p.jsx(AAe,{children:p.jsx(EAe,{style:{width:"30px",height:"30px",marginTop:"10px",color:"#e8d058"}})}),p.jsx(PAe,{completed:u.유저아이디.includes((a==null?void 0:a.uid)||""),children:u.도전과제이름}),r==="total"?p.jsx(sF,{style:{width:"20px",height:"20px",marginTop:"15px"}}):null]}),s===u.도전과제이름&&r==="total"&&p.jsx(MAe,{children:u.도전과제설명})]},u.도전과제이름))]})})},NAe=C.div`
     width:100vw;
     height:calc(100vh - 70px);
     overflow-y:scroll;
