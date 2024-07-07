@@ -5672,6 +5672,7 @@ font-size:25px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-right:10px;
 `,SDe=C.img`
     width: 40px;
     height: 40px;
@@ -5684,7 +5685,6 @@ font-size:25px;
     height:40px;
     border:0.3px solid lightgray;
     border-radius:50%;
-    margin-right:10px;
     overflow:hidden;
 `,EDe=({onClose:t,roomId:e})=>{const[n,r]=b.useState([]),[i,s]=b.useState(""),[o,a]=b.useState(null),l=ve.currentUser;b.useEffect(()=>{(async()=>{if(l){const d=oe(X,"user"),h=be(d,Ee("유저아이디","==",l.uid)),f=await Se(h);if(!f.empty){const g=f.docs[0].data();a({프로필사진:g.프로필사진||"",닉네임:g.닉네임||""})}}})()},[l]),b.useEffect(()=>{const u=oe(X,"groupchallengeroom",e,"messages"),d=be(u,qf("날짜","asc")),h=uJ(d,f=>{const g=f.docs.map(m=>{const y=m.data();return{채팅내용:y.채팅내용,날짜:y.날짜.toDate(),유저아이디:y.유저아이디,프로필사진:y.프로필사진,닉네임:y.닉네임}});r(g)});return()=>h()},[e]);const c=async()=>{i.trim()!==""&&o&&(await ar(oe(X,"groupchallengeroom",e,"messages"),{채팅내용:i,날짜:new Date,유저아이디:l==null?void 0:l.uid,프로필사진:o.프로필사진,닉네임:o.닉네임}),s(""))};return p.jsx(hDe,{children:p.jsxs(fDe,{children:[p.jsxs(pDe,{children:[p.jsx("h4",{children:"채팅방"}),p.jsx(_De,{onClick:t,children:"X"})]}),p.jsx(gDe,{children:n.map((u,d)=>p.jsxs(mDe,{isCurrentUser:u.유저아이디===(l==null?void 0:l.uid),children:[u.유저아이디!==(l==null?void 0:l.uid)&&p.jsxs(bDe,{children:[u.프로필사진!==""?p.jsx(S4,{children:p.jsx(SDe,{src:u.프로필사진,alt:"프로필"})}):p.jsx(S4,{children:p.jsx(Wh,{style:{width:"30px",color:"gray",height:"30px",marginLeft:"5px",marginTop:"10px"}})}),p.jsx(CDe,{children:u.닉네임})]}),p.jsx(yDe,{isCurrentUser:u.유저아이디===(l==null?void 0:l.uid),children:u.채팅내용})]},d))}),p.jsxs(vDe,{children:[p.jsx(wDe,{value:i,onChange:u=>s(u.target.value),placeholder:"메시지를 입력하세요"}),p.jsx(xDe,{onClick:c,children:"전송"})]})]})})},kDe=C.div`
   padding: 10px;
