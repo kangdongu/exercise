@@ -48,10 +48,14 @@ Habit의 궁극적인 목표는 사용자가 지속적으로 운동을 하여 �
 ![2-2](https://github.com/kangdongu/exercise/assets/162076741/984969ae-af57-45d4-96f5-8ffbbf6a0052)
 
 
-그룹챌린지
+그룹챌린지리스트 및 그룹생성
 
-![3](https://github.com/kangdongu/exercise/assets/162076741/479213f6-91f8-466f-963a-47813cdfbb6c)
+![3-1](https://github.com/kangdongu/exercise/assets/162076741/380e8417-214a-44e3-bba6-3a9af092a83c)
 
+
+그룹챌린지 방
+
+![3-2](https://github.com/kangdongu/exercise/assets/162076741/5c2992ef-4f42-4767-a40e-295634f87c9c)
 
 타이머, 뱃지, 도전과제
 
