@@ -1,6 +1,8 @@
 import styled from "styled-components"
 import GithubButton from "../components/github-login";
 import GoogleButton from "../components/gogle-login";
+import { FaArrowRight } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
 @media screen and (max-width: 700px) {
@@ -27,24 +29,22 @@ const Title = styled.div`
     width:100%;
     line-height:150px;
     text-align:center;
-    margin:100px auto;
+    margin:5vh auto;
     margin-bottom:10px;
 `;
 const TextWrapper = styled.div`
     width:100%;
-    height:100px;
     font-size:23px;
     font-weight:800;
 `;
 const ContentWrapper = styled.div`
 @media screen and (max-width: 700px) {
-    height: 100vh;
     width:90vw;
    }
-    height:915px;
     width:412px;
     padding: 0px 5px;
     margin: 0 auto;
+    margin-bottom : 20px;
 `;
 const Size = styled.div`
 @media screen and (max-width: 700px) {
@@ -54,6 +54,16 @@ const Size = styled.div`
     bottom:50px;
     text-align:center;
     width:412px;
+`;
+const Interviewer = styled.div`
+    width:90%;
+    height:50px;
+    background-color:white;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 0 auto;
+    border-radius:10px;
 `;
 
 
@@ -69,6 +79,11 @@ export const Switcher = styled.span`
 `;
 
 export default function Login() {
+    const navigate = useNavigate()
+
+    const createAccount = () => {
+        navigate("/create-account")
+    }
 
     return (
         <Wrapper>
@@ -82,6 +97,10 @@ export default function Login() {
                     <GoogleButton />
                 </LoginButtonWrapper>
             </ContentWrapper>
+            <Interviewer onClick={createAccount}>
+                <span>면접관님 전용 로그인</span> 
+                <FaArrowRight />
+            </Interviewer>
             <Size>현재 개발자모드 Samsung Galaxy S20 Ultra에<br />최적화 되어 있습니다.</Size>
         </Wrapper>
     )

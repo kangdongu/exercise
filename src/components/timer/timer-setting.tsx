@@ -12,45 +12,50 @@ const slideUp = keyframes`
 `;
 
 const Wrapper = styled.div`
-  width: 100vw;
+ width: 100vw;
   height: 100vh;
   background-color: white;
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
   z-index: 100;
   animation: ${slideUp} 0.3s ease-out;
   display: flex;
   flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
 `;
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
 `;
 
 const Complete = styled.div`
   cursor: pointer;
+  color: #007bff;
+  font-weight: bold;
+  font-size: 16px;
 `;
 
 const InputWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 30px;
 `;
 
 const Back = styled.div`
-  width: 50px;
-  height: 20px;
-  margin: 10px;
-  cursor: pointer;
-  align-self: flex-start;
+cursor: pointer;
+  color: #007bff;
+  font-size: 16px;
 `;
 const Title = styled.div`
-  font-size:20px;
-  
+  font-size: 20px;
+  font-weight: bold;
 `;
 
 interface MoTimerSetting {
@@ -90,12 +95,12 @@ const TimerSettingComponent: React.FC<MoTimerSetting> = ({ onClose, onComplete, 
           styles={{
             container: (base) => ({
               ...base,
-              width: '100px',
+              width: '80px',
               marginRight: '10px',
             }),
             menu: (base) => ({
               ...base,
-              maxHeight: '150px',
+              maxHeight: '300px',
             }),
           }}
         />
@@ -107,12 +112,12 @@ const TimerSettingComponent: React.FC<MoTimerSetting> = ({ onClose, onComplete, 
           styles={{
             container: (base) => ({
               ...base,
-              width: '100px',
-              marginLeft: '10px',
+              width: '80px',
+              marginRight: '10px',
             }),
             menu: (base) => ({
               ...base,
-              maxHeight: '150px',
+              maxHeight: '300px',
             }),
           }}
         />

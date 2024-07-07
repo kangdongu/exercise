@@ -81,6 +81,7 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
     const [showAchievements, setShowAchievements] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
     const [goals, setGoals] = useState<{ memo: string }[]>([{ memo: "" }]);
+    const [isCreating, setIsCreating] = useState(false)
 
     const handleDateChange = (date: Date | null) => {
         setSelectedDate(date);
@@ -109,6 +110,9 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
     }
 
     const completClick = async () => {
+        if (isCreating) return;
+
+        setIsCreating(true);
         if (goals.every(goal => goal.memo.trim() !== "")) {
             try {
                 const user = auth.currentUser;
@@ -143,8 +147,10 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
                 }
             } catch (error) {
                 console.error(error);
+            } finally {
+                setIsCreating(false);
             }
-        }else if(goals.some(goal => goal.memo.trim() === ""))(
+        } else if (goals.some(goal => goal.memo.trim() === "")) (
             alert("목표의 내용을 작성해주세요")
         )
     };

@@ -7,28 +7,34 @@ import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 100%;
-  height:97vh;
+  height:calc(100vh - 80px);
   position:relative;
 `;
 
-const TimerSection = styled.div`
+const TimerSection = styled.div<{disabled: boolean}>`
   width: 100%;
-  cursor: pointer;
+  cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
   font-size: 30px;
   text-align: center;
   margin-top: 20px;
-  height:150px;
+  height:20vh;
   overflow-y:scroll;
   border-top:1px solid #939393;
+  pointer-events: ${props => props.disabled ? "none" : "auto"};
+  opacity: ${props => props.disabled ? 0.5 : 1};
 `;
-const TimerRound = styled.div`
+
+const TimerRound = styled.div<{disabled: boolean}>`
   width: 100%;
-  cursor: pointer;
+  cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
   font-size: 24px;
   text-align: center;
   margin-top: 10px;
   margin-bottom:65px;
+  pointer-events: ${props => props.disabled ? "none" : "auto"};
+  opacity: ${props => props.disabled ? 0.5 : 1};
 `;
+
 const StartWrapper = styled.div`
   cursor: pointer;
   font-size: 20px;
@@ -39,7 +45,7 @@ const StartWrapper = styled.div`
   border:1px solid black;
   line-height:50px;
   position:absolute;
-  bottom:100px;
+  bottom:30px;
   left:50%;
   transform:translate(-25px,0);
 `;
@@ -48,20 +54,21 @@ const RoundStart = styled.div`
   font-size: 18px;
   margin-top: 10px;
 `;
+
 const ResetWrapper = styled.div`
-width:50px;
-height:50px;
-cursor: pointer;
-font-size: 24px;
-text-align: center;
-margin-top: 20px;
-color: red;
-position:absolute;
-bottom:100px;
-left:50%;
-line-height:50px;
-text-align:center;
-transform:translate(50px, 0);
+  width:50px;
+  height:50px;
+  cursor: pointer;
+  font-size: 24px;
+  text-align: center;
+  margin-top: 20px;
+  color: red;
+  position:absolute;
+  bottom:30px;
+  left:50%;
+  line-height:50px;
+  text-align:center;
+  transform:translate(50px, 0);
 `;
 
 const TimerContent = () => {
@@ -104,6 +111,7 @@ const TimerContent = () => {
   };
 
   const openTimerSetting = (timer: string) => {
+    if (TimerStart) return;
     setCurrentTimer(timer);
     setTimerSetting(true);
     setTimerTitle(timer)
@@ -168,55 +176,56 @@ const TimerContent = () => {
 
   return (
     <MoSlideModal onClose={() => navigate("/")}>
-    <Wrapper>
-      <TimerRound>
-        <span>라운드<br /></span>
-        <Select
-          options={Array.from({ length: 10 }, (_, i) => ({ value: `${i + 1}`, label: `${i + 1}` }))}
-          value={currentRound}
-          onChange={(option) => {
-            setCurrentRound(option || { value: "1", label: "1" });
-            setRoundIndex(1);
-          }}
-          styles={{
-            menu: (provided) => ({
-              ...provided,
-              maxHeight: '200px',
-              overflowY: 'auto'
-            })
-          }}
-        />
-        <RoundStart>{roundIndex} / {currentRound.value} 라운드</RoundStart>
-      </TimerRound>
-      <TimerSection onClick={() => openTimerSetting('exercise')}>
-        <span>운동<br /></span>
-        {formatTime(exerciseTime)}
-         <span style={{fontSize:"14px"}}><br />(클릭하여 시간설정)</span>
-      </TimerSection>
-      <TimerSection style={{borderBottom:"1px solid #939393"}} onClick={() => openTimerSetting('relax')}>
-        <span>휴식<br /></span>
-        {formatTime(relaxTime)}
-        <span style={{fontSize:"14px"}}><br />(클릭하여 시간설정)</span>
-      </TimerSection>
-      {timerSetting && (
-        <TimerSettingComponent
-          onClose={() => setTimerSetting(false)}
-          onComplete={handleComplete}
-          initialTime={
-            currentTimer === 'exercise'
-              ? exerciseTime
-              : relaxTime
-          }
-          title={timerTitle}
-        />
-      )}
-      <StartWrapper onClick={timerToggle}>
-        {TimerStart ? "정지" : "시작"}
-      </StartWrapper>
-      <ResetWrapper onClick={resetClick}>
-        리셋
-      </ResetWrapper>
-    </Wrapper>
+      <Wrapper>
+        <TimerRound disabled={TimerStart}>
+          <span>라운드<br /></span>
+          <Select
+            options={Array.from({ length: 10 }, (_, i) => ({ value: `${i + 1}`, label: `${i + 1}` }))}
+            value={currentRound}
+            onChange={(option) => {
+              setCurrentRound(option || { value: "1", label: "1" });
+              setRoundIndex(1);
+            }}
+            styles={{
+              menu: (provided) => ({
+                ...provided,
+                maxHeight: '300px',
+                overflowY: 'auto'
+              })
+            }}
+            isDisabled={TimerStart}
+          />
+          <RoundStart>{roundIndex} / {currentRound.value} 라운드</RoundStart>
+        </TimerRound>
+        <TimerSection onClick={() => openTimerSetting('exercise')} disabled={TimerStart}>
+          <span>운동<br /></span>
+          {formatTime(exerciseTime)}
+          <span style={{fontSize:"14px"}}><br />(클릭하여 시간설정)</span>
+        </TimerSection>
+        <TimerSection style={{borderBottom:"1px solid #939393"}} onClick={() => openTimerSetting('relax')} disabled={TimerStart}>
+          <span>휴식<br /></span>
+          {formatTime(relaxTime)}
+          <span style={{fontSize:"14px"}}><br />(클릭하여 시간설정)</span>
+        </TimerSection>
+        {timerSetting && (
+          <TimerSettingComponent
+            onClose={() => setTimerSetting(false)}
+            onComplete={handleComplete}
+            initialTime={
+              currentTimer === 'exercise'
+                ? exerciseTime
+                : relaxTime
+            }
+            title={timerTitle}
+          />
+        )}
+        <StartWrapper onClick={timerToggle}>
+          {TimerStart ? "정지" : "시작"}
+        </StartWrapper>
+        <ResetWrapper onClick={resetClick}>
+          리셋
+        </ResetWrapper>
+      </Wrapper>
     </MoSlideModal>
   );
 };

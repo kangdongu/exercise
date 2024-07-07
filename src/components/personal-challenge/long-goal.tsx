@@ -119,6 +119,7 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
     const [goals, setGoals] = useState<{ memo: string }[]>([{ memo: "" }]);
     const [title, setTitle] = useState("")
     const [showAchievements, setShowAchievements] = useState(false);
+    const [isCreating, setIsCreating] = useState(false)
 
     const EndDateChange = (date: Date | null) => {
         setSelectedEndDate(date);
@@ -152,6 +153,9 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
     }
 
     const completClick = async () => {
+        if (isCreating) return;
+
+        setIsCreating(true);
         if (title !== "" && goals.length !== 0 && goals.every(goal => goal.memo.trim() !== "")) {
             try {
                 const user = auth.currentUser;
@@ -206,6 +210,8 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
                 }
             } catch (error) {
                 console.error(error);
+            } finally {
+                setIsCreating(false);
             }
         } else {
             if (title === "" && goals.length == 0 && selectedWeek === "") {
@@ -214,7 +220,7 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
                 alert("제목을 입력해주세요")
             } else if (goals.length == 0) {
                 alert("목표를 추가해주세요")
-            }else if (goals.some(goal => goal.memo.trim() === "")){
+            } else if (goals.some(goal => goal.memo.trim() === "")) {
                 alert("목표의 내용을 입력해주세요")
             }
 
@@ -234,7 +240,7 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
 
     return (
         <Wrapper>
-            <h4 style={{marginTop:"5px", marginBottom:"5px"}}>장기 챌린지 제목 *</h4>
+            <h4 style={{ marginTop: "5px", marginBottom: "5px" }}>장기 챌린지 제목 *</h4>
             <Title onChange={TitleChange} type="text" value={title} name="title" placeholder="챌린지 제목을 적어주세요"></Title>
             <DateWrapper>
                 <DateTitle>종료날짜를 입력해주세요</DateTitle>

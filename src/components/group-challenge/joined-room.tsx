@@ -194,9 +194,9 @@ export interface Photo {
     인증요일: string;
     인증내용: string;
     좋아요유저: string[];
-    챌린지아이디:string;
-    프로필사진:string;
-    닉네임:string;
+    챌린지아이디: string;
+    프로필사진: string;
+    닉네임: string;
 }
 
 const JoinedRoom: React.FC = () => {
@@ -211,6 +211,7 @@ const JoinedRoom: React.FC = () => {
     const [photoMyData, setPhotoMyData] = useState<Photo[]>([]);
     const [viewPhoto, setViewPhoto] = useState<Photo | null>(null);
     const [ourView, setOurView] = useState<Photo | null>(null);
+    const [isCreating, setIsCreating] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -229,11 +230,11 @@ const JoinedRoom: React.FC = () => {
         fetchChallenge();
     }, [challengeId]);
 
-      const fetchPhotos = async () => {
+    const fetchPhotos = async () => {
         if (!challengeId) return;
 
         try {
-            const q = query(collection(db, "groupchallengeroom", challengeId, "photos"), orderBy("날짜", "asc"),); 
+            const q = query(collection(db, "groupchallengeroom", challengeId, "photos"), orderBy("날짜", "asc"),);
             const querySnapshot = await getDocs(q);
             const user = auth.currentUser;
             const currentUserUID = user?.uid;
@@ -248,8 +249,8 @@ const JoinedRoom: React.FC = () => {
                 인증내용: doc.data().인증내용,
                 좋아요유저: doc.data().좋아요유저,
                 챌린지아이디: doc.data().챌린지아이디,
-                프로필사진:doc.data().프로필사진,
-                닉네임:doc.data().닉네임
+                프로필사진: doc.data().프로필사진,
+                닉네임: doc.data().닉네임
             }));
 
             setPhotoData(photoArray);
@@ -312,16 +313,19 @@ const JoinedRoom: React.FC = () => {
         }
     };
 
-   
 
-    const uploadFile = async (file: File): Promise<string> => { 
+
+    const uploadFile = async (file: File): Promise<string> => {
         const fileRef = ref(storage, `groupchallengephotos/${challengeId}/${file.name}`);
-        await uploadBytes(fileRef, file); 
-        const fileURL = await getDownloadURL(fileRef); 
-        return fileURL; 
-    }; 
-    
+        await uploadBytes(fileRef, file);
+        const fileURL = await getDownloadURL(fileRef);
+        return fileURL;
+    };
+
     const createChallenge = async () => {
+        if (isCreating) return;
+
+        setIsCreating(true);
         const user = auth.currentUser;
         if (!user || !challengeId) return;
 
@@ -335,9 +339,9 @@ const JoinedRoom: React.FC = () => {
         const day = format(startDate, "EEE", { locale: ko })
 
         let fileURL = "";
-        if (file) { 
-            fileURL = await uploadFile(file); 
-        } 
+        if (file) {
+            fileURL = await uploadFile(file);
+        }
 
         try {
             await addDoc(recordsRef, {
@@ -349,20 +353,22 @@ const JoinedRoom: React.FC = () => {
                 인증내용: memo,
                 좋아요유저: [],
                 챌린지아이디: challengeId,
-                프로필사진:userData.프로필사진,
-                닉네임:userData.닉네임,
+                프로필사진: userData.프로필사진,
+                닉네임: userData.닉네임,
             })
             fetchPhotos();
             setCreateChallenge(false)
-            setMemo("") 
-            setPreviewUrl(null) 
-            setFile(null)  
+            setMemo("")
+            setPreviewUrl(null)
+            setFile(null)
         } catch (error) {
             console.log(error)
+        } finally {
+            setIsCreating(false);
         }
     }
 
-   
+
 
     const handlePhotoClick = (photo: Photo) => {
         setViewPhoto(photo)
@@ -371,9 +377,9 @@ const JoinedRoom: React.FC = () => {
         setOurView(photo)
     }
 
-    if (!challenge) { 
-        return <LoadingScreen />; 
-      } 
+    if (!challenge) {
+        return <LoadingScreen />;
+    }
 
     return (
         <Wrapper>

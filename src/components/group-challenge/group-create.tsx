@@ -203,6 +203,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
     const [nickname, setNickname] = useState("")
     const [isPeopleModalOpen, setIsPeopleModalOpen] = useState(false);
     const [peopleCount, setPeopleCount] = useState(0);
+    const [isCreating, setIsCreating] = useState(false)
     const currentUser = auth.currentUser
 
 
@@ -311,6 +312,9 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
     }, [currentUser]);
 
     const createRoom = async () => {
+        if (isCreating) return;
+
+        setIsCreating(true);
         if (password === rePassword && title !== "" && contentText !== "" && selectedDays.length !== 0) {
             const user = auth.currentUser;
             const recordsRef = collection(db, "groupchallengeroom");
@@ -343,6 +347,8 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                 onBack();
             } catch (error) {
                 console.error("방 생성 중 오류가 발생했습니다: ", error);
+            } finally {
+                setIsCreating(false);
             }
         } else if (password !== rePassword) {
             alert("비밀번호가 다릅니다");
@@ -433,7 +439,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
             <PeopleCompleteWrapper>
                 {peopleCount !== 0 ? (
                     <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                        <span style={{fontWeight:'600'}}>인원수 설정 필수 *</span>
+                        <span style={{ fontWeight: '600' }}>인원수 설정 필수 *</span>
                         <People style={{ backgroundColor: "#326FFC", justifyContent: "center" }} onClick={() => setIsPeopleModalOpen(true)}>인원수: {peopleCount}</People>
                     </div>
                 ) : (

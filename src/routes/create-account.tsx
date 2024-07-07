@@ -8,15 +8,22 @@ import GithubButton from "../components/github-login";
 import GoogleButton from "../components/gogle-login";
 
 const Wrapper = styled.div`
-height: 100%;
+@media screen and (max-width: 700px) {
+    height: 100vh;
+    width:100vw;
+   }
+height: 900px;
 display: flex;
 flex-direction: column;
 align-items: center;
-width: 420px;
-padding: 50px 0px;
+width: 412px;
+margin: 0 auto;
+padding: 50px 10px;
+background-color:#f3f1f1;
 `;
 const Title = styled.h1`
 font-size: 42px;
+color:#990033;
 `;
 const CreateForm = styled.form`
 margin-top: 50px;
@@ -44,9 +51,11 @@ padding: 10px 20px;
 border-radius: 50px;
 border: none;
 width: 100%;
+background-color:#990033;
 font-size: 16px;
 &[type="submit"] {
 cursor: pointer;
+color:white;
 &:hover {
 opacity: 0.8;
 }
@@ -113,7 +122,7 @@ export default function CreateAccount(){
     
     return (
         <Wrapper>
-            <Title>회원가입</Title>
+            <Title>Habit</Title>
             <CreateForm onSubmit={onSubmit}>
                 <CreateInput onChange={onChange} name="name" value={name} placeholder="이름" type="text" required />
                 <CreateInput onChange={onChange} name="email" value={email} placeholder="이메일" type="email" required />
@@ -126,6 +135,7 @@ export default function CreateAccount(){
             </Switcher>
             <GithubButton />
             <GoogleButton />
+            <div style={{width:"90%", margin:"20px auto", textAlign:'center'}}>아무 이름과 이메일, 비밀번호를 입력하시면 로그인 가능합니다.</div>
         </Wrapper>
     )
 }

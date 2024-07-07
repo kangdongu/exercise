@@ -184,6 +184,7 @@ export default function PhotoRecords() {
     const [selectedOption, setSelectedOption] = useState("나만보기");
     const [editView, setEditView] = useState(false);
     const [userProfile, setUserProfile] = useState<{ 프로필사진: string, 닉네임: string } | null>(null);
+    const [isCreating, setIsCreating] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -252,6 +253,9 @@ export default function PhotoRecords() {
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (isCreating) return;
+
+        setIsCreating(true);
         const user = auth.currentUser;
 
         if (!user || isLoading) return;
@@ -292,6 +296,7 @@ export default function PhotoRecords() {
                 console.error(error);
             } finally {
                 setLoading(false);
+                setIsCreating(false);
             }
         }
     };
@@ -304,8 +309,8 @@ export default function PhotoRecords() {
                     const userId = user.uid;
                     const userPhotosRef = collection(db, "photo");
                     const querySnapshot = await getDocs(
-                        query(userPhotosRef, where("유저아이디", "==", userId),orderBy("정렬날짜", "desc"))
-                        
+                        query(userPhotosRef, where("유저아이디", "==", userId), orderBy("정렬날짜", "desc"))
+
                     );
                     const photos: any[] = [];
                     querySnapshot.forEach((doc) => {
@@ -473,7 +478,7 @@ export default function PhotoRecords() {
                 ))}
             </PhotoWrapper>
             {viewDetails && window.innerWidth <= 700 ? (
-                <MoSlideModal onClose={()=> {setViewDetails(false)}}>
+                <MoSlideModal onClose={() => { setViewDetails(false) }}>
                     <ModalBackdrop>
                         <ViewContent>
                             {selectedPhotoDetails && (
