@@ -231,7 +231,7 @@ const JoinedRoom: React.FC = () => {
         if (!challengeId) return;
 
         try {
-            const q = query(collection(db, "groupchallengeroom", challengeId, "photos"), orderBy("날짜", "asc")); 
+            const q = query(collection(db, "groupchallengeroom", challengeId, "photos"), orderBy("날짜", "asc"),); 
             const querySnapshot = await getDocs(q);
             const user = auth.currentUser;
             const currentUserUID = user?.uid;
@@ -275,7 +275,7 @@ const JoinedRoom: React.FC = () => {
                 collection(db, "groupchallengeroom", challengeId, "photos"),
                 where("날짜", "==", today),
                 where("유저아이디", "==", currentUser.uid),
-                where("챌린지아이디", "==", challengeId)
+                where("챌린지아이디", "==", challengeId),
             );
 
             const querySnapshot = await getDocs(q);

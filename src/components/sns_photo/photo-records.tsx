@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 import { auth, db, storage } from "../../firebase";
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import DateChoice from "../date-picker";
 import { format } from 'date-fns';
@@ -276,7 +276,8 @@ export default function PhotoRecords() {
                     const userId = user.uid;
                     const userPhotosRef = collection(db, "photo");
                     const querySnapshot = await getDocs(
-                        query(userPhotosRef, where("유저아이디", "==", userId))
+                        query(userPhotosRef, where("유저아이디", "==", userId),orderBy("정렬날짜", "desc"))
+                        
                     );
                     const photos: any[] = [];
                     querySnapshot.forEach((doc) => {

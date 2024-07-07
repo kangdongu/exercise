@@ -72,14 +72,14 @@ function App() {
                   <GroupList />
                 </ChallengeProvider>
               } />
-              <Route path="group-challenge/:challengeId" element={
+              <Route path="achievements" element={<AchievementsContent />} />
+              <Route path="efficacy" element={<EfficacyContent />} />
+            </Route>
+            <Route path="/group-challenge/:challengeId" element={
                 <ChallengeProvider>
                   <JoinedRoom />
                 </ChallengeProvider>
               } />
-              <Route path="achievements" element={<AchievementsContent />} />
-              <Route path="efficacy" element={<EfficacyContent />} />
-            </Route>
             <Route path="/start-page" element={<StartPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/create-account" element={<CreateAccount />} />

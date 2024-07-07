@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { auth, db, storage } from "../firebase";
-import { collection, getDocs, query, where, doc, getDoc, updateDoc, addDoc, Timestamp, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, query, where, doc, getDoc, updateDoc, addDoc, Timestamp, deleteDoc, orderBy } from "firebase/firestore";
 import { getDownloadURL, ref } from "firebase/storage";
 import PhotoUpload from "../components/sns_photo/rander-photo";
 import CommentFormComponent from "../components/sns_photo/comment-form";
@@ -124,8 +124,8 @@ width:100%;
 
 interface Photo {
   id: string;
-  photoUrl: string;
-  sort: string;
+  사진: string;
+  정렬날짜: string;
 }
 
 export default function PublicPhotosPage() {
@@ -147,15 +147,15 @@ export default function PublicPhotosPage() {
   useEffect(() => {
     const fetchPublicPhotos = async () => {
       try {
-        const q = query(collection(db, "photo"), where("옵션", "==", "전체공개"));
+        const q = query(collection(db, "photo"), where("옵션", "==", "전체공개"), orderBy("정렬날짜","desc"));
         const querySnapshot = await getDocs(q);
         const photos: Photo[] = querySnapshot.docs.map((doc) => ({
           id: doc.id,
-          photoUrl: doc.data().사진,
-          sort: doc.data().정렬날짜,
+          사진: doc.data().사진,
+          정렬날짜: doc.data().정렬날짜,
         }));
 
-        photos.sort((a, b) => new Date(b.sort).getTime() - new Date(a.sort).getTime());
+       
 
         setPublicPhotos(photos);
       } catch (error) {
@@ -390,7 +390,7 @@ export default function PublicPhotosPage() {
         <PhotoUpload
           onClick={() => handlePhotoClick(photo.id)}
           key={photo.id}
-          src={photo.photoUrl}
+          src={photo.사진}
           alt="Public Photo"
         />
       ))}

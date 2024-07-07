@@ -2,6 +2,7 @@ import { addDoc, collection, getDocs, onSnapshot, query, where, orderBy } from "
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { auth, db } from "../../../firebase";
+import { FaUserAlt } from "react-icons/fa";
 
 const ModalWrapper = styled.div`
     position: fixed;
@@ -21,7 +22,7 @@ const ModalContent = styled.div`
     padding: 20px;
     border-radius: 10px;
     width: 95%;
-    height: 90%;
+    height: 80%;
     display: flex;
     flex-direction: column;
 `;
@@ -93,13 +94,21 @@ const ProfileImg = styled.img`
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin-right: 10px;
 `;
 
 const Nickname = styled.div`
     font-size: 14px;
     text-align: center;
 `;
+const ProfileImgWrapper = styled.div`
+    width:40px;
+    height:40px;
+    border:0.3px solid lightgray;
+    border-radius:50%;
+    margin-right:10px;
+    overflow:hidden;
+`; 
+
 
 interface ChatModalProps {
     onClose: () => void;
@@ -183,7 +192,16 @@ const ChatModal: React.FC<ChatModalProps> = ({ onClose, roomId }) => {
                         <ChatMessage key={index} isCurrentUser={message.유저아이디 === currentUser?.uid}>
                             {message.유저아이디 !== currentUser?.uid && (
                                 <ProfileWrapper>
-                                    <ProfileImg src={message.프로필사진} alt="프로필" />
+                                    {message.프로필사진 !== "" ? (
+                                        <ProfileImgWrapper>
+                                            <ProfileImg src={message.프로필사진} alt="프로필" />
+                                        </ProfileImgWrapper>
+                                    ) : (
+                                        <ProfileImgWrapper>
+                                            <FaUserAlt style={{width:"30px", color:'gray', height:"30px", marginLeft:'5px',marginTop:'10px'}} />
+                                        </ProfileImgWrapper>
+                                    )}
+
                                     <Nickname>{message.닉네임}</Nickname>
                                 </ProfileWrapper>
                             )}

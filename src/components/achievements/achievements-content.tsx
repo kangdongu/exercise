@@ -121,9 +121,11 @@ const AchievementsContent = () => {
                             <AchievementsTitle completed={achievement.유저아이디.includes(currentUser?.uid || '')}>
                                 {achievement.도전과제이름}
                             </AchievementsTitle>
-                            <FaAngleDown style={{ width: "20px", height: "20px", marginTop: "15px" }} />
+                            {selectedMenu === "total" ? (
+                                <FaAngleDown style={{ width: "20px", height: "20px", marginTop: "15px" }} />
+                            ):null}
                         </AchievementsList>
-                        {selectedAchievement === achievement.도전과제이름 && (
+                        {selectedAchievement === achievement.도전과제이름 && selectedMenu === "total" && (
                             <DetailWrapper>
                                 {achievement.도전과제설명}
                             </DetailWrapper>
