@@ -11,6 +11,7 @@ import MoSlideLeft from "../components/slideModal/mo-slide-left";
 import { FaRegComment } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
+import { FaUserAlt } from "react-icons/fa";
 
 const Wrapper = styled.div`
 @media screen and (max-width: 700px) {
@@ -121,10 +122,31 @@ width:100%;
     height:100px;
     
 `;
+const UserDataWrapper = styled.div`
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-bottom:10px;
+  padding-top:10px;
+  padding-left:5px;
+  border-top:1px solid gray;
+`;
+const UserProfilePhoto = styled.div`
+  width:50px;
+  height:50px;
+  overflow:hidden;
+  border:0.1px solid gray;
+  border-radius:50%;
+`;
+const UserNickname = styled.div`
+
+`;
 
 interface Photo {
   id: string;
   사진: string;
+  프로필사진:string;
+  닉네임:string;
   정렬날짜: string;
 }
 
@@ -153,6 +175,8 @@ export default function PublicPhotosPage() {
           id: doc.id,
           사진: doc.data().사진,
           정렬날짜: doc.data().정렬날짜,
+          프로필사진:doc.data().프로필사진,
+          닉네임:doc.data().닉네임,
         }));
 
        
@@ -399,7 +423,19 @@ export default function PublicPhotosPage() {
           {selectedPhotoDetails && (
             <MoSlideLeft onClose={() => { setSelectedPhotoDetails(false); setViewDetails(false); }}>
               <ViewWrapper>
+                <UserDataWrapper>
+                  <UserProfilePhoto>
+                    {selectedPhotoDetails.프로필사진 !== "" ? (
+                       <img style={{width:"100%" , borderRadius:'50%'}} src={selectedPhotoDetails.프로필사진} />
+                    ):(
+                      <FaUserAlt style={{width:"35px", color:'gray', height:"35px", marginLeft:'7.5px',marginTop:'15px'}} />
+                    )}
+                   
+                  </UserProfilePhoto>
+                  <UserNickname>{selectedPhotoDetails.닉네임}</UserNickname>
+                </UserDataWrapper>
                 <ViewImg src={selectedPhotoDetails.사진} alt="Selected Photo" />
+                <div style={{paddingLeft:"5px"}}>
                 <p>{selectedPhotoDetails.날짜}</p>
                 <p>{selectedPhotoDetails.메모}</p>
                 <InteractionWrapper>
@@ -414,6 +450,7 @@ export default function PublicPhotosPage() {
                     <span style={{ marginLeft: "10px" }}>{comments.length}</span>
                   </OpenCommentWrapper>
                 </InteractionWrapper>
+                </div>
               </ViewWrapper>
             </MoSlideLeft>
           )}

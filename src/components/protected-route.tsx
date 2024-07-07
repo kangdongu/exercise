@@ -3,6 +3,7 @@ import { auth, db } from '../firebase';
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, query, where, getDocs } from 'firebase/firestore';
+import LoadingScreen from './loading-screen';
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState(auth.currentUser);
@@ -44,7 +45,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div><LoadingScreen /></div>;
   }
 
   if (!user) {

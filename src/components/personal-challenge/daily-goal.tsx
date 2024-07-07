@@ -4,7 +4,7 @@ import { addDoc, collection, doc, getDocs, query, updateDoc } from "firebase/fir
 import { format } from "date-fns";
 import { auth, db } from "../../firebase";
 import DateChoiceToday from "../date-picker-today";
-import { FaHandsClapping } from "react-icons/fa6";
+import AchievementModal from "../achievement-alert";
 
 const Wrapper = styled.div``;
 const GoalPlus = styled.div`
@@ -71,33 +71,6 @@ const Completion = styled.div`
     text-align: center;
     line-height: 35px;
     transform: translate(62vw, 40px);
-`;
-const ModalWrapper = styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
-const ModalContent = styled.div`
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-`;
-
-const ModalButton = styled.button`
-    margin-top: 20px;
-    padding: 10px 20px;
-    border: none;
-    background-color: #FF3232;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
 `;
 
 interface DailyProps {
@@ -201,14 +174,7 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
             ))}
             <Completion onClick={completClick}>완료</Completion>
             {showAchievements && (
-                <ModalWrapper>
-                    <ModalContent>
-                        <div><FaHandsClapping style={{ color: "FBCEB1", width: "50px", height: "50px" }} /></div>
-                        <h2>도전과제 달성!</h2>
-                        <p>개인 챌린지 생성 도전과제를 완료했습니다.</p>
-                        <ModalButton onClick={handleModalConfirm}>확인</ModalButton>
-                    </ModalContent>
-                </ModalWrapper>
+                <AchievementModal handleModalConfirm={handleModalConfirm} achievementName="개인챌린지 생성하기" />
             )}
         </Wrapper>
     );

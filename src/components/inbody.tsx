@@ -1,38 +1,31 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { db, auth } from '../firebase'; // Firebase Firestore 관련 기능 불러오기
-import { addDoc, collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { format } from 'date-fns'; // date-fns에서 format 함수 불러오기
 import { Line } from "react-chartjs-2";
 import { Chart, registerables } from 'chart.js';
+import AchievementModal from "./achievement-alert";
 
 const Wrapper = styled.div`
 @media screen and (max-width: 700px) {
     flex-direction: column;
     gap:1%;
-    height:165vh;
   }
     width:100%;
-    height:80vh;
+    overflow-y:scroll;
+    height:calc(100vh - 130px);
     display:flex;
     gap:0.5%;
 `;
 
 const InbodyRecordWrapper = styled.div`
-@media screen and (max-width: 700px) {
-    width:100vw;
-    height:50vh;
-  }
-    width:33%;
-    height:80vh;
+    width:90vw;
+    margin-bottom:20px;
     box-sizing:border-box;
 `;
 const LineWrapper = styled.div`
-@media screen and (max-width:700px) {
-    margin-top:1vh;
-}
     width:100%;
-    margin-top:10vh;
 `;
 
 const Form = styled.form`
@@ -66,7 +59,9 @@ export default function Inbody() {
     const [weightData, setWeightData] = useState<WeightData[]>([]);
     const [muscleData, setMuscleData] = useState<MuscleData[]>([]);
     const [fatData, setFatData] = useState<FatData[]>([]);
-    const [chartWidth, setChartWidth] = useState(window.innerWidth >= 700 ? 600 : 350);
+    const [showAchievements, setShowAchievements] = useState(false) 
+    const [achievementName, setAchievementName] = useState("")
+    const currentUser = auth.currentUser;
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, setValue: React.Dispatch<React.SetStateAction<string>>) => {
         setValue(e.target.value); 
@@ -114,16 +109,6 @@ export default function Inbody() {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        fetchData();
-    
-        const handleResize = () => {
-          setChartWidth(window.innerWidth >= 700 ? 600 : 360);
-        };
-    
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-      }, [fetchData]);
 
     const handleSaveWeight = async () => {
         try {
@@ -132,6 +117,22 @@ export default function Inbody() {
                 날짜: getCurrentDate(), 
                 weight
             });
+            const achievementsRef = collection(db, 'achievements');
+            const q = query(achievementsRef);
+            const querySnapshot = await getDocs(q);
+    
+            const achievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "몸무게 입력 완료");
+    
+            if (achievementDoc && !achievementDoc.data().유저아이디.includes(currentUser?.uid)) {
+                const achievementRef = doc(db, 'achievements', achievementDoc.id);
+                await updateDoc(achievementRef, {
+                    유저아이디: [...achievementDoc.data().유저아이디, currentUser?.uid]
+                });
+                setAchievementName(achievementDoc.data().도전과제이름);
+                setShowAchievements(true);
+            } else {
+                alert("개인챌린지를 성공적으로 생성하였습니다.")
+            }
             console.log("ID로 작성된 체중 문서: ", docRef.id);
         } catch (e) {
             console.error("체중 문서 추가 중 오류 발생: ", e);
@@ -142,12 +143,27 @@ export default function Inbody() {
 
     const handleSaveMuscle = async () => {
         try {
-            // Firestore 컬렉션에 근육량 데이터 추가
             const docRef = await addDoc(collection(db, 'inbody'), {
-                유저아이디: auth.currentUser?.uid, // 현재 사용자의 아이디
-                날짜: getCurrentDate(), // 현재 날짜
+                유저아이디: auth.currentUser?.uid, 
+                날짜: getCurrentDate(),
                 muscle
             });
+            const achievementsRef = collection(db, 'achievements');
+            const q = query(achievementsRef);
+            const querySnapshot = await getDocs(q);
+    
+            const achievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "골격근량 입력 완료");
+    
+            if (achievementDoc && !achievementDoc.data().유저아이디.includes(currentUser?.uid)) {
+                const achievementRef = doc(db, 'achievements', achievementDoc.id);
+                await updateDoc(achievementRef, {
+                    유저아이디: [...achievementDoc.data().유저아이디, currentUser?.uid]
+                });
+                setAchievementName(achievementDoc.data().도전과제이름);
+                setShowAchievements(true);
+            } else {
+                alert("개인챌린지를 성공적으로 생성하였습니다.")
+            }
             console.log("ID로 작성된 무게 문서: ", docRef.id);
         } catch (e) {
             console.error("근육 문서를 추가하는 중 오류 발생: ", e);
@@ -159,10 +175,26 @@ export default function Inbody() {
     const handleSaveFat = async () => {
         try {
             const docRef = await addDoc(collection(db, 'inbody'), {
-                유저아이디: auth.currentUser?.uid, // 현재 사용자의 아이디
-                날짜: getCurrentDate(), // 현재 날짜
+                유저아이디: auth.currentUser?.uid, 
+                날짜: getCurrentDate(),
                 fat
             });
+            const achievementsRef = collection(db, 'achievements');
+            const q = query(achievementsRef);
+            const querySnapshot = await getDocs(q);
+    
+            const achievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "체지방 입력 완료");
+    
+            if (achievementDoc && !achievementDoc.data().유저아이디.includes(currentUser?.uid)) {
+                const achievementRef = doc(db, 'achievements', achievementDoc.id);
+                await updateDoc(achievementRef, {
+                    유저아이디: [...achievementDoc.data().유저아이디, currentUser?.uid]
+                });
+                setAchievementName(achievementDoc.data().도전과제이름);
+                setShowAchievements(true);
+            } else {
+                alert("개인챌린지를 성공적으로 생성하였습니다.")
+            }
             console.log("ID로 작성된 무게 문서: ", docRef.id);
         } catch (e) {
             console.error("문서 추가 중 오류 발생: ", e);
@@ -174,6 +206,9 @@ export default function Inbody() {
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     }
+    const handleModalConfirm = () => {
+        setShowAchievements(false)
+    }
 
 
     Chart.register(...registerables);
@@ -183,7 +218,6 @@ export default function Inbody() {
             <InbodyRecordWrapper>
                 <LineWrapper>
                     <Line height={400}
-                        width={chartWidth}
                         data={{
                             labels: weightData.map(data => data.x),
                             datasets: [
@@ -198,7 +232,8 @@ export default function Inbody() {
                             ]
                         }}
                         options={{
-                            responsive: false
+                            responsive: true,
+                            maintainAspectRatio:true
                         }}
                     />
                 </LineWrapper>
@@ -210,7 +245,6 @@ export default function Inbody() {
             <InbodyRecordWrapper>
                 <LineWrapper>
                     <Line height={400}
-                        width={chartWidth}
                         data={{
                             labels: muscleData.map(data => data.x),
                             datasets: [
@@ -225,7 +259,8 @@ export default function Inbody() {
                             ]
                         }}
                         options={{
-                            responsive: false
+                            responsive: true,
+                            maintainAspectRatio:true
                         }}
                     />
                 </LineWrapper>
@@ -237,7 +272,6 @@ export default function Inbody() {
             <InbodyRecordWrapper>
                 <LineWrapper>
                     <Line height={400}
-                        width={chartWidth}
                         data={{
                             labels: fatData.map(data => data.x),
                             datasets: [
@@ -253,6 +287,7 @@ export default function Inbody() {
                         }}
                         options={{
                             responsive: false,
+                            maintainAspectRatio:true,
                             scales: {
                                 x: {
                                     ticks: {
@@ -271,6 +306,9 @@ export default function Inbody() {
                     <Button onClick={handleSaveFat}>완료</Button>
                 </Form>
             </InbodyRecordWrapper>
+            {showAchievements ? (
+                <AchievementModal handleModalConfirm={handleModalConfirm} achievementName={achievementName} /> 
+            ):null}
         </Wrapper>
     )
 }

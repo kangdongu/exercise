@@ -52,7 +52,8 @@ const ReadyFile = styled.div`
     overflow:hidden;
 `;
 const ReadyImg = styled.img`
-    width:100%:
+    width:100%;
+    height:500px;
 `;
 const PhotoWrapper = styled.div`
 @media screen and (max-width: 700px) {
@@ -182,6 +183,31 @@ export default function PhotoRecords() {
     const [selectedPhotoDetails, setSelectedPhotoDetails] = useState<any>(null);
     const [selectedOption, setSelectedOption] = useState("나만보기");
     const [editView, setEditView] = useState(false);
+    const [userProfile, setUserProfile] = useState<{ 프로필사진: string, 닉네임: string } | null>(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const currentUser = auth.currentUser;
+                if (currentUser) {
+                    const userRef = collection(db, "user");
+                    const querySnapshot = await getDocs(
+                        query(userRef, where("유저아이디", "==", currentUser.uid))
+                    );
+                    if (!querySnapshot.empty) {
+                        const userData = querySnapshot.docs[0].data();
+                        setUserProfile({
+                            프로필사진: userData.프로필사진 || "",
+                            닉네임: userData.닉네임 || ""
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error("사용자 정보를 가져오는 중 오류 발생:", error);
+            }
+        };
+        fetchUser();
+    }, []);
 
     const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedOption(e.target.value);
@@ -242,7 +268,9 @@ export default function PhotoRecords() {
                     이름: user.displayName,
                     유저아이디: user.uid,
                     메모: memo,
-                    옵션: selectedOption
+                    옵션: selectedOption,
+                    프로필사진: userProfile?.프로필사진 || "",
+                    닉네임: userProfile?.닉네임 || "",
                 });
 
                 const docId = docRef.id;
@@ -403,7 +431,7 @@ export default function PhotoRecords() {
                                 </Select>
                                 <DateChoice onDateChange={handleDateChange} />
                                 <Memo rows={5} maxLength={180} onChange={onChange} value={memo} placeholder="오늘의 운동은 어땠나요?" />
-                                <AttachFileButton htmlFor="file">{file ? "선택 완료" : "+ 사진 선택"}</AttachFileButton>
+                                <AttachFileButton htmlFor="file">{file ? "다른사진 선택" : "+ 사진 선택"}</AttachFileButton>
                                 <AttachFileInput onChange={onFileChange} type="file" id="file" accept="image" />
                                 <SubmitBtn type="submit" value={isLoading ? "등록중.." : "사진등록"} />
                             </Form>

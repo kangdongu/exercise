@@ -23,6 +23,7 @@ const ModalContent = styled.div`
     border-radius: 10px;
     width: 95%;
     height: 80%;
+    margin-top:-10px;
     display: flex;
     flex-direction: column;
 `;
@@ -88,6 +89,7 @@ const ProfileWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-right:10px;
 `;
 
 const ProfileImg = styled.img`
@@ -105,7 +107,6 @@ const ProfileImgWrapper = styled.div`
     height:40px;
     border:0.3px solid lightgray;
     border-radius:50%;
-    margin-right:10px;
     overflow:hidden;
 `; 
 

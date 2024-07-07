@@ -4,18 +4,21 @@ import { collection, query, where, getDocs, doc, updateDoc } from "firebase/fire
 import { auth, db } from "../../firebase";
 import { format } from "date-fns";
 import { FaCheck } from "react-icons/fa";
-import { FaHandsClapping } from "react-icons/fa6";
+import AchievementModal from "../achievement-alert";
 
 
 const Wrapper = styled.div`
    width:100%;
-    height:calc(100vh - 125px);
+    height:calc(100vh - 190px);
     overflow-y: scroll;
     padding: 15px;
     box-sizing: border-box;
 `;
-
-const DailyGoalsWrapper = styled.div<{ completed: boolean }>`
+const DailyGoalsWrapper = styled.div`
+    height:60vh;
+    overflow-y:scroll;
+`;
+const DailyGoal = styled.div<{ completed: boolean }>`
     width: 90%;
     height: 50px;
     display: flex;
@@ -63,34 +66,7 @@ const GoalComplet = styled.div`
     line-height:70px;
     text-align:center;
 `;
-const ModalWrapper = styled.div`
-   position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
 
-const ModalContent = styled.div`
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-`;
-
-const ModalButton = styled.button`
-    margin-top: 20px;
-    padding: 10px 20px;
-    border: none;
-    background-color: #FF3232;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-`;
 const GuideWrapper = styled.div`
      position: fixed;
     top: 0;
@@ -284,27 +260,22 @@ const TodayGoals = () => {
 
     return (
         <Wrapper>
+            <DailyGoalsWrapper>
             {goals.map((goal, index) => (
-                <DailyGoalsWrapper key={index} completed={goal.완료여부 === '완료'}>
+                <DailyGoal key={index} completed={goal.완료여부 === '완료'}>
                     <GoalText>{goal.챌린지내용}</GoalText>
                     <GoalComplet onClick={() => toggleCompletion(goal.id, goal.완료여부)}>
                         {goal.완료여부 === '완료' ? <FaCheck style={{ fontSize: "30px", color: 'green' }} /> : <FaCheck style={{ fontSize: "30px", color: '#dcdcdc' }} />}
                     </GoalComplet>
-                </DailyGoalsWrapper>
+                </DailyGoal>
             ))}
+            </DailyGoalsWrapper>
             <CompletCountWrapper>
                 <Complet>{completedCount}개</Complet>
                 <TotalComplet>{goals.length}개중</TotalComplet>
             </CompletCountWrapper>
             {showAchievements && (
-                <ModalWrapper>
-                    <ModalContent>
-                        <div><FaHandsClapping style={{ color: "FBCEB1", width: "50px", height: "50px" }} /></div>
-                        <h2>도전과제 달성!</h2>
-                        <p>개인 챌린지 완료 도전과제를 완료했습니다.</p>
-                        <ModalButton onClick={handleModalConfirm}>확인</ModalButton>
-                    </ModalContent>
-                </ModalWrapper>
+                <AchievementModal handleModalConfirm={handleModalConfirm} achievementName="개인챌린지 완료" />
             )}
             {guide ? (
                 <GuideWrapper>
