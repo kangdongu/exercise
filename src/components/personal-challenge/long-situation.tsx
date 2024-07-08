@@ -151,6 +151,7 @@ interface Challenge {
     시작날짜: string;
     목표갯수: number;
     챌린지내용: string;
+    기간종료:boolean;
 }
 
 const LongGoalSituation = () => {
@@ -179,7 +180,8 @@ const LongGoalSituation = () => {
                         완료여부: doc.data().완료여부,
                         시작날짜: doc.data().시작날짜,
                         목표갯수: doc.data().목표갯수,
-                        챌린지내용: doc.data().챌린지내용
+                        챌린지내용: doc.data().챌린지내용,
+                        기간종료:doc.data().기간종료,
                     }));
                     setFilterChallenge(challengesArray)
                     const uniqueChallenges = challengesArray.reduce((acc: Challenge[], challenge) => {

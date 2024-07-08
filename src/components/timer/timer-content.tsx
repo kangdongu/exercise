@@ -85,6 +85,7 @@ const TimerContent = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [currentSetting, setCurrentSetting] = useState<boolean>(true)
   const [timerTitle, setTimerTitle] = useState('')
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const INTERVAL = 1000;
 
@@ -128,6 +129,7 @@ const TimerContent = () => {
         if (currentTimer === 'exercise') {
           setExerciseTime((prev) => {
             if (prev <= 0) {
+              if (audioRef.current) audioRef.current.play();
               setCurrentTimer('relax');
               return initialExerciseTime;
             }
@@ -137,6 +139,7 @@ const TimerContent = () => {
           setRelaxTime((prev) => {
             if (prev <= 0) {
               if (roundIndex < parseInt(currentRound.value)) {
+                if (audioRef.current) audioRef.current.play();
                 setRoundIndex((prev) => prev + 1);
                 setCurrentTimer('exercise');
                 return initialRelaxTime;
@@ -225,6 +228,7 @@ const TimerContent = () => {
         <ResetWrapper onClick={resetClick}>
           리셋
         </ResetWrapper>
+        <audio ref={audioRef} src="./611112__5ro4__bell-ding-2.wav" />
       </Wrapper>
     </MoSlideModal>
   );

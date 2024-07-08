@@ -1,5 +1,5 @@
 import { addDoc, collection, getDocs, onSnapshot, query, where, orderBy } from "firebase/firestore";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { auth, db } from "../../../firebase";
 import { FaUserAlt } from "react-icons/fa";
@@ -108,7 +108,7 @@ const ProfileImgWrapper = styled.div`
     border:0.3px solid lightgray;
     border-radius:50%;
     overflow:hidden;
-`; 
+`;
 
 
 interface ChatModalProps {
@@ -122,12 +122,14 @@ interface Message {
     유저아이디: string;
     프로필사진: string;
     닉네임: string;
+    읽은유저: string[];
 }
 
 const ChatModal: React.FC<ChatModalProps> = ({ onClose, roomId }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputValue, setInputValue] = useState("");
     const [userProfile, setUserProfile] = useState<{ 프로필사진: string; 닉네임: string } | null>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
     const currentUser = auth.currentUser;
 
     useEffect(() => {
@@ -160,6 +162,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ onClose, roomId }) => {
                     유저아이디: data.유저아이디,
                     프로필사진: data.프로필사진,
                     닉네임: data.닉네임,
+                    읽은유저: [],
                 };
             });
             setMessages(fetchedMessages);
@@ -170,16 +173,32 @@ const ChatModal: React.FC<ChatModalProps> = ({ onClose, roomId }) => {
 
     const handleSend = async () => {
         if (inputValue.trim() !== "" && userProfile) {
-            await addDoc(collection(db, "groupchallengeroom", roomId, "messages"), {
-                채팅내용: inputValue,
-                날짜: new Date(),
-                유저아이디: currentUser?.uid,
-                프로필사진: userProfile.프로필사진,
-                닉네임: userProfile.닉네임,
-            });
-            setInputValue("");
+            try {
+                await addDoc(collection(db, "groupchallengeroom", roomId, "messages"), {
+                    채팅내용: inputValue,
+                    날짜: new Date(),
+                    유저아이디: currentUser?.uid,
+                    프로필사진: userProfile.프로필사진,
+                    닉네임: userProfile.닉네임,
+                    읽은유저: [],
+                });
+                setInputValue("");
+            } catch (error) {
+                console.log(error)
+            } finally {
+
+            }
         }
     };
+
+    const scrollToBottom = () => {
+        if (scrollRef.current !== null) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+        }
+    }
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages])
 
     return (
         <ModalWrapper>
@@ -188,7 +207,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ onClose, roomId }) => {
                     <h4>채팅방</h4>
                     <CloseButton onClick={onClose}>X</CloseButton>
                 </ChatHeader>
-                <ChatBody>
+                <ChatBody ref={scrollRef}>
                     {messages.map((message, index) => (
                         <ChatMessage key={index} isCurrentUser={message.유저아이디 === currentUser?.uid}>
                             {message.유저아이디 !== currentUser?.uid && (
@@ -199,7 +218,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ onClose, roomId }) => {
                                         </ProfileImgWrapper>
                                     ) : (
                                         <ProfileImgWrapper>
-                                            <FaUserAlt style={{width:"30px", color:'gray', height:"30px", marginLeft:'5px',marginTop:'10px'}} />
+                                            <FaUserAlt style={{ width: "30px", color: 'gray', height: "30px", marginLeft: '5px', marginTop: '10px' }} />
                                         </ProfileImgWrapper>
                                     )}
 

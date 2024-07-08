@@ -30,18 +30,18 @@ margin-bottom:20px;
 const WeekListWrapper = styled.div`
 margin-bottom:20px;
 display: flex;
-gap:10px;
+gap:0.3%;
 margin-top:5px;
+width:98%;
 `;
 const WeekTitle = styled.h4`
     margin-bottom:10px;
 `;
 const WeekList = styled.div<{ selected: boolean }>`
-    width:45px;
-    height:25px;
+    padding:3px 0px;
+     width:14.0285714%;
     border-radius:10px;
     border: ${props => props.selected ? 'none' : '1px solid black'};
-    font-size:14px;
     text-align:center;
     line-height:25px;
     background-color: ${props => props.selected ? '#FF3232' : 'white'};
@@ -61,12 +61,13 @@ const GoalPlus = styled.div`
 const QuickWrapper = styled.div`
     margin-bottom:15px;
         display: flex;
+        width:98%;
     gap: 2%;
 `;
 const QuickList = styled.div`
     cursor: pointer;
-    height: 27px;
-    width: 100px;
+    padding:3px 0px;
+    width: 23.5%;
     border: 1px solid black;
     font-size: 13px;
     text-align: center;
@@ -186,6 +187,7 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
                             주에몇일: selectedWeek,
                             목표갯수: goals.length,
                             시작날짜: format(startDate, 'yyyy-MM-dd'),
+                            기간종료:false,
                         })
                     )
                 );

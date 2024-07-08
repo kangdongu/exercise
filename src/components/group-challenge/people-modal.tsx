@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 
 const ModalWrapper = styled.div`
@@ -8,15 +7,23 @@ const ModalWrapper = styled.div`
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
     z-index: 1000;
+`;
+const ModalBack = styled.div`
+    width:100vw;
+    height:100vh;
+    position:flxed;
+    top:0;
+    left:0;
 `;
 
 const ModalContent = styled.div`
     background-color: white;
     padding: 20px;
+    transform:translate(-50%,-50%);
+    position:fixed;
+    top:50%;
+    left:50%;
     border-radius: 10px;
     text-align: center;
 `;
@@ -33,7 +40,7 @@ const PeopleInput = styled.input`
 
 const ButtonWrapper = styled.div`
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 20px;
 `;
 
@@ -58,7 +65,7 @@ const PeopleModal: React.FC<PeopleModalProps> = ({ onClose, peopleCount, setPeop
         const numericValue = parseInt(value);
 
         if (value === '' || !isNaN(numericValue) && numericValue >= 1 && numericValue <= 30) {
-            setPeopleCount(numericValue);
+            setPeopleCount(value === '' ? 0 : numericValue);
         }
     };
 
@@ -70,8 +77,10 @@ const PeopleModal: React.FC<PeopleModalProps> = ({ onClose, peopleCount, setPeop
 
     return (
         <ModalWrapper>
+            <ModalBack onClick={onClose}></ModalBack>
             <ModalContent>
-                <h4>인원수를 선택하세요</h4>
+                <h4 style={{marginBottom:"10px"}}>인원수를 선택하세요</h4>
+                    <div style={{fontSize:"13px", }}>(최대 30명)</div>
                 <PeopleInput
                     type="number"
                     value={peopleCount || ''}

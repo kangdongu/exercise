@@ -7,7 +7,7 @@ const Wrapper = styled.div`
     width:100vw;
     height:calc(100vh - 70px);
     overflow-y:scroll;
-     background: linear-gradient(to bottom, #FF6F61, #D32F2F);
+     background: linear-gradient(to bottom, #FAC1BA, #FF6F61);
     padding-top:20px;
 `;
 const ContentWrapper = styled.div`
@@ -19,7 +19,7 @@ const ContentWrapper = styled.div`
     gap:20px;
 `;
 const Content = styled.div`
-    background-color:#f3f1f1;
+    background: linear-gradient(to bottom, #FAFAF8, lightgray);
     border-radius:20px;
     line-height:150px;
     font-size:20px;
@@ -49,7 +49,7 @@ const EfficacyContent = () => {
     return (
         <MoSlideModal onClose={() => navigate("/")}>
         <Wrapper>
-            <h4 style={{fontSize:"24px", marginTop:"10px", marginLeft:"2.5vw", marginBottom:"10px", color:"#f3f1f1"}}>운동 정보</h4>
+            <h4 style={{fontSize:"24px", marginTop:"10px", marginLeft:"2.5vw", marginBottom:"10px", color:"#333333"}}>운동 정보</h4>
             <ContentWrapper>
                 <Content onClick={modalOpen}>운동의 효과</Content>
                 <Content onClick={modalOpen}>헬스</Content>

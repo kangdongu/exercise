@@ -277,6 +277,7 @@ interface Challenge {
     방장프로필: string;
     방장닉네임: string;
     인원수:number;
+    기간종료:boolean;
 }
 
 const GroupList = () => {
@@ -401,7 +402,8 @@ const GroupList = () => {
                     비밀번호: doc.data().비밀번호,
                     방장프로필: doc.data().방장프로필,
                     방장닉네임: doc.data().방장닉네임,
-                    인원수:doc.data().인원수
+                    인원수:doc.data().인원수,
+                    기간종료:doc.data().기간종료,
                 }));
                 setChallenges(challengesArray)
             } catch (error) {

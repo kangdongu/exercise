@@ -184,6 +184,8 @@ export interface Challenge {
     종료날짜: string;
     요일선택: string[];
     유저아이디: string[];
+    인원수:string;
+    기간종료:boolean;
 }
 export interface Photo {
     id: string;
@@ -234,7 +236,7 @@ const JoinedRoom: React.FC = () => {
         if (!challengeId) return;
 
         try {
-            const q = query(collection(db, "groupchallengeroom", challengeId, "photos"), orderBy("날짜", "asc"),);
+            const q = query(collection(db, "groupchallengeroom", challengeId, "photos"), orderBy("날짜", "desc"),);
             const querySnapshot = await getDocs(q);
             const user = auth.currentUser;
             const currentUserUID = user?.uid;

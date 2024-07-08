@@ -58,11 +58,11 @@ const WeekWrapper = styled.div`
 margin-bottom:20px;
 `;
 const WeekListWrapper = styled.div`
-    width:120%;
+    width:98%;
     margin-bottom: 20px;
     display: flex;
     margin-top: 5px;
-    gap: 15px;
+    gap: 0.3%;
     overflow-x: auto;
     padding-bottom: 5px; 
 `;
@@ -70,8 +70,9 @@ const WeekTitle = styled.h4`
 
 `;
 const WeekList = styled.span<{ selected: boolean }>`
-    padding:2px 7px;
+    padding:2px 0px;
     border-radius:10px;
+    width:14.0285714%;
     border: ${props => props.selected ? 'none' : '0.5px solid gray'};
     text-align:center;
     line-height:25px;
@@ -79,7 +80,7 @@ const WeekList = styled.span<{ selected: boolean }>`
     color:${props => props.selected ? 'white' : 'black'}
 `;
 const DaysChoiceWrapper = styled.div`
-
+    width:100%;
 `;
 const DaysChoiceTitle = styled.h4`
     span{
@@ -89,10 +90,13 @@ const DaysChoiceTitle = styled.h4`
 `;
 const DaysChoiceListWrapper = styled.div`
     display:flex;
-    gap:10px;
+    gap:0.3%;
+    width:98%;
 `;
 const DaysChoiceList = styled.span<{ selected: boolean }>`
-  padding: 5px 8px;
+  padding: 5px 0px;
+    width:14.0285714%;
+    text-align:center;
   border: ${(props) => (props.selected ? "none" : "0.5px solid gray")};
   border-radius: 10px;
   background-color: ${(props) => (props.selected ? "#FF3232" : "white")};
@@ -315,7 +319,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
         if (isCreating) return;
 
         setIsCreating(true);
-        if (password === rePassword && title !== "" && contentText !== "" && selectedDays.length !== 0) {
+        if (password === rePassword && title !== "" && contentText !== "" && selectedDays.length !== 0 && peopleCount !== 0) {
             const user = auth.currentUser;
             const recordsRef = collection(db, "groupchallengeroom");
             const startDate = new Date();
@@ -335,6 +339,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                 방장프로필: userProfileUrl,
                 방장닉네임: nickname,
                 인원수: peopleCount,
+                기간종료:false,
             };
 
             try {
@@ -362,6 +367,8 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
             alert("챌린지 내용을 작성해주시고 요일을 선택해주세요")
         } else if (selectedDays.length == 0) {
             alert("요일을 선택해주세요")
+        } else if (peopleCount == 0) {
+            alert("인원수를 선택해주세요")
         }
     };
 

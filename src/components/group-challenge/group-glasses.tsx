@@ -130,6 +130,7 @@ interface Challenge {
     방장프로필:string;
     방장닉네임:string;
     인원수:number;
+    기간종료:boolean;
 }
 interface GlassesProps {
     onBack: () => void;
