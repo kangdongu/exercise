@@ -1,6 +1,7 @@
 import { differenceInDays, parseISO } from "date-fns";
 import styled from "styled-components"
 import { CiLock } from "react-icons/ci";
+import { FaUserAlt } from "react-icons/fa";
 
 const Wrapper = styled.div`
     width:100vw;
@@ -104,11 +105,13 @@ const Day = styled.div`
 const ProfileImgWrapper = styled.div`
     width:80px;
     height:80px;
+    overflow:hidden;
     border-radius:50%;
     border: 0.3px solid gray;
 `;
 const ProfileImg = styled.img`
-    width:100%;
+    width:80px;
+    height:80px;
     border-radius:50%;
 `;
 const ProfileNicknameWrapper = styled.div`
@@ -147,7 +150,12 @@ const GroupGlasses: React.FC<GlassesProps> = ({ onBack, challenge }) => {
                 </Back>
                 <ManagerProfileWrapper>
                     <ProfileImgWrapper>
-                        <ProfileImg src={challenge.방장프로필} />
+                        {challenge.방장프로필 !== "" ? (
+                             <ProfileImg src={challenge.방장프로필} />
+                        ):(
+                            <FaUserAlt style={{width:"60px", height:'60px', marginLeft:'10px', marginTop:"20px", color:'gray'}} />
+                        )}
+                       
                     </ProfileImgWrapper>
                     <ProfileNicknameWrapper>
                         {challenge.방장닉네임}

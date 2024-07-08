@@ -426,7 +426,7 @@ export default function PublicPhotosPage() {
                 <UserDataWrapper>
                   <UserProfilePhoto>
                     {selectedPhotoDetails.프로필사진 !== "" ? (
-                       <img style={{width:"100%" , borderRadius:'50%'}} src={selectedPhotoDetails.프로필사진} />
+                       <img style={{width:"50px",height:'50px' , borderRadius:'50%'}} src={selectedPhotoDetails.프로필사진} />
                     ):(
                       <FaUserAlt style={{width:"35px", color:'gray', height:"35px", marginLeft:'7.5px',marginTop:'15px'}} />
                     )}
