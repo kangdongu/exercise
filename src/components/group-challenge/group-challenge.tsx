@@ -21,7 +21,7 @@ const GroupWrapper = styled.div`
     align-items: center;
     margin-left:auto;
     z-index:10;
-    gap:20px;
+    gap:15px;
     color:white;
     span{
         font-size:14px;
@@ -38,7 +38,7 @@ const GroupChallenge: React.FC<GroupProps> = ({ GroupModal }) => {
         <Wrapper onClick={GroupModal}>
             <FaUserGroup style={{ position: "absolute", left: "-30px", top: "20px", width: "100px", opacity: "0.8", height: "100px", color: "F48FB1" }} />
             <GroupWrapper>
-                <div style={{ fontSize: "20px", fontWeight: "600", textAlign: "center", marginTop: "25px" }}>그룹챌린지</div>
+                <div style={{ fontSize: "20px", fontWeight: "600", textAlign: "center", marginTop: "20px" }}>그룹챌린지</div>
                 <span>사람들과 함께 챌린지를 실천해보세요</span>
             </GroupWrapper>
         </Wrapper>

@@ -20,7 +20,7 @@ const TimerWrapper = styled.div`
     align-items: center;
     margin-left:auto;
     z-index:10;
-    gap:20px;
+    gap:15px;
     color:white;
     span{
         font-size:14px;
@@ -37,7 +37,7 @@ const Badge: React.FC<badgeProps> = ({ badgeClick }) => {
             <RiPoliceBadgeFill style={{ position:"absolute" ,left:"-30px",top:"20px", width: "100px",opacity:"0.8" , height: "100px",color:"#FFEB3B" }} />
             
             <TimerWrapper>
-                <div style={{fontSize:"20px", fontWeight:"600", textAlign:"center",marginTop:"25px"}}>뱃지 현황</div>
+                <div style={{fontSize:"20px", fontWeight:"600", textAlign:"center",marginTop:"20px"}}>뱃지 현황</div>
                 <span>운동 습관을 완료하고 뱃지를 획득해보세요</span>
             </TimerWrapper>
         </Wrapper>

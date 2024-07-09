@@ -160,7 +160,6 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
         if (title !== "" && goals.length !== 0 && goals.every(goal => goal.memo.trim() !== "")) {
             try {
                 const user = auth.currentUser;
-                const recordsRef = collection(db, 'personallonggoals');
                 const startDate = new Date();
                 const endDate = selectedEndDate ? new Date(selectedEndDate) : new Date();
                 const endDateFormat = selectedEndDate ? format(selectedEndDate, 'yyyy-MM-dd') : '';
@@ -168,30 +167,35 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
                 const startDateKST = convertToKST(startDate);
                 const endDateKST = convertToKST(endDate);
 
+
+                const longGoalRef = await addDoc(collection(db, 'personallonggoals'), {
+                    챌린지제목: title,
+                    유저아이디: user?.uid,
+                    종료날짜: endDateFormat,
+                    시작날짜: format(startDate, 'yyyy-MM-dd'),
+                    주에몇일: selectedWeek,
+                    목표갯수: goals.length,
+                    기한선택: '장기챌린지',
+                    챌린지내용: goals.map(goal => goal.memo),
+                    기간종료:false,
+                    종료알림:false,
+                });
+
                 const dateArray = [];
                 for (let dt = startDateKST; dt <= endDateKST; dt.setDate(dt.getDate() + 1)) {
                     dateArray.push(new Date(dt));
                 }
 
-
                 const promises = dateArray.map((date) =>
                     goals.map((goal) =>
-                        addDoc(recordsRef, {
+                        addDoc(collection(db, 'personallonggoals', longGoalRef.id, 'longgoals'), {
                             챌린지내용: goal.memo,
-                            챌린지제목: title,
-                            유저아이디: user?.uid,
                             날짜: format(date, 'yyyy-MM-dd'),
-                            종료날짜: endDateFormat,
                             완료여부: '미완',
-                            기한선택: '장기챌린지',
-                            주에몇일: selectedWeek,
-                            목표갯수: goals.length,
-                            시작날짜: format(startDate, 'yyyy-MM-dd'),
-                            기간종료:false,
+                            기한선택:'장기챌린지'
                         })
                     )
                 );
-
                 await Promise.all(promises.flat());
 
                 const achievementsRef = collection(db, 'achievements');
@@ -245,7 +249,7 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
             <h4 style={{ marginTop: "5px", marginBottom: "5px" }}>장기 챌린지 제목 *</h4>
             <Title onChange={TitleChange} type="text" value={title} name="title" placeholder="챌린지 제목을 적어주세요"></Title>
             <DateWrapper>
-                <DateTitle>종료날짜를 입력해주세요</DateTitle>
+                <DateTitle>종료날짜를 입력해주세요 <span style={{fontSize:'12px'}}>(7주 후 까지 선택가능)</span></DateTitle>
                 <span style={{ border: "0.3px solid lightgray" }}><DateChoiceFuture onDateChange={EndDateChange} /></span> 까지
             </DateWrapper>
             <WeekWrapper>

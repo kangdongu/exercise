@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { auth, db } from "../../firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { differenceInDays, eachDayOfInterval, endOfWeek, format, isSameDay, parseISO, startOfDay, startOfWeek, subDays } from "date-fns";
+import { collection, query, where, getDocs, doc, updateDoc } from "firebase/firestore";
+import { differenceInDays, eachDayOfInterval, endOfWeek, format, parseISO, startOfWeek } from "date-fns";
 import { ko } from "date-fns/locale";
-import DonutChart from "./donut-chart";
 import { FaAngleDown } from "react-icons/fa";
 
 const slide = keyframes`
@@ -56,10 +55,9 @@ const SituationList = styled.div`
 
 const Situation = styled.div`
     width: 100%;
-    height: 450px;
     background-color: #efebeb;
     animation: ${slide} 0.3s ease-out;
-    padding-top:10px;
+    padding:10px 10px;
     box-sizing:border-box;
 `;
 const WeekDdayWrapper = styled.div`
@@ -73,51 +71,14 @@ const WeekTitle = styled.span`
 const DdayTitle = styled.span`
     float:right;
 `;
-const ChartWrapper = styled.div`
-    display: flex;
-    justify-content: space-around;
-    height:150px;
-`;
-const PresentChartWrapper = styled.div`
-    width:40%;
-    height:100px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
-const TotalChartWrapper = styled.div`
-    width:40%;
-    height:100px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
-const PresentText = styled.span`
-    
-`;
-const TotalText = styled.span`
-
-`;
-const PresentChartPercent = styled.div`
-
-`;
-const TotalChartPercent = styled.div`
-
-`;
 const GoalsContentCountWrapper = styled.div`
 
 `;
-const GoalsContentCountTitle = styled.h5`
-    font-weight:500;
-    margin-bottom:0;
-    margin-top: 30px;
-    font-size:16px;
-    font-weight:600;
+const GoalsContentCountTitle = styled.h4`
+    margin-bottom:10px;
 `;
 const GoalsContentWrapper = styled.div`
     width:100%;
-    padding-top:10px;
-    box-sizing:border-box;
 `;
 const GoalsContent = styled.div`
 
@@ -131,78 +92,140 @@ const WeekCompletTitle = styled.h5`
 `;
 const WeekComplet = styled.div`
     display:flex;
-    gap:23px;
+    gap:0.3%;
 `;
 const WeekCount = styled.div`
+    width:14.0285714%;
 `;
 const WeekAchievedWrapper = styled.div`
     display: flex;
     justify-content: flex-end;
     margin-top:18px;
 `;
+const EndAlarmWrapper = styled.div`
+    width:100vw;
+    height:100vh;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+`;
+const AlarmContent = styled.div`
+    width:65vw;
+    height:65vw;
+    background-color:white;
+    padding:10px;
+`;
+
+interface SubGoal {
+    날짜: string;
+    챌린지내용: string;
+    완료여부: string;
+}
 
 interface Challenge {
     id: string;
     챌린지제목: string;
     주에몇일: string;
     종료날짜: string;
-    날짜: string;
-    완료여부: string;
     시작날짜: string;
     목표갯수: number;
-    챌린지내용: string;
-    기간종료:boolean;
+    챌린지내용: string[];
+    기간종료: boolean;
+    종료알림:boolean;
+    subGoals: SubGoal[];
 }
 
 const LongGoalSituation = () => {
-    const [selectedTitle, setSelectedTitle] = useState("ing")
+    const [selectedTitle, setSelectedTitle] = useState("ing");
     const [selectedChallenge, setSelectedChallenge] = useState<string | null>(null);
     const [challenges, setChallenges] = useState<Challenge[]>([]);
-    const [filterChallenge, setFilterChallenge] = useState<Challenge[]>([])
     const [completedChallenges, setCompletedChallenges] = useState<Challenge[]>([]);
     const [ongoingChallenges, setOngoingChallenges] = useState<Challenge[]>([]);
+    const [showEndAlarm, setShowEndAlarm] = useState<Challenge[]>([]);
 
     useEffect(() => {
         const fetchChallenges = async () => {
             try {
                 const user = auth.currentUser;
-                if (user) {
-                    const currentUserUID = user.uid;
-                    const q = query(collection(db, "personallonggoals"), where("유저아이디", "==", currentUserUID));
-                    const querySnapshot = await getDocs(q);
+                if (!user) return;
 
-                    const challengesArray: Challenge[] = querySnapshot.docs.map((doc) => ({
-                        id: doc.id,
-                        챌린지제목: doc.data().챌린지제목,
-                        주에몇일: doc.data().주에몇일,
-                        종료날짜: doc.data().종료날짜,
-                        날짜: doc.data().날짜,
-                        완료여부: doc.data().완료여부,
-                        시작날짜: doc.data().시작날짜,
-                        목표갯수: doc.data().목표갯수,
-                        챌린지내용: doc.data().챌린지내용,
-                        기간종료:doc.data().기간종료,
+                const currentUserUID = user.uid;
+                const q = query(collection(db, "personallonggoals"), where("유저아이디", "==", currentUserUID));
+                const querySnapshot = await getDocs(q);
+
+                const challengesArray: Challenge[] = [];
+
+                for (const docSnapshot of querySnapshot.docs) {
+                    const challengeData = docSnapshot.data();
+                    const challengeId = docSnapshot.id;
+
+                    const subCollectionQuery = query(collection(db, `personallonggoals/${challengeId}/longgoals`));
+                    const subCollectionSnapshot = await getDocs(subCollectionQuery);
+
+                    const subGoals: SubGoal[] = subCollectionSnapshot.docs.map(subDoc => ({
+                        날짜: subDoc.data().날짜,
+                        챌린지내용: subDoc.data().챌린지내용,
+                        챌린지제목: subDoc.data().챌린지제목,
+                        완료여부: subDoc.data().완료여부,
                     }));
-                    setFilterChallenge(challengesArray)
-                    const uniqueChallenges = challengesArray.reduce((acc: Challenge[], challenge) => {
-                        if (!acc.some((item) => item.챌린지제목 === challenge.챌린지제목)) {
-                            acc.push(challenge);
-                        }
-                        return acc;
 
-                    }, []);
-                    setChallenges(uniqueChallenges);
-                    const now = new Date();
-                    const ongoing = uniqueChallenges.filter((challenge) =>
-                        differenceInDays(parseISO(challenge.종료날짜), now) >= 0
-                    );
-                    const completed = uniqueChallenges.filter((challenge) =>
-                        differenceInDays(parseISO(challenge.종료날짜), now) < 0
-                    );
+                    const challenge: Challenge = {
+                        id: challengeId,
+                        챌린지제목: challengeData.챌린지제목,
+                        주에몇일: challengeData.주에몇일,
+                        종료날짜: challengeData.종료날짜,
+                        시작날짜: challengeData.시작날짜,
+                        목표갯수: challengeData.목표갯수,
+                        챌린지내용: challengeData.챌린지내용,
+                        기간종료: challengeData.기간종료,
+                        종료알림:challengeData.종료알림,
+                        subGoals: subGoals,
+                    };
 
-                    setOngoingChallenges(ongoing);
-                    setCompletedChallenges(completed);
+                    challengesArray.push(challenge);
                 }
+
+                const uniqueChallenges = challengesArray.reduce((acc: Challenge[], challenge) => {
+                    if (!acc.some((item) => item.id === challenge.id)) {
+                        acc.push(challenge);
+                    }
+                    return acc;
+                }, []);
+
+                setChallenges(uniqueChallenges);
+
+                const now = new Date();
+                const ongoing = uniqueChallenges.filter((challenge) =>
+                    differenceInDays(parseISO(challenge.종료날짜), now) >= 0
+                );
+                const completed = uniqueChallenges.filter((challenge) =>
+                    differenceInDays(parseISO(challenge.종료날짜), now) < 0
+                );
+
+                for (const challenge of completed) {
+                    if (!challenge.기간종료) {
+                        const challengeDoc = doc(db, "personallonggoals", challenge.id);
+                        await updateDoc(challengeDoc, { 기간종료: true });
+                    }
+                }
+
+                const showEndAlarmChallenges = completed.filter((challenge) => challenge.기간종료 && !challenge.종료알림);
+                setShowEndAlarm(showEndAlarmChallenges);
+
+                for (const challenge of completed) {
+                    if (!challenge.기간종료) {
+                        const challengeDoc = doc(db, "personallonggoals", challenge.id);
+                        await updateDoc(challengeDoc, { 기간종료: true });
+                    }
+                }
+
+                setOngoingChallenges(ongoing);
+                setCompletedChallenges(completed);
 
             } catch (error) {
                 console.error(error);
@@ -212,58 +235,20 @@ const LongGoalSituation = () => {
         fetchChallenges();
     }, []);
 
-
-    const countSameDaySameChallenge = (challenge: Challenge): number => {
-        const targetCount = challenge.목표갯수;
-
-        const allDates = eachDayOfInterval({
-            start: startOfDay(parseISO(challenge.시작날짜)),
-            end: startOfDay(new Date())
-        });
-
-        let completedCount = 0;
-
-        allDates.forEach((date) => {
-            const filteredChallenges = filterChallenge.filter((c) => {
-                const challengeDate = startOfDay(parseISO(c.날짜));
-                const isSame = isSameDay(challengeDate, date);
-                return c.챌린지제목 === challenge.챌린지제목 &&
-                    isSame &&
-                    c.완료여부 === "완료";
-            });
-
-            if (filteredChallenges.length === targetCount) {
-                completedCount++;
-            }
-        });
-
-        return completedCount;
+    const handleEndAlarmConfirm = async (challenge: Challenge) => {
+        const challengeDoc = doc(db, "personallonggoals", challenge.id);
+        await updateDoc(challengeDoc, { 종료알림: true });
+        setShowEndAlarm((prev) => prev.filter((item) => item.id !== challenge.id));
     };
 
-    const toggleSituation = (챌린지제목: string) => {
-        setSelectedChallenge(selectedChallenge === 챌린지제목 ? null : 챌린지제목);
+    const toggleSituation = (challengeId: string) => {
+        setSelectedChallenge(selectedChallenge === challengeId ? null : challengeId);
     };
 
-    const currentDate = (challenge: Challenge) => {
-        const startDate = parseISO(challenge.시작날짜);
-        const oneDayBefore = subDays(startDate, 1);
-        return oneDayBefore;
-    };
-
-    const calculatePercent = (completed: number, total: number) => {
-        if (total === 0) {
-            return 0;
-        } else if (total === 100) {
-            return ((completed / total) * 100).toFixed(0);
-        } else {
-            return ((completed / total) * 100).toFixed(2);
-        }
-    };
-
-    const uniqueChallengeContents = (챌린지제목: string) => {
+    const uniqueChallengeContents = (challengeId: string) => {
+        const challenge = challenges.find(challenge => challenge.id === challengeId);
         const seenContents = new Set();
-        return filterChallenge
-            .filter(c => c.챌린지제목 === 챌린지제목)
+        return challenge?.subGoals
             .filter(c => {
                 if (seenContents.has(c.챌린지내용)) {
                     return false;
@@ -271,7 +256,7 @@ const LongGoalSituation = () => {
                     seenContents.add(c.챌린지내용);
                     return true;
                 }
-            });
+            }) || [];
     };
 
     const getWeekDates = (): string[] => {
@@ -282,26 +267,27 @@ const LongGoalSituation = () => {
         return dates.map(date => format(date, 'yyyy-MM-dd'));
     };
 
-    const countCompletedChallengesForWeek = (챌린지제목: string): { [key: string]: number } => {
+    const countCompletedChallengesForWeek = (challengeId: string): { [key: string]: number } => {
         const weekDates = getWeekDates();
         const result: { [key: string]: number } = {};
 
+        const challenge = challenges.find(challenge => challenge.id === challengeId);
+
         weekDates.forEach(date => {
-            const completedCount = filterChallenge.filter(challenge => {
-                return challenge.챌린지제목 === 챌린지제목 &&
-                    challenge.날짜 === date &&
-                    challenge.완료여부 === '완료';
-            }).length;
+            const completedCount = challenge?.subGoals.filter(subGoal => {
+                const subGoalDate = format(parseISO(subGoal.날짜), 'yyyy-MM-dd');
+                return subGoalDate === date && subGoal.완료여부 === '완료';
+            }).length || 0;
             result[date] = completedCount;
         });
-
         return result;
     };
 
-    const countFailedOrSucceededChallenges = (챌린지제목: string): string => {
-        const targetDay = parseInt(challenges.find(challenge => challenge.챌린지제목 === 챌린지제목)?.주에몇일 || "0");
-        const completedChallenges = countCompletedChallengesForWeek(챌린지제목);
-        const completedDays = Object.values(completedChallenges).filter(count => count === challenges.find(challenge => challenge.챌린지제목 === 챌린지제목)?.목표갯수).length;
+    const countFailedOrSucceededChallenges = (challengeId: string): string => {
+        const challenge = challenges.find(challenge => challenge.id === challengeId);
+        const targetDay = parseInt(challenge?.주에몇일 || "0");
+        const completedChallenges = countCompletedChallengesForWeek(challengeId);
+        const completedDays = Object.values(completedChallenges).filter(count => count === challenge?.목표갯수).length;
 
         if (completedDays < targetDay) {
             return "미달성";
@@ -317,12 +303,12 @@ const LongGoalSituation = () => {
                 <Title selected={selectedTitle === 'completed'} onClick={() => setSelectedTitle('completed')}>완료된 장기챌린지</Title>
             </TitleWrapper>
             {(selectedTitle === 'ing' ? ongoingChallenges : completedChallenges).map((challenge) => (
-                <SituationWrapper key={challenge.챌린지제목}>
-                    <SituationList onClick={() => toggleSituation(challenge.챌린지제목)}>
+                <SituationWrapper key={challenge.id}>
+                    <SituationList onClick={() => toggleSituation(challenge.id)}>
                         {challenge.챌린지제목}
                         <FaAngleDown style={{ width: "20px", height: "20px" }} />
                     </SituationList>
-                    {selectedChallenge === challenge.챌린지제목 && (
+                    {selectedChallenge === challenge.id && (
                         <Situation>
                             <WeekDdayWrapper>
                                 <WeekTitle>주 {challenge.주에몇일} 챌린지</WeekTitle>
@@ -330,48 +316,54 @@ const LongGoalSituation = () => {
                                     <DdayTitle>D-{differenceInDays(parseISO(challenge.종료날짜), new Date())}</DdayTitle>
                                 ) : null}
                             </WeekDdayWrapper>
-                            <ChartWrapper>
-                                {selectedTitle === "ing" ? (
-                                    <PresentChartWrapper>
-                                        <DonutChart completed={countSameDaySameChallenge(challenge)} total={differenceInDays(new Date(), currentDate(challenge))}></DonutChart>
-                                        <PresentChartPercent>{calculatePercent(countSameDaySameChallenge(challenge), differenceInDays(new Date(), currentDate(challenge)))}%</PresentChartPercent>
-                                        <PresentText>현재까지의 달성률</PresentText>
-                                    </PresentChartWrapper>
-                                ) : null}
-                                <TotalChartWrapper>
-                                    <DonutChart completed={countSameDaySameChallenge(challenge)} total={differenceInDays(parseISO(challenge.종료날짜), parseISO(challenge.시작날짜))}></DonutChart>
-                                    <TotalChartPercent>{calculatePercent(countSameDaySameChallenge(challenge), differenceInDays(parseISO(challenge.종료날짜), parseISO(challenge.시작날짜)))}%</TotalChartPercent>
-                                    <TotalText>총 달성률</TotalText>
-                                </TotalChartWrapper>
-                            </ChartWrapper>
                             <GoalsContentCountWrapper>
                                 <GoalsContentCountTitle>챌린지 목표</GoalsContentCountTitle>
                                 <GoalsContentWrapper>
-                                    {uniqueChallengeContents(challenge.챌린지제목).map(filteredChallenge => (
-                                        <GoalsContent key={filteredChallenge.id}>{filteredChallenge.챌린지내용}</GoalsContent>
+                                    {uniqueChallengeContents(challenge.id).map(filteredChallenge => (
+                                        <GoalsContent key={filteredChallenge.챌린지내용}>{filteredChallenge.챌린지내용}</GoalsContent>
                                     ))}
                                 </GoalsContentWrapper>
                             </GoalsContentCountWrapper>
                             <WeekCompletAchievedWrapper>
-                                <WeekCompletTitle>이번주 현황</WeekCompletTitle>
+                                <div>
+                                    <h4 style={{marginBottom:'10px'}}>시작날짜</h4>
+                                    <div>{challenge.시작날짜}</div>
+                                </div>
+                                <div>
+                                    <h4 style={{marginBottom:'10px'}}>종료날짜</h4>
+                                    <div>{challenge.종료날짜}</div>
+                                </div>
+                                <WeekCompletTitle style={{marginBottom:'10px'}}>이번주 현황</WeekCompletTitle>
                                 <WeekComplet>
                                     {getWeekDates().map(date => (
                                         <WeekCount key={date}>
                                             {format(new Date(date), 'EEE', { locale: ko })}
-                                            <span style={{ color: countCompletedChallengesForWeek(challenge.챌린지제목)[date] === challenge.목표갯수 ? 'green' : 'black', marginLeft: 5 + "px" }}>{countCompletedChallengesForWeek(challenge.챌린지제목)[date]}</span>
+                                            <span style={{ color: countCompletedChallengesForWeek(challenge.id)[date] === challenge.목표갯수 ? 'green' : 'black', marginLeft: 5 + "px" }}>{countCompletedChallengesForWeek(challenge.id)[date]}</span>
                                         </WeekCount>
                                     ))}
                                 </WeekComplet>
                                 {selectedTitle === "ing" ? (
-                                     <WeekAchievedWrapper>
-                                     주 {challenge.주에몇일} 챌린지 : {countFailedOrSucceededChallenges(challenge.챌린지제목)}
-                                 </WeekAchievedWrapper>
-                                ):null}
+                                    <WeekAchievedWrapper>
+                                        주 {challenge.주에몇일} 챌린지 : {countFailedOrSucceededChallenges(challenge.id)}
+                                    </WeekAchievedWrapper>
+                                ) : null}
                             </WeekCompletAchievedWrapper>
                         </Situation>
                     )}
                 </SituationWrapper>
             ))}
+             {showEndAlarm.length > 0 && (
+                <EndAlarmWrapper>
+                    {showEndAlarm.map((challenge) => (
+                        <AlarmContent key={challenge.id}>
+                            <h4 style={{fontSize:'18px' ,textAlign: 'center' }}>장기챌린지 완료안내</h4>
+                            <p>챌린지 제목: {challenge.챌린지제목}</p>
+                            <p>종료날짜: {challenge.종료날짜}</p>
+                            <button style={{width:"100px", height:'40px', color:'white',backgroundColor:'#990033', marginTop:'2vh', fontSize:'18px'}} onClick={() => handleEndAlarmConfirm(challenge)}>확인</button>
+                        </AlarmContent>
+                    ))}
+                </EndAlarmWrapper>
+            )}
         </Wrapper>
     );
 };

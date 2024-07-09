@@ -20,7 +20,7 @@ const PersonalWrapper = styled.div`
     align-items: center;
     margin-left:auto;
     z-index:10;
-    gap:20px;
+    gap:15px;
     color:white;
     span{
         font-size:14px;
@@ -41,7 +41,7 @@ const PersonalChallenge: React.FC<PersonalProps> = ({ personalClick }) => {
             
             <PersonalWrapper>
                
-                <div style={{ fontSize: "20px",fontWeight:"600" ,textAlign:"center",marginTop:"25px" }}>개인 챌린지</div>
+                <div style={{ fontSize: "20px",fontWeight:"600" ,textAlign:"center",marginTop:"20px" }}>개인 챌린지</div>
                 <span>혼자만의 습관을 새우고 완료해보세요</span>
             </PersonalWrapper>
         </Wrapper>

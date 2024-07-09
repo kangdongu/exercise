@@ -20,7 +20,7 @@ const Timer = styled.div`
     align-items: center;
     margin-left:auto;
     z-index:10;
-    gap:20px;
+    gap:15px;
     color:white;
     span{
         font-size:14px;
@@ -38,7 +38,7 @@ const TimerWrapper: React.FC<TimerProps> = ({ timerClick }) => {
         <Wrapper onClick={timerClick}>
             <MdTimer style={{ position:"absolute" ,left:"-30px",top:"20px", width: "100px",opacity:"0.8" , height: "100px",color:"#1565C0" }} />
             <Timer>
-                <div style={{ fontSize: "20px",fontWeight:"600" ,textAlign:"center",marginTop:"25px" }}>운동 타이머</div>
+                <div style={{ fontSize: "20px",fontWeight:"600" ,textAlign:"center",marginTop:"20px" }}>운동 타이머</div>
                 <span>운동할때 타이머를 이용해 보세요</span>
             </Timer>
         </Wrapper>

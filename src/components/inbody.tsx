@@ -130,8 +130,6 @@ export default function Inbody() {
                 });
                 setAchievementName(achievementDoc.data().도전과제이름);
                 setShowAchievements(true);
-            } else {
-                alert("개인챌린지를 성공적으로 생성하였습니다.")
             }
             console.log("ID로 작성된 체중 문서: ", docRef.id);
         } catch (e) {
@@ -161,8 +159,6 @@ export default function Inbody() {
                 });
                 setAchievementName(achievementDoc.data().도전과제이름);
                 setShowAchievements(true);
-            } else {
-                alert("개인챌린지를 성공적으로 생성하였습니다.")
             }
             console.log("ID로 작성된 무게 문서: ", docRef.id);
         } catch (e) {
@@ -192,8 +188,6 @@ export default function Inbody() {
                 });
                 setAchievementName(achievementDoc.data().도전과제이름);
                 setShowAchievements(true);
-            } else {
-                alert("개인챌린지를 성공적으로 생성하였습니다.")
             }
             console.log("ID로 작성된 무게 문서: ", docRef.id);
         } catch (e) {

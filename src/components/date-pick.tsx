@@ -14,7 +14,9 @@ export default function DateChoiceFuture({ onDateChange }: DateChoiceProps) {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     const [startDate, setStartDate] = useState<Date | null>(new Date(tomorrow));
-  
+
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 7 * 7);
 
     return (
 
@@ -28,6 +30,7 @@ export default function DateChoiceFuture({ onDateChange }: DateChoiceProps) {
             dateFormat="yyyy-MM-dd"
             shouldCloseOnSelect
             minDate={new Date(new Date().setDate(new Date().getDate() + 1))}
+            maxDate={maxDate}
             locale={ko}
             icon={
                 <svg

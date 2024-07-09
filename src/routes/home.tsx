@@ -9,8 +9,9 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref } from "firebase/storage";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { FaUserAlt } from "react-icons/fa";
+import AchievementModal from "../components/achievement-alert";
 
 const Wrapper = styled.div`
     width:100vw;
@@ -25,7 +26,7 @@ const GridWrapper = styled.div`
     width:100%;
     display: grid; 
     grid-template-columns:1fr 1fr;
-    grid-template-rows: 15vh 15vh 15vh 15vh;
+    grid-template-rows: 140px 140px 140px 140px;
     grid-column-gap: 20px;
     grid-row-gap: 30px;
 `;
@@ -43,15 +44,18 @@ const ProfileImgWrapper = styled.div`
    border-radius: 50%;
     overflow: hidden;
     background-color: #f3f1f1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width:80px;
+    height:80px;
+    border:0.1px solid #f3f1f1;
 `;
 
 export default function Home() {
     const navigate = useNavigate();
     const [userProfilePicUrl, setUserProfileUrl] = useState("");
     const [nickname, setNickname] = useState("")
+    const [isLoading, setLoading] = useState(false)
+    const [showAchievements ,setShowAchievements] = useState(false);
+    const [achievementName, setAchievementName] = useState("")
     const currentUser = auth.currentUser;
 
     const handleNavigation = (path: string) => {
@@ -70,11 +74,12 @@ export default function Home() {
                 }
             } catch (error) {
                 console.error("유저 프로필을 찾지 못했습니다:", error);
+            } finally {
+                setLoading(true)
             }
         };
-
         fetchUserProfilePic();
-    }, []);
+    }, [currentUser]);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -97,29 +102,68 @@ export default function Home() {
             }
         };
         fetchUser();
+    }, [currentUser]);
+
+    useEffect(() => {
+        const fetchPersonalLongGoals = async () => {
+            try {
+                const longGoalRef = collection(db, 'personallonggoals');
+                const querySnapshot = await getDocs(
+                    query(longGoalRef, where("유저아이디", "==", currentUser?.uid), where("기간종료", "==", true))
+                );
+
+                if (!querySnapshot.empty) {
+                    const achievementsRef = collection(db, 'achievements');
+                    const q = query(achievementsRef);
+                    const querySnapshotAchievement = await getDocs(q);
+
+                    const achievementDoc = querySnapshotAchievement.docs.find(doc => doc.data().도전과제이름 === "장기챌린지 완료");
+
+                    if (achievementDoc && !achievementDoc.data().유저아이디.includes(currentUser?.uid)) {
+                        const achievementRef = doc(db, 'achievements', achievementDoc.id);
+                        await updateDoc(achievementRef, {
+                            유저아이디: [...achievementDoc.data().유저아이디, currentUser?.uid]
+                        });
+                        setShowAchievements(true);
+                        setAchievementName(achievementDoc.data().도전과제이름)
+                    }
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchPersonalLongGoals();
     }, []);
 
+    const handleModalConfirm = () => {
+        setShowAchievements(false)
+    }
 
     return (
         <Wrapper>
             <ProfileWrapper>
-            <ProfileImgWrapper>
-                {userProfilePicUrl !== "" ? (
-                    <img style={{width:'80px', height:'80px'}} src={userProfilePicUrl} />
-                ):(
-                    <FaUserAlt style={{width:'60px', height:'60px', marginLeft:'10px', marginTop:'20px', color:'gray'}} />
-                )}    
-                </ProfileImgWrapper>
-                <span style={{fontSize:'18px',fontWeight: 'bold'}}>{nickname}</span>
+                {isLoading && userProfilePicUrl === "" ? (
+                    <ProfileImgWrapper>
+                        <FaUserAlt style={{ width: '60px', height: '60px', marginLeft: '10px', marginTop: '20px', color: 'gray' }} />
+                    </ProfileImgWrapper>
+                ) : (
+                    <ProfileImgWrapper>
+                        <img style={{ width: '80px', height: '80px', borderRadius: '50%' }} src={userProfilePicUrl} />
+                    </ProfileImgWrapper>
+                )}
+                <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{nickname}</span>
             </ProfileWrapper>
             <GridWrapper>
-            <TimerWrapper timerClick={() => handleNavigation('/timer')} />
-            <Badge badgeClick={() => handleNavigation('/badge')} />
-            <PersonalChallenge personalClick={() => handleNavigation('/personal-challenge')} />
-            <GroupChallenge GroupModal={() => handleNavigation('/group-challenge')} />
-            <Achievements achievmeentsClick={() => handleNavigation('/achievements')} />
-            <Efficacy efficacyClick={() => handleNavigation('/efficacy')} />
+                <TimerWrapper timerClick={() => handleNavigation('/timer')} />
+                <Badge badgeClick={() => handleNavigation('/badge')} />
+                <PersonalChallenge personalClick={() => handleNavigation('/personal-challenge')} />
+                <GroupChallenge GroupModal={() => handleNavigation('/group-challenge')} />
+                <Achievements achievmeentsClick={() => handleNavigation('/achievements')} />
+                <Efficacy efficacyClick={() => handleNavigation('/efficacy')} />
             </GridWrapper>
+            {showAchievements && (
+                <AchievementModal handleModalConfirm={handleModalConfirm} achievementName={achievementName} />
+            )}
         </Wrapper>
     )
 }
