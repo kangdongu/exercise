@@ -5909,6 +5909,8 @@ font-size:25px;
     box-sizing:border-box;
     width:100%;
     position:relative;
+        height: calc(100vh - 100px);
+        overflow-y:scroll;
 `,qDe=S.div`
     margin-bottom:10px;
     margin-top:20px;
