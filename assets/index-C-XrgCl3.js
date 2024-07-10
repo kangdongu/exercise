@@ -4267,12 +4267,12 @@ box-sizing:border-box;
   align-items: center;
   animation: ${Gwe} 0.3s ease-out;
   padding-left: 10px;
-  background-color:#FFEBE7;
+  background-color:#f1f3f3;
   border:0.2px solid lightgray;
 `,hxe=S.input`
   width:calc(100% - 20px);
   height:40px;
-  background-color:#FFEBE7;
+  background-color:#f1f3f3;
   border:none;
   border-radius:30px;
   padding:5px;
