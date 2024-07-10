@@ -25,7 +25,7 @@ const PersonalWrapper = styled.div`
     span{
         font-size:14px;
         text-align:center;
-        color:#FFF8E1;
+        color:#F8F8FF;
     }
 `;
 
@@ -37,12 +37,12 @@ const PersonalChallenge: React.FC<PersonalProps> = ({ personalClick }) => {
 
     return (
         <Wrapper onClick={personalClick}>
-             <FaUser style={{ position:"absolute" ,left:"-30px",top:"20px", width: "100px",opacity:"0.8" , height: "100px",color:"E91E63" }} />
+             <FaUser style={{ position:"absolute" ,left:"-30px",top:"20px", width: "100px",opacity:"0.7" , height: "100px",color:"E91E63" }} />
             
             <PersonalWrapper>
                
                 <div style={{ fontSize: "20px",fontWeight:"600" ,textAlign:"center",marginTop:"20px" }}>개인 챌린지</div>
-                <span>혼자만의 습관을 새우고 완료해보세요</span>
+                <span>혼자만의 습관을 세우고 완료해보세요</span>
             </PersonalWrapper>
         </Wrapper>
     )

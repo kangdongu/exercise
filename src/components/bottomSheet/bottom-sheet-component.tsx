@@ -10,7 +10,7 @@ const Wrapper = styled(motion.div)`
   flex-direction: column;
   
   position: fixed;
-  z-index: 1;
+  z-index: 99;
   top: calc(100% - 90px);
   left: 0;
   right: 0;

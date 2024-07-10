@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   }
     width:100%;
     overflow-y:scroll;
-    height:calc(100vh - 130px);
+    height:calc(100vh - 100px);
     display:flex;
     gap:0.5%;
 `;

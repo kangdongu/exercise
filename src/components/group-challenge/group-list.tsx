@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
     width:100%;
-    height:90vh;
+    height:calc(100vh - 80px);
     padding:15px;
     box-sizing:border-box;
     overflow-y:scroll;

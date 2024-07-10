@@ -16,7 +16,7 @@ import AchievementModal from "../components/achievement-alert";
 const Wrapper = styled.div`
     width:100vw;
     margin: 0 auto;
-    height:97vh;
+    height:calc(100vh - 40px);
     padding: 40px 3.5vw;
     overflow-y:scroll;
      background-color:#f3f1f1;

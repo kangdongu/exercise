@@ -11,7 +11,8 @@ import MoSlideModal from "../slideModal/mo-slide-modal";
 const Wrapper = styled.div`
     background-color:#f3f1f1;
     width:100vw;
-    height:100vh;
+    height:calc(100vh - 80px);
+    overflow-y:scroll;
 `;
 const AchievementsWrapper = styled.div`
     width:90vw;

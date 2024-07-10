@@ -15,24 +15,20 @@ import { FaUserAlt } from "react-icons/fa";
 
 const Wrapper = styled.div`
 @media screen and (max-width: 700px) {
-  gap:0; 
   width:100%;
   padding-top:0;
-  // display: grid;
-  // grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  // gap: 1%;
-  // width: 95%;
-  // margin: 0 auto;
-  // padding-top: 20px;
-  // box-sizing: border-box;
+  height:calc(100vh - 40px);
+  overflow-y:scroll;
  }
-  display: flex;
-  flex-wrap: wrap;
   margin: 0 auto;
-  gap:1%;
   width: 95%;
   padding-top:20px;
   box-sizing:border-box;
+`;
+const PhotoWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  width:100%;
 `;
 
 const ViewContent = styled.div`
@@ -410,6 +406,7 @@ export default function PublicPhotosPage() {
       <TextTitle>
         <h4 style={{textAlign:"center", fontSize:"25px", color:"#939393"}}>사람들과 기록 공유하기</h4>
       </TextTitle>
+      <PhotoWrapper>
       {publicPhotos.map((photo) => (
         <PhotoUpload
           onClick={() => handlePhotoClick(photo.id)}
@@ -418,6 +415,7 @@ export default function PublicPhotosPage() {
           alt="Public Photo"
         />
       ))}
+      </PhotoWrapper>
       {viewDetails && window.innerWidth <= 700 ? (
         <ModalBackdrop>
           {selectedPhotoDetails && (

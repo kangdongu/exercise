@@ -427,6 +427,8 @@ export default function ExerciseRegistration({
               selected={selectedArea === "삼두"}>삼두</AreaMenu>
             <AreaMenu onClick={() => setSelectedArea("어깨")}
               selected={selectedArea === "어깨"}>어깨</AreaMenu>
+               <AreaMenu onClick={() => setSelectedArea("유산소")}
+              selected={selectedArea === "유산소"}>유산소</AreaMenu>
           </TypeWrapper>
           <ExerciseList>
           {filteredExercises.map((exercise, index) => (

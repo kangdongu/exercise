@@ -15,6 +15,8 @@ import ChatModal from "./chat-modal";
 const Wrapper = styled.div`
   padding: 10px;
   background-color: #f5f5f5;
+  height:calc(100vh - 250px);
+  overflow-y:scroll;
 `;
 const RenderUserWrapper = styled.div`
     margin-top: 20px;

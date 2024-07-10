@@ -26,7 +26,7 @@ const AchievementsWrapper = styled.div`
     span{
         font-size:14px;
         text-align:center;
-        color:#FFF8E1;
+        color:#F8F8FF;
     }
 `;
 

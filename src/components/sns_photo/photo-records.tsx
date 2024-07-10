@@ -12,20 +12,21 @@ import MoSlideModal from "../slideModal/mo-slide-modal";
 const Wrapper = styled.div`
 width:100%;
 margin: 0 auto;
+height:calc(100vh - 100px);
 `;
 const Form = styled.form`
 @media screen and (max-width: 700px) {
     flex-direction: column;
-    width:100vw;
+    width:100%;
    }
 display:flex;
 `;
 const AttachFileButton = styled.label`
 padding: 10px 0px;
-  color: #1d9bf0;
+  color: #990033;
   text-align: center;
   border-radius: 20px;
-  border: 1px solid #1d9bf0;
+  border: 1px solid #990033;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -34,7 +35,7 @@ const AttachFileInput = styled.input`
 display:none;
 `;
 const SubmitBtn = styled.input`
-background-color: blue;
+background-color: #990033;
     color:white;
     border:none;
     padding:10px 0px;
@@ -47,13 +48,13 @@ background-color: blue;
     }
 `;
 const ReadyFile = styled.div`
-    width:500px;
-    height:500px;
+    width:100%;
+    height:350px;
     overflow:hidden;
 `;
 const ReadyImg = styled.img`
     width:100%;
-    height:500px;
+    height:350px;
 `;
 const PhotoWrapper = styled.div`
 @media screen and (max-width: 700px) {
@@ -66,7 +67,8 @@ margin: 0 auto;
 width:100%;
 `;
 const Memo = styled.textarea`
-width:80%;
+width:100%;
+border-radius:5px;
 `;
 const Plus = styled.div`
     width:30px;
@@ -102,8 +104,9 @@ const ModalBackdrop = styled.div`
 const ModalContent = styled.div`
 @media screen and (max-width: 700px) {
    width:100%;
-   height:100vh;
-    padding:0;
+   height:calc(100vh - 80px);
+    padding:10px;
+    margin: 0 auto;
 }
 width:50%;
 height:50vh;
@@ -144,7 +147,9 @@ const ViewWrapper = styled.div`
     overflow-y:scroll;
 `;
 const Select = styled.select`
-    
+    height:30px;
+    width:200px;
+    border-radius:5px;
 `;
 const Option = styled.option`
 
@@ -438,13 +443,14 @@ export default function PhotoRecords() {
                                 <Memo rows={5} maxLength={180} onChange={onChange} value={memo} placeholder="오늘의 운동은 어땠나요?" />
                                 <AttachFileButton htmlFor="file">{file ? "다른사진 선택" : "+ 사진 선택"}</AttachFileButton>
                                 <AttachFileInput onChange={onFileChange} type="file" id="file" accept="image" />
-                                <SubmitBtn type="submit" value={isLoading ? "등록중.." : "사진등록"} />
-                            </Form>
-                            {previewUrl && (
+                                {previewUrl && (
                                 <ReadyFile>
                                     <ReadyImg src={previewUrl} alt="Selected" />
                                 </ReadyFile>
                             )}
+                                <SubmitBtn type="submit" value={isLoading ? "등록중.." : "완료"} />
+                            </Form>
+                            
                         </ModalContent>
                     </ModalBackdrop>
                 </MoSlideModal>

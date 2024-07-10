@@ -1,27 +1,29 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { IoHomeOutline } from "react-icons/io5";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { SlSpeech } from "react-icons/sl";
 import { CgProfile } from "react-icons/cg";
+import { useEffect, useState } from "react";
 
 
 const Wrapper = styled.div`
-width:100%;
+    width:100%;
 `;
 const Header = styled.div`
-@media screen and (max-width: 700px) {
+    @media screen and (max-width: 700px) {
     position:fixed;
     bottom: 0px; 
     left:0;
-    height: 30px;
+    height: 40px;
     z-index:999;
+    padding-top:1px;
     background-color:white;
-border-top:1px solid black;
-  }
-  a{
-    color:black;
-  }
+    border-top:0.1px solid #F1F3F3;
+    }
+    a{
+        color:black;
+    }
     width:100%;
     height:100px;
     background-color:#E72929;
@@ -29,20 +31,18 @@ border-top:1px solid black;
 `;
 const Menu = styled.div`
 @media screen and (max-width: 700px) {
-    height: 80px;
+    height: 40px;
     font-size:20px;
     font-weight:500;
     width:100%;
     align-items: center;
-    gap: 40px;
     justify-content: space-around;
   }
-display: flex;
+    display: flex;
     width: 80%;
-    height: 80px;
+    height: 40px;
     margin: 0 auto;
     align-items: center;
-    gap: 70px;
     justify-content: flex-end;
     font-size:25px;
     a{
@@ -50,40 +50,50 @@ display: flex;
     }
 }
 `;
-const MenuItem = styled.div`
-@media screen and (max-width: 700px) {
-    display:flex;
-    height:80px;
-    flex-direction: column;
-    align-items: center;
-    span{
-        font-size:12px;
+const MenuItem = styled.div<{ selected: boolean }>`
+    @media screen and (max-width: 700px) {
+        display:flex;
+        height:40px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position:relative;
+        span{
+            font-size:12px;
+        }
     }
-  }
-  height:80px;
-
+    height:80px;
+    color: ${props => props.selected ? '#E72929' : 'black'};
+    svg {
+        fill: ${props => props.selected ? '#E72929' : 'black'};
+    }
 `;
 
 
 
 export default function Layout() {
+    const location = useLocation();
+    const [selectedPath, setSelectedPath] = useState("");
 
+    useEffect(() => {
+        setSelectedPath(location.pathname);
+    }, [location.pathname]);
 
     return (
         <Wrapper>
             <Header>
                 <Menu>
-                    <Link to="/">
-                        <MenuItem><IoHomeOutline /><span>홈</span></MenuItem>
+                <Link to="/">
+                        <MenuItem selected={selectedPath === "/"}><IoHomeOutline /><span>홈</span></MenuItem>
                     </Link>
                     <Link to="/records">
-                        <MenuItem><FaRegCalendarAlt /><span>기록</span> </MenuItem>
+                        <MenuItem selected={selectedPath === "/records"}><FaRegCalendarAlt /><span>기록</span></MenuItem>
                     </Link>
                     <Link to="/sns">
-                        <MenuItem><SlSpeech /><span>소셜</span></MenuItem>
+                        <MenuItem selected={selectedPath === "/sns"}><SlSpeech /><span>소셜</span></MenuItem>
                     </Link>
                     <Link to="/profile">
-                        <MenuItem><CgProfile /><span>프로필</span></MenuItem>
+                        <MenuItem selected={selectedPath === "/profile"}><CgProfile /><span>프로필</span></MenuItem>
                     </Link>
                 </Menu>
             </Header>

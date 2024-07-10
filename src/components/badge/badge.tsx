@@ -25,7 +25,7 @@ const TimerWrapper = styled.div`
     span{
         font-size:14px;
         text-align:center;
-        color:#FFF8E1;
+        color:#F8F8FF;
     }
 `;
 interface badgeProps {
@@ -34,7 +34,7 @@ interface badgeProps {
 const Badge: React.FC<badgeProps> = ({ badgeClick }) => {
     return (
         <Wrapper onClick={badgeClick}>
-            <RiPoliceBadgeFill style={{ position:"absolute" ,left:"-30px",top:"20px", width: "100px",opacity:"0.8" , height: "100px",color:"#FFEB3B" }} />
+            <RiPoliceBadgeFill style={{ position:"absolute" ,left:"-30px",top:"20px", width: "100px",opacity:"0.7" , height: "100px",color:"#FFEB3B" }} />
             
             <TimerWrapper>
                 <div style={{fontSize:"20px", fontWeight:"600", textAlign:"center",marginTop:"20px"}}>뱃지 현황</div>

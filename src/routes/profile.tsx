@@ -11,7 +11,7 @@ import { FaArrowUp } from "react-icons/fa";
 
 const Wrapper = styled.div`
   width:100vw;
-  height:97vh;
+  height:calc(100vh - 40px);
   background-color:#f3f1f1;
   overflow-y:scroll;
 `;
