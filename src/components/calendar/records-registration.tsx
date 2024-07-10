@@ -1,11 +1,21 @@
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { auth, db } from "../../firebase";
 import DateChoice from "../date-picker";
 import { format } from 'date-fns';
 import MoSlideModal from "../slideModal/mo-slide-modal";
 import BottomSheet from "../bottomSheet/bottom-sheet-component";
+import { IoSearch } from "react-icons/io5";
+
+const searchWidth = keyframes`
+  from {
+    width:0px
+  }
+  to {
+    width:80%;
+  }
+`;
 
 const Wrapper = styled.div`
 @media screen and (max-width: 700px) {
@@ -193,6 +203,26 @@ const ExerciseNameWrapper = styled.div`
   height:50px;
   margin-top:20px;
 `;
+const SearchWrapper = styled.div`
+  width:80%;
+  height:40px;
+  border-radius:30px;
+  display: flex;
+  align-items: center;
+  animation: ${searchWidth} 0.3s ease-out;
+  padding-left: 10px;
+  background-color:#f1f3f3;
+  border:0.2px solid lightgray;
+`;
+const SearchBox = styled.input`
+  width:calc(100% - 20px);
+  height:40px;
+  background-color:#f1f3f3;
+  border:none;
+  border-radius:30px;
+  padding:5px;
+  font-size:16px;
+`;
 
 interface Exercise {
   name: string;
@@ -211,7 +241,8 @@ export default function ExerciseRegistration({
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [exerciseType, setExerciseType] = useState("");
   const [exerciseData, setExerciseData] = useState<Exercise[]>([]);
-  const [exerciseModal, setExerciseModal] = useState(false)
+  const [exerciseModal, setExerciseModal] = useState(false);
+  const [searchBox, setSearchBox] = useState(false);
   const [areaDb, setAreaDb] = useState("");
   const [sets, setSets] = useState<{ kg: string; count: string }[]>([
     { kg: "", count: "" },
@@ -219,6 +250,7 @@ export default function ExerciseRegistration({
   const [selectedType, setSelectedType] = useState<string>("전체");
   const [selectedArea, setSelectedArea] = useState<String>("전체");
   const [bottomSheetOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
@@ -300,13 +332,20 @@ export default function ExerciseRegistration({
   const ExerciseChoice = () => {
     setExerciseModal(true)
   }
-  const ExeerciseChoiceClose = () => {
-    setExerciseModal(false);
-  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  }
+
+  const filteredExercises = exerciseData.filter((exercise) => 
+    (selectedType === "전체" || exercise.type === selectedType) &&
+    (selectedArea === "전체" || exercise.area === selectedArea) &&
+    exercise.name.includes(searchTerm)
+  );
 
   return (
     <Wrapper>
-      {window.innerWidth <= 700 ? (<BottomSheet open={bottomSheetOpen} onClose={closeModal}>
+      <BottomSheet open={bottomSheetOpen} onClose={closeModal}>
         <RecordsWrapper>
           <CloseBtn onClick={back}>X</CloseBtn>
           <DateChoiceWrapper>
@@ -352,46 +391,19 @@ export default function ExerciseRegistration({
           </SetList>
           <Button onClick={onClick}>운동 완료</Button>
         </RecordsWrapper>
-      </BottomSheet>) : null}
-      {window.innerWidth >= 700 ? (<RecordsWrapper>
-        <CloseBtn onClick={back}>X</CloseBtn>
-        <DateChoice onDateChange={handleDateChange} />
-        <Label>
-          운동종류:{" "}
-          <Input
-            onChange={(e) => setExerciseType(e.target.value)}
-            value={exerciseType}
-            type="text"
-            name="exerciseType"
-            placeholder="운동 직접입력"
-          />
-        </Label>
-        <ExerciseDataBtn onClick={ExerciseChoice}>운동선택<span>&gt;</span></ExerciseDataBtn>
-        <SetPlus onClick={addSet}>세트추가<span>+</span></SetPlus>
-        <SetList>
-          {sets.map((set, index) => (
-            <ListBody key={index}>
-              {index + 1}.세트
-              <Input
-                onChange={(e) => onChange(index, e)}
-                value={set.kg}
-                type="number"
-                name="kg"
-              />kg
-              <Input
-                onChange={(e) => onChange(index, e)}
-                value={set.count}
-                type="number"
-                name="count"
-              />회/ 분
-              <SetDelete onClick={(event) => onDelete(index, event)}>-</SetDelete>
-            </ListBody>
-          ))}
-        </SetList>
-        <Button onClick={onClick}>운동 완료</Button>
-      </RecordsWrapper>) : null}
-      {exerciseModal && window.innerWidth <= 700 ? <MoSlideModal onClose={() => setExerciseModal(false)}>
+      </BottomSheet>
+     
+      {exerciseModal ? <MoSlideModal onClose={() => setExerciseModal(false)}>
         <ExerciseChoiceModal>
+          {searchBox ? (
+            <SearchWrapper>
+            <IoSearch style={{width:'20px',height:'20px'}} />
+             <SearchBox value={searchTerm} onChange={handleSearchChange} placeholder="운동 검색" />
+            </SearchWrapper>
+          ):(
+            <IoSearch onClick={() => setSearchBox(true)} style={{width:'20px',height:'20px'}} />
+          )}
+          
           <TypeWrapper>
             <TypeMenu onClick={() => setSelectedType("전체")}
               selected={selectedType === "전체"}>전체</TypeMenu>
@@ -417,13 +429,7 @@ export default function ExerciseRegistration({
               selected={selectedArea === "어깨"}>어깨</AreaMenu>
           </TypeWrapper>
           <ExerciseList>
-            {exerciseData
-              .filter(
-                (exercise) =>
-                  (selectedType === "전체" || exercise.type === selectedType) &&
-                  (selectedArea === "전체" || exercise.area === selectedArea)
-              )
-              .map((exercise, index) => (
+          {filteredExercises.map((exercise, index) => (
                 <ExerciseItem key={index} onClick={() => { setExerciseType(exercise.name); setAreaDb(exercise.area); setExerciseModal(false); }}>
                   <div>운동이름: {exercise.name}</div>
                   <div>운동종류: {exercise.type}</div>
@@ -433,49 +439,6 @@ export default function ExerciseRegistration({
           </ExerciseList>
         </ExerciseChoiceModal>
       </MoSlideModal> : null}
-
-      {exerciseModal && window.innerWidth >= 700 ? <ExerciseChoiceModal>
-        <button onClick={ExeerciseChoiceClose}>닫기</button>
-        <TypeWrapper>
-          <TypeMenu onClick={() => setSelectedType("전체")}
-            selected={selectedType === "전체"}>전체</TypeMenu>
-          <TypeMenu onClick={() => setSelectedType("맨몸운동")}
-            selected={selectedType === "맨몸운동"}>맨몸운동</TypeMenu>
-          <TypeMenu onClick={() => setSelectedType("헬스")}
-            selected={selectedType === "헬스"}>헬스</TypeMenu>
-          <TypeMenu onClick={() => setSelectedType("수영")}
-            selected={selectedType === "수영"}>수영</TypeMenu>
-        </TypeWrapper>
-        <TypeWrapper>
-          <AreaMenu onClick={() => setSelectedArea("전체")}
-            selected={selectedArea === "전체"}>전체</AreaMenu>
-          <AreaMenu onClick={() => setSelectedArea("가슴")}
-            selected={selectedArea === "가슴"}>가슴</AreaMenu>
-          <AreaMenu onClick={() => setSelectedArea("등")}
-            selected={selectedArea === "등"}>등</AreaMenu>
-          <AreaMenu onClick={() => setSelectedArea("하체")}
-            selected={selectedArea === "하체"}>하체</AreaMenu>
-          <AreaMenu onClick={() => setSelectedArea("삼두")}
-            selected={selectedArea === "삼두"}>삼두</AreaMenu>
-          <AreaMenu onClick={() => setSelectedArea("어깨")}
-            selected={selectedArea === "어깨"}>어깨</AreaMenu>
-        </TypeWrapper>
-        <ExerciseList>
-          {exerciseData
-            .filter(
-              (exercise) =>
-                (selectedType === "전체" || exercise.type === selectedType) &&
-                (selectedArea === "전체" || exercise.area === selectedArea)
-            )
-            .map((exercise, index) => (
-              <ExerciseItem key={index} onClick={() => { setExerciseType(exercise.name); setAreaDb(exercise.area); setExerciseModal(false); }}>
-                <div>운동이름: {exercise.name}</div>
-                <div>운동종류: {exercise.type}</div>
-                <div>운동부위: {exercise.area}</div>
-              </ExerciseItem>
-            ))}
-        </ExerciseList>
-      </ExerciseChoiceModal> : null}
     </Wrapper>
   );
 }

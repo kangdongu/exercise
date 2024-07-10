@@ -88,6 +88,8 @@ const CreateWrapper = styled.div`
     box-sizing:border-box;
     width:100%;
     position:relative;
+        height: calc(100vh - 100px);
+        overflow-y:scroll;
 `;
 const PhotoChoiceWrapper = styled.div`
     margin-bottom:10px;
