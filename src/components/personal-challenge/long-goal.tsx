@@ -192,7 +192,7 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
                             챌린지내용: goal.memo,
                             날짜: format(date, 'yyyy-MM-dd'),
                             완료여부: '미완',
-                            기한선택:'장기챌린지'
+                            기한선택:'장기챌린지',
                         })
                     )
                 );

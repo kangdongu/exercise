@@ -28,7 +28,7 @@ const GridWrapper = styled.div`
     grid-template-columns:1fr 1fr;
     grid-template-rows: 140px 140px 140px 140px;
     grid-column-gap: 20px;
-    grid-row-gap: 30px;
+    grid-row-gap: 20px;
 `;
 const ProfileWrapper = styled.div`
    display: flex;

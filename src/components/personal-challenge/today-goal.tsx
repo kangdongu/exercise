@@ -143,7 +143,7 @@ const TodayGoals = () => {
 
                 const date = format(new Date(), 'yyyy-MM-dd');
                 const personalGoalsQuery = query(collection(db, 'personalgoals'), where('유저아이디', '==', user.uid), where('날짜', '==', date));
-                const longGoalsQuery = query(collection(db, 'personallonggoals'));
+                const longGoalsQuery = query(collection(db, 'personallonggoals'),where('유저아이디', '==', user.uid));
 
                 const [personalGoalsSnapshot, longGoalsSnapshot] = await Promise.all([getDocs(personalGoalsQuery), getDocs(longGoalsQuery)]);
 

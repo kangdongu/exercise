@@ -493,7 +493,7 @@ export default function PhotoRecords() {
                                     <p>{selectedPhotoDetails.날짜}</p>
                                     {editView ? <Memo rows={5} maxLength={180} onChange={onChange} value={memo} placeholder={selectedPhotoDetails.메모} /> : <p>{selectedPhotoDetails.메모}</p>}
                                     <DeleteBtn onClick={deleteClick}>삭제</DeleteBtn>
-                                    <EditPost onClick={editPost}>수정</EditPost>
+                                    {editView ? null :<EditPost onClick={editPost}>수정</EditPost>}
                                     {editView ? <EditComplete onClick={editCompleteEvent}>수정완료</EditComplete> : null}
                                 </ViewWrapper>
                             )}
