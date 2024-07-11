@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import { forwardRef } from 'react';
 
 const Wrapper = styled.div`
-  height : 24px;
+  height: 24px;
   border-top-left-radius: 12px;
   border-bottom-right-radius: 12px;
   position: relative; 
@@ -16,13 +17,14 @@ const Header = styled.div`
   background-color: #000000;
   margin: auto;
   border-top: 1px solid gray;
-`
-const BottomSheetHeader = () => {
-  return (
-    <Wrapper>
-      <Header/>
-    </Wrapper>
-  )
-}
+`;
 
-export default BottomSheetHeader
+const BottomSheetHeader = forwardRef<HTMLDivElement>((props, ref) => {
+  return (
+    <Wrapper ref={ref} {...props}>
+      <Header />
+    </Wrapper>
+  );
+});
+
+export default BottomSheetHeader;

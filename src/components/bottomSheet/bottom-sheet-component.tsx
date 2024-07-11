@@ -25,31 +25,31 @@ const Wrapper = styled(motion.div)`
   border-top: 0.5px solid lightgray;
 
   transition: transform 650ms ease-out;
-`
+`;
 
 const BottomSheetContentWrapper = styled.div`
   overflow: auto;                            
   -webkit-overflow-scrolling: touch;
-`
+`;
 
 interface BottomSheetProps {
   children: ReactNode;
   open: boolean;
-  onClose: () => void
+  onClose: () => void;
 }
+
 const BottomSheet: React.FC<BottomSheetProps> = ({ children }) => {
 
-  const { sheet, content } = useBottomSheet();
-
+  const { sheet, content, header } = useBottomSheet();
 
   return (
     <Wrapper ref={sheet}>
-      <BottomSheetHeader />
+      <BottomSheetHeader ref={header} />
       <BottomSheetContentWrapper ref={content}>
         {children}
       </BottomSheetContentWrapper>
     </Wrapper>
   );
-}
+};
 
 export default BottomSheet;
