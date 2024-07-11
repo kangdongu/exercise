@@ -276,8 +276,8 @@ interface Challenge {
     비밀번호: any;
     방장프로필: string;
     방장닉네임: string;
-    인원수:number;
-    기간종료:boolean;
+    인원수: number;
+    기간종료: boolean;
 }
 
 const GroupList = () => {
@@ -310,31 +310,40 @@ const GroupList = () => {
     const joinClick = async (challenge: Challenge) => {
         if (user && user.uid) {
             if (!challenge.유저아이디.includes(user.uid)) {
-                if (!challenge.비밀방여부) {
-                    try {
-                        const challengeRef = doc(db, "groupchallengeroom", challenge.id);
-                        await updateDoc(challengeRef, {
-                            유저아이디: arrayUnion(user.uid),
-                        });
+                if (challenge.인원수 > challenge.유저아이디.length) {
+                    if (!challenge.비밀방여부) {
+                        try {
+                            const challengeRef = doc(db, "groupchallengeroom", challenge.id);
 
-                        const updatedChallenges = challenges.map((ch) => {
-                            if (ch.id === challenge.id) {
-                                return {
-                                    ...ch,
-                                    유저아이디: [...ch.유저아이디, user.uid],
-                                };
-                            }
-                            return ch;
-                        });
-                        setChallenges(updatedChallenges);
-                    } catch (error) {
-                        console.error("챌린지 가입 중 오류 발생:", error);
+                            await updateDoc(challengeRef, {
+                                유저아이디: arrayUnion(user.uid),
+                            });
+
+                            const updatedChallenges = challenges.map((ch) => {
+                                if (ch.id === challenge.id) {
+                                    return {
+                                        ...ch,
+                                        유저아이디: [...ch.유저아이디, user.uid],
+                                    };
+                                }
+                                return ch;
+                            });
+
+                            setChallenges(updatedChallenges);
+
+                        } catch (error) {
+                            console.error("챌린지 가입 중 오류 발생:", error);
+                        }
+
+                        setSelectedChallenge(challenge);
+                        setJoin(true);
+                        navigate(`/group-challenge/${challenge.id}`);
+
+                    } else {
+                        setJoinPasswordModal(true);
                     }
-                    setSelectedChallenge(challenge);
-                    setJoin(true);
-                    navigate(`/group-challenge/${challenge.id}`);
                 } else {
-                    setJoinPasswordModal(true);
+                    alert("현재 그룹방은 인원수가 가득 찼습니다.")
                 }
             } else {
                 setSelectedChallenge(challenge);
@@ -402,8 +411,8 @@ const GroupList = () => {
                     비밀번호: doc.data().비밀번호,
                     방장프로필: doc.data().방장프로필,
                     방장닉네임: doc.data().방장닉네임,
-                    인원수:doc.data().인원수,
-                    기간종료:doc.data().기간종료,
+                    인원수: doc.data().인원수,
+                    기간종료: doc.data().기간종료,
                 }));
                 setChallenges(challengesArray)
             } catch (error) {
@@ -479,7 +488,7 @@ const GroupList = () => {
         setGuide4(false)
         setGuideStart(false)
     }
-    
+
 
     return (
         <MoSlideModal onClose={() => navigate("/")}>
