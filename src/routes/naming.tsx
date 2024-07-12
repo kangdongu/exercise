@@ -66,6 +66,9 @@ export default function Naming() {
         개인챌린지가이드:false,
         프로필사진:"",
         그룹챌린지가이드:false,
+        개인챌린지생성:0,
+        개인챌린지완료:0,
+        장기챌린지종료:0,
       });
       navigate("/gender");
     } catch (error) {

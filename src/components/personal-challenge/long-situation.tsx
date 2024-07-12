@@ -55,10 +55,11 @@ const SituationList = styled.div`
 
 const Situation = styled.div`
     width: 100%;
-    background-color: #efebeb;
+    background-color: #f1f3f3;
     animation: ${slide} 0.3s ease-out;
     padding:10px 10px;
     box-sizing:border-box;
+    border-radius: 0px 0px 10px 10px;
 `;
 const WeekDdayWrapper = styled.div`
     width:100%;
@@ -338,7 +339,7 @@ const LongGoalSituation = () => {
                                     {getWeekDates().map(date => (
                                         <WeekCount key={date}>
                                             {format(new Date(date), 'EEE', { locale: ko })}
-                                            <span style={{ color: countCompletedChallengesForWeek(challenge.id)[date] === challenge.목표갯수 ? 'green' : 'black', marginLeft: 5 + "px" }}>{countCompletedChallengesForWeek(challenge.id)[date]}</span>
+                                            <span style={{ fontWeight:'600' ,color: countCompletedChallengesForWeek(challenge.id)[date] === challenge.목표갯수 ? 'green' : 'black', marginLeft: 5 + "px" }}>{countCompletedChallengesForWeek(challenge.id)[date]}</span>
                                         </WeekCount>
                                     ))}
                                 </WeekComplet>

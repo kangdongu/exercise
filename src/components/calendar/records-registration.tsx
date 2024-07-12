@@ -165,7 +165,7 @@ const TypeMenu = styled.li<{ selected: boolean }>`
   border:1px solid gray;
   text-align:center;
   border-radius:10px;
-  padding: 5px 15px;
+  padding: 5px 0px;
   cursor: pointer;
   background-color: ${(props) => props.selected ? "#ff0000" : "transparent"};
   color: ${(props) => props.selected ? "white" : "black"};
@@ -219,7 +219,7 @@ const SearchBox = styled.input`
   height:40px;
   background-color:#f1f3f3;
   border:none;
-  border-radius:30px;
+  border-radius:0px 30px 30px 0px;
   padding:5px;
   font-size:16px;
 `;
@@ -404,15 +404,17 @@ export default function ExerciseRegistration({
             <IoSearch onClick={() => setSearchBox(true)} style={{width:'20px',height:'20px'}} />
           )}
           
-          <TypeWrapper>
-            <TypeMenu onClick={() => setSelectedType("전체")}
+          <TypeWrapper style={{gap:"0.5%"}}>
+            <TypeMenu style={{width:'15.47%'}} onClick={() => setSelectedType("전체")}
               selected={selectedType === "전체"}>전체</TypeMenu>
-            <TypeMenu onClick={() => setSelectedType("맨몸운동")}
+            <TypeMenu style={{width:'25.79%'}} onClick={() => setSelectedType("맨몸운동")}
               selected={selectedType === "맨몸운동"}>맨몸운동</TypeMenu>
-            <TypeMenu onClick={() => setSelectedType("헬스")}
+            <TypeMenu style={{width:'15.47%'}} onClick={() => setSelectedType("헬스")}
               selected={selectedType === "헬스"}>헬스</TypeMenu>
-            <TypeMenu onClick={() => setSelectedType("수영")}
+            <TypeMenu style={{width:'15.47%'}} onClick={() => setSelectedType("수영")}
               selected={selectedType === "수영"}>수영</TypeMenu>
+              <TypeMenu style={{width:'25.79%'}} onClick={() => setSelectedType("구기종목")}
+              selected={selectedType === "구기종목"}>구기종목</TypeMenu>
           </TypeWrapper>
           <TypeWrapper style={{gap:"0.5%"}}>
             <AreaMenu onClick={() => setSelectedArea("전체")}

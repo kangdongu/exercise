@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { useState } from "react";
 import { auth, db } from "../../firebase";
-import { addDoc, collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, increment, query, updateDoc, where } from "firebase/firestore";
 import { format } from "date-fns";
 import DateChoiceFuture from "../date-pick";
 import AchievementModal from "../achievement-alert";
@@ -120,6 +120,7 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
     const [goals, setGoals] = useState<{ memo: string }[]>([{ memo: "" }]);
     const [title, setTitle] = useState("")
     const [showAchievements, setShowAchievements] = useState(false);
+    const [achievementName, setAchievementName] = useState("")
     const [isCreating, setIsCreating] = useState(false)
 
     const EndDateChange = (date: Date | null) => {
@@ -155,64 +156,96 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
 
     const completClick = async () => {
         if (isCreating) return;
-
+    
         setIsCreating(true);
         if (title !== "" && goals.length !== 0 && goals.every(goal => goal.memo.trim() !== "")) {
             try {
                 const user = auth.currentUser;
+                if (!user) {
+                    throw new Error("User not authenticated");
+                }
+    
                 const startDate = new Date();
                 const endDate = selectedEndDate ? new Date(selectedEndDate) : new Date();
                 const endDateFormat = selectedEndDate ? format(selectedEndDate, 'yyyy-MM-dd') : '';
-
+    
                 const startDateKST = convertToKST(startDate);
                 const endDateKST = convertToKST(endDate);
-
-
+    
                 const longGoalRef = await addDoc(collection(db, 'personallonggoals'), {
                     챌린지제목: title,
-                    유저아이디: user?.uid,
+                    유저아이디: user.uid,
                     종료날짜: endDateFormat,
                     시작날짜: format(startDate, 'yyyy-MM-dd'),
                     주에몇일: selectedWeek,
                     목표갯수: goals.length,
                     기한선택: '장기챌린지',
                     챌린지내용: goals.map(goal => goal.memo),
-                    기간종료:false,
-                    종료알림:false,
+                    기간종료: false,
+                    종료알림: false,
                 });
-
+    
                 const dateArray = [];
                 for (let dt = startDateKST; dt <= endDateKST; dt.setDate(dt.getDate() + 1)) {
                     dateArray.push(new Date(dt));
                 }
-
+    
                 const promises = dateArray.map((date) =>
                     goals.map((goal) =>
                         addDoc(collection(db, 'personallonggoals', longGoalRef.id, 'longgoals'), {
                             챌린지내용: goal.memo,
                             날짜: format(date, 'yyyy-MM-dd'),
                             완료여부: '미완',
-                            기한선택:'장기챌린지',
+                            기한선택: '장기챌린지',
                         })
                     )
                 );
                 await Promise.all(promises.flat());
-
-                const achievementsRef = collection(db, 'achievements');
-                const q = query(achievementsRef);
-                const querySnapshot = await getDocs(q);
-
-                const achievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 생성하기");
-
-                if (achievementDoc && !achievementDoc.data().유저아이디.includes(user?.uid)) {
-                    const achievementRef = doc(db, 'achievements', achievementDoc.id);
-                    await updateDoc(achievementRef, {
-                        유저아이디: [...achievementDoc.data().유저아이디, user?.uid]
+    
+                const userQuery = query(collection(db, 'user'), where("유저아이디", "==", user.uid));
+                const userSnapshot = await getDocs(userQuery);
+                if (!userSnapshot.empty) {
+                    const userDoc = userSnapshot.docs[0];
+                    await updateDoc(userDoc.ref, {
+                        개인챌린지생성: increment(1)
                     });
-                    setShowAchievements(true);
-                } else {
-                    alert("개인챌린지를 성공적으로 생성하였습니다.")
-                    complet();
+    
+                    const challengeCount = userDoc.data().개인챌린지생성;
+    
+                    const achievementsRef = collection(db, 'achievements');
+                    const q = query(achievementsRef);
+                    const querySnapshot = await getDocs(q);
+    
+                    const mainAchievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 생성");
+    
+                    if (mainAchievementDoc) {
+                        const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
+                        const subAchievementsSnapshot = await getDocs(subAchievementsRef);
+    
+                        const subAchievementDoc =
+                            challengeCount >= 20
+                                ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 20개 생성")
+                                : challengeCount >= 15
+                                    ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 15개 생성")
+                                    : challengeCount >= 10
+                                        ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 10개 생성")
+                                        : challengeCount >= 5
+                                            ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 5개 생성")
+                                            : subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "첫 개인챌린지 생성");
+    
+                        if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(user.uid)) {
+                            const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
+                            await updateDoc(subAchievementRef, {
+                                유저아이디: [...subAchievementDoc.data().유저아이디, user.uid]
+                            });
+                            setAchievementName(subAchievementDoc.data().도전과제이름);
+                            setShowAchievements(true);
+                        }else{
+                            alert("개인챌린지를 성공적으로 생성하였습니다.");
+                            complet();
+                        }
+                    }
+                   
                 }
             } catch (error) {
                 console.error(error);
@@ -220,16 +253,15 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
                 setIsCreating(false);
             }
         } else {
-            if (title === "" && goals.length == 0 && selectedWeek === "") {
+            if (title === "" && goals.length === 0 && selectedWeek === "") {
                 alert("제목과 주에 몇일을 입력하고 목표를 추가해주세요")
             } else if (title === "") {
                 alert("제목을 입력해주세요")
-            } else if (goals.length == 0) {
+            } else if (goals.length === 0) {
                 alert("목표를 추가해주세요")
             } else if (goals.some(goal => goal.memo.trim() === "")) {
                 alert("목표의 내용을 입력해주세요")
             }
-
         }
     };
 
@@ -249,7 +281,7 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
             <h4 style={{ marginTop: "5px", marginBottom: "5px" }}>장기 챌린지 제목 *</h4>
             <Title onChange={TitleChange} type="text" value={title} name="title" placeholder="챌린지 제목을 적어주세요"></Title>
             <DateWrapper>
-                <DateTitle>종료날짜를 입력해주세요 <span style={{fontSize:'12px'}}>(7주 후 까지 선택가능)</span></DateTitle>
+                <DateTitle>종료날짜를 입력해주세요 <span style={{ fontSize: '12px' }}>(7주 후 까지 선택가능)</span></DateTitle>
                 <span style={{ border: "0.3px solid lightgray" }}><DateChoiceFuture onDateChange={EndDateChange} /></span> 까지
             </DateWrapper>
             <WeekWrapper>
@@ -281,7 +313,7 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
             ))}
             <Completion onClick={completClick}>완료</Completion>
             {showAchievements && (
-                <AchievementModal handleModalConfirm={handleModalConfirm} achievementName="개인챌린지 생성하기" />
+                <AchievementModal handleModalConfirm={handleModalConfirm} achievementName={achievementName} />
             )}
         </Wrapper>
     )

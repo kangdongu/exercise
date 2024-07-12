@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { collection, query, where, getDocs, doc, updateDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, updateDoc, increment } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { format } from "date-fns";
 import { FaCheck } from "react-icons/fa";
@@ -134,6 +134,7 @@ const TodayGoals = () => {
     const [completedCount, setCompletedCount] = useState<number>(0)
     const [showAchievements, setShowAchievements] = useState(false);
     const [guide, setGuide] = useState(false)
+    const [achievementName, setAchievementName] = useState("")
 
     useEffect(() => {
         const fetchGoals = async () => {
@@ -239,20 +240,48 @@ const TodayGoals = () => {
             return goal;
         }));
 
-        const achievementsRef = collection(db, 'achievements');
-        const q = query(achievementsRef);
-        const querySnapshot = await getDocs(q);
-
-        const achievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 완료");
-
-        if (achievementDoc && !achievementDoc.data().유저아이디.includes(currentUser?.uid)) {
-            const achievementRef = doc(db, 'achievements', achievementDoc.id);
-            await updateDoc(achievementRef, {
-                유저아이디: [...achievementDoc.data().유저아이디, currentUser?.uid]
+        const userQuery = query(collection(db, 'user'), where("유저아이디", "==", currentUser?.uid));
+        const userSnapshot = await getDocs(userQuery);
+        if (!userSnapshot.empty) {
+            const userDoc = userSnapshot.docs[0];
+            const incrementValue = newStatus === '완료' ? 1 : -1;
+            await updateDoc(userDoc.ref, {
+                개인챌린지완료: increment(incrementValue)
             });
-            setShowAchievements(true);
-        }
 
+            const challengeCount = userDoc.data().개인챌린지완료 + incrementValue;
+
+            const achievementsRef = collection(db, 'achievements');
+            const q = query(achievementsRef);
+            const querySnapshot = await getDocs(q);
+
+            const mainAchievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 완료");
+
+            if (mainAchievementDoc) {
+                const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
+                const subAchievementsSnapshot = await getDocs(subAchievementsRef);
+
+                const subAchievementDoc =
+                    challengeCount >= 100
+                        ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "총 100개 개인챌린지 완료")
+                        : challengeCount >= 50
+                            ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "총 50개 개인챌린지 완료")
+                            : challengeCount >= 30
+                                ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "총 30개 개인챌린지 완료")
+                                : challengeCount >= 10
+                                    ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "총 10개 개인챌린지 완료")
+                                    : subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "첫 개인챌린지 완료");
+
+                if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(currentUser?.uid)) {
+                    const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
+                    await updateDoc(subAchievementRef, {
+                        유저아이디: [...subAchievementDoc.data().유저아이디, currentUser?.uid]
+                    });
+                    setAchievementName(subAchievementDoc.data().도전과제이름);
+                    setShowAchievements(true);
+                }
+            }
+        }
     } catch (error) {
         console.error(error);
     }
@@ -279,7 +308,7 @@ const TodayGoals = () => {
                 <TotalComplet>{goals.length}개중</TotalComplet>
             </CompletCountWrapper>
             {showAchievements && (
-                <AchievementModal handleModalConfirm={handleModalConfirm} achievementName="개인챌린지 완료" />
+                <AchievementModal handleModalConfirm={handleModalConfirm} achievementName={achievementName} />
             )}
             {guide ? (
                 <GuideWrapper>

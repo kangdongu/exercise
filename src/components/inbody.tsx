@@ -77,7 +77,7 @@ export default function Inbody() {
             const muscleData: MuscleData[] = [];
             const fatData: FatData[] = [];
 
-            const q = query(collection(db, 'inbody'), where("유저아이디", "==", auth.currentUser?.uid), orderBy("날짜", "asc"));
+            const q = query(collection(db, 'inbody'), where("유저아이디", "==", currentUser?.uid), orderBy("날짜", "asc"));
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
@@ -113,23 +113,30 @@ export default function Inbody() {
     const handleSaveWeight = async () => {
         try {
             const docRef = await addDoc(collection(db, 'inbody'), {
-                유저아이디: auth.currentUser?.uid, 
-                날짜: getCurrentDate(), 
+                유저아이디: auth.currentUser?.uid,
+                날짜: getCurrentDate(),
                 weight
             });
             const achievementsRef = collection(db, 'achievements');
             const q = query(achievementsRef);
             const querySnapshot = await getDocs(q);
     
-            const achievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "몸무게 입력 완료");
+            const mainAchievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "첫 인바디 입력");
     
-            if (achievementDoc && !achievementDoc.data().유저아이디.includes(currentUser?.uid)) {
-                const achievementRef = doc(db, 'achievements', achievementDoc.id);
-                await updateDoc(achievementRef, {
-                    유저아이디: [...achievementDoc.data().유저아이디, currentUser?.uid]
-                });
-                setAchievementName(achievementDoc.data().도전과제이름);
-                setShowAchievements(true);
+            if (mainAchievementDoc) {
+                const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
+                const subAchievementsSnapshot = await getDocs(subAchievementsRef);
+    
+                const subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "몸무게 입력");
+    
+                if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(currentUser?.uid)) {
+                    const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
+                    await updateDoc(subAchievementRef, {
+                        유저아이디: [...subAchievementDoc.data().유저아이디, auth.currentUser?.uid]
+                    });
+                    setAchievementName(subAchievementDoc.data().도전과제이름);
+                    setShowAchievements(true);
+                }
             }
             console.log("ID로 작성된 체중 문서: ", docRef.id);
         } catch (e) {
@@ -150,15 +157,22 @@ export default function Inbody() {
             const q = query(achievementsRef);
             const querySnapshot = await getDocs(q);
     
-            const achievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "골격근량 입력 완료");
+            const mainAchievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "첫 인바디 입력");
     
-            if (achievementDoc && !achievementDoc.data().유저아이디.includes(currentUser?.uid)) {
-                const achievementRef = doc(db, 'achievements', achievementDoc.id);
-                await updateDoc(achievementRef, {
-                    유저아이디: [...achievementDoc.data().유저아이디, currentUser?.uid]
-                });
-                setAchievementName(achievementDoc.data().도전과제이름);
-                setShowAchievements(true);
+            if (mainAchievementDoc) {
+                const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
+                const subAchievementsSnapshot = await getDocs(subAchievementsRef);
+    
+                const subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "골격근량 입력");
+    
+                if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(currentUser?.uid)) {
+                    const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
+                    await updateDoc(subAchievementRef, {
+                        유저아이디: [...subAchievementDoc.data().유저아이디, auth.currentUser?.uid]
+                    });
+                    setAchievementName(subAchievementDoc.data().도전과제이름);
+                    setShowAchievements(true);
+                }
             }
             console.log("ID로 작성된 무게 문서: ", docRef.id);
         } catch (e) {
@@ -179,15 +193,22 @@ export default function Inbody() {
             const q = query(achievementsRef);
             const querySnapshot = await getDocs(q);
     
-            const achievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "체지방 입력 완료");
+            const mainAchievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "첫 인바디 입력");
     
-            if (achievementDoc && !achievementDoc.data().유저아이디.includes(currentUser?.uid)) {
-                const achievementRef = doc(db, 'achievements', achievementDoc.id);
-                await updateDoc(achievementRef, {
-                    유저아이디: [...achievementDoc.data().유저아이디, currentUser?.uid]
-                });
-                setAchievementName(achievementDoc.data().도전과제이름);
-                setShowAchievements(true);
+            if (mainAchievementDoc) {
+                const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
+                const subAchievementsSnapshot = await getDocs(subAchievementsRef);
+    
+                const subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "체지방 입력");
+    
+                if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(auth.currentUser?.uid)) {
+                    const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
+                    await updateDoc(subAchievementRef, {
+                        유저아이디: [...subAchievementDoc.data().유저아이디, auth.currentUser?.uid]
+                    });
+                    setAchievementName(subAchievementDoc.data().도전과제이름);
+                    setShowAchievements(true);
+                }
             }
             console.log("ID로 작성된 무게 문서: ", docRef.id);
         } catch (e) {

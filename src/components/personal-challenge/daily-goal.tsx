@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { addDoc, collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, increment, query, updateDoc, where } from "firebase/firestore";
 import { format } from "date-fns";
 import { auth, db } from "../../firebase";
 import DateChoiceToday from "../date-picker-today";
@@ -71,6 +71,8 @@ const Completion = styled.div`
     text-align: center;
     line-height: 35px;
     transform: translate(62vw, 40px);
+    color:white;
+    background-color:#D32F2F;
 `;
 
 interface DailyProps {
@@ -81,6 +83,7 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
     const [showAchievements, setShowAchievements] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
     const [goals, setGoals] = useState<{ memo: string }[]>([{ memo: "" }]);
+    const [achievementName, setAchievementName] = useState("")
     const [isCreating, setIsCreating] = useState(false)
 
     const handleDateChange = (date: Date | null) => {
@@ -116,6 +119,9 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
         if (goals.every(goal => goal.memo.trim() !== "")) {
             try {
                 const user = auth.currentUser;
+                if (!user) {
+                    throw new Error("User not authenticated");
+                }
                 const recordsRef = collection(db, 'personalgoals');
                 const date = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
                 const promises = goals.map((goal) =>
@@ -129,21 +135,49 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
                 );
                 await Promise.all(promises);
 
-                const achievementsRef = collection(db, 'achievements');
-                const q = query(achievementsRef);
-                const querySnapshot = await getDocs(q);
-
-                const achievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 생성하기");
-
-                if (achievementDoc && !achievementDoc.data().유저아이디.includes(user?.uid)) {
-                    const achievementRef = doc(db, 'achievements', achievementDoc.id);
-                    await updateDoc(achievementRef, {
-                        유저아이디: [...achievementDoc.data().유저아이디, user?.uid]
+                const userQuery = query(collection(db, 'user'), where("유저아이디", "==", user.uid));
+                const userSnapshot = await getDocs(userQuery);
+                if (!userSnapshot.empty) {
+                    const userDoc = userSnapshot.docs[0];
+                    await updateDoc(userDoc.ref, {
+                        개인챌린지생성: increment(1)
                     });
-                    setShowAchievements(true);
-                } else {
-                    alert("개인챌린지를 성공적으로 생성하였습니다.")
-                    complet();
+    
+                    const challengeCount = userDoc.data().개인챌린지생성;
+    
+                    const achievementsRef = collection(db, 'achievements');
+                    const q = query(achievementsRef);
+                    const querySnapshot = await getDocs(q);
+    
+                    const mainAchievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 생성");
+    
+                    if (mainAchievementDoc) {
+                        const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
+                        const subAchievementsSnapshot = await getDocs(subAchievementsRef);
+    
+                        const subAchievementDoc =
+                            challengeCount >= 20
+                                ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 20개 생성")
+                                : challengeCount >= 15
+                                    ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 15개 생성")
+                                    : challengeCount >= 10
+                                        ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 10개 생성")
+                                        : challengeCount >= 5
+                                            ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 5개 생성")
+                                            : subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "첫 개인챌린지 생성");
+    
+                        if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(user.uid)) {
+                            const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
+                            await updateDoc(subAchievementRef, {
+                                유저아이디: [...subAchievementDoc.data().유저아이디, user.uid]
+                            });
+                            setAchievementName(subAchievementDoc.data().도전과제이름);
+                            setShowAchievements(true);
+                        }else{
+                            alert("개인챌린지를 성공적으로 생성하였습니다.");
+                            complet();
+                        }
+                    }
                 }
             } catch (error) {
                 console.error(error);
@@ -180,7 +214,7 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
             ))}
             <Completion onClick={completClick}>완료</Completion>
             {showAchievements && (
-                <AchievementModal handleModalConfirm={handleModalConfirm} achievementName="개인챌린지 생성하기" />
+                <AchievementModal handleModalConfirm={handleModalConfirm} achievementName={achievementName} />
             )}
         </Wrapper>
     );
