@@ -234,9 +234,7 @@ interface ExerciseRegistrationProps {
   closeModal: () => void;
 }
 
-export default function ExerciseRegistration({
-  closeModal,
-}: ExerciseRegistrationProps) {
+export default function ExerciseRegistration({ closeModal, }: ExerciseRegistrationProps) {
   const user = auth.currentUser;
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [exerciseType, setExerciseType] = useState("");
@@ -274,6 +272,7 @@ export default function ExerciseRegistration({
       });
 
       setExerciseData(exercises);
+      
     } catch (error) {
       console.error("Error fetching exercise data: ", error);
     }

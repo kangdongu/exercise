@@ -177,15 +177,13 @@ const AchievementsContent = () => {
                                 <AchievementsTitle>
                                     {achievement.도전과제이름}
                                 </AchievementsTitle>
-                                {selectedMenu === "total" ? (
-                                    selectedAchievement === achievement.achievementId ? (
+                                    {selectedAchievement === achievement.achievementId ? (
                                         <FaAngleUp style={{ width: "20px", height: "20px", marginTop: "15px", marginLeft: 'auto' }} />
                                     ) : (
                                         <FaAngleDown style={{ width: "20px", height: "20px", marginTop: "15px", marginLeft: 'auto' }} />
-                                    )
-                                ) : null}
+                                    )}
                             </AchievementsList>
-                            {selectedAchievement === achievement.achievementId && selectedMenu === "total" && (
+                            {selectedAchievement === achievement.achievementId && (
                                 <DetailWrapper>
                                     {subAchievements[achievement.achievementId] &&
                                         subAchievements[achievement.achievementId].map((subAchievement) => (
@@ -206,7 +204,7 @@ const AchievementsContent = () => {
                                                         )
                                                     ) : null}
                                                 </SubAchievement>
-                                                {selectedSubAchievement === subAchievement.도전과제이름 && (
+                                                {selectedSubAchievement === subAchievement.도전과제이름 && selectedMenu === "total" && (
                                                     <SubAchievementDescription>
                                                         {subAchievement.도전과제설명}
                                                     </SubAchievementDescription>
