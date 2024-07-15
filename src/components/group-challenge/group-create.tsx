@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import styled from "styled-components"
 import DateChoiceFuture from "../date-pick";
 import { auth, db, storage } from "../../firebase";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { format } from "date-fns";
 import { getDownloadURL, ref } from "firebase/storage";
 import { Challenge, useChallenges } from "./group-context";
 import PeopleModal from "./people-modal";
+import AchievementModal from "../achievement-alert";
 
 
 const Wrapper = styled.div`
@@ -208,6 +209,8 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
     const [isPeopleModalOpen, setIsPeopleModalOpen] = useState(false);
     const [peopleCount, setPeopleCount] = useState(0);
     const [isCreating, setIsCreating] = useState(false)
+    const [achievementName, setAchievementName] = useState("")
+    const [showAchievements, setShowAchievements] = useState(false)
     const currentUser = auth.currentUser
 
 
@@ -348,6 +351,30 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                     ...prevChallenges,
                     { id: docRef.id, ...newChallenge } as Challenge,
                 ]);
+
+                const achievementsRef = collection(db, 'achievements');
+                const q = query(achievementsRef);
+                const querySnapshot = await getDocs(q)
+
+                const mainAchievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "그룹챌린지 주최");
+
+                if (mainAchievementDoc) {
+                    const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
+                    const subAchievementsSnapshot = await getDocs(subAchievementsRef);
+
+                    const subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "그룹챌린지 주최");
+
+                    if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(user?.uid)) {
+                        const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
+                        await updateDoc(subAchievementRef, {
+                            유저아이디: arrayUnion(user?.uid),
+                        });
+                        setAchievementName(subAchievementDoc.data().도전과제이름);
+                        setShowAchievements(true);
+                        return;
+                    }
+                }
+
                 alert("방이 생성되었습니다!");
                 onBack();
             } catch (error) {
@@ -371,6 +398,10 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
             alert("인원수를 선택해주세요")
         }
     };
+    const handleModalConfirm = () => {
+        alert("방이 생성되었습니다!");
+        onBack();
+    }
 
     return (
         <Wrapper>
@@ -463,6 +494,9 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                     peopleCount={peopleCount}
                     setPeopleCount={setPeopleCount}
                 />
+            )}
+            {showAchievements && (
+                <AchievementModal achievementName={achievementName} handleModalConfirm={handleModalConfirm} />
             )}
         </Wrapper>
     )

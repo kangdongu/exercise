@@ -12,6 +12,7 @@ import { useChallenges } from "./group-context";
 import { FaArrowUp } from "react-icons/fa";
 import MoSlideModal from "../slideModal/mo-slide-modal";
 import { useNavigate } from "react-router-dom";
+import AchievementModal from "../achievement-alert";
 
 const Wrapper = styled.div`
     width:100%;
@@ -273,7 +274,7 @@ interface Challenge {
     종료날짜: string;
     요일선택: string[];
     유저아이디: string[];
-    비밀번호: any;
+    비밀번호: string;
     방장프로필: string;
     방장닉네임: string;
     인원수: number;
@@ -292,6 +293,8 @@ const GroupList = () => {
     const [joinPasswordModal, setJoinPasswordModal] = useState(false)
     const [passwordCheck, setPasswordCheck] = useState("")
     const [guideStart, setGuideStart] = useState(false);
+    const [achievementName, setAchievementName] = useState("")
+    const [showAchievements, setShowAchievements] = useState(false)
     const [guide1, setGuide1] = useState(false)
     const [guide2, setGuide2] = useState(false)
     const [guide3, setGuide3] = useState(false)
@@ -331,6 +334,29 @@ const GroupList = () => {
 
                             setChallenges(updatedChallenges);
 
+                            const achievementsRef = collection(db, 'achievements');
+                            const q = query(achievementsRef);
+                            const querySnapshot = await getDocs(q)
+
+                            const mainAchievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "그룹챌린지 참여");
+
+                            if (mainAchievementDoc) {
+                                const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
+                                const subAchievementsSnapshot = await getDocs(subAchievementsRef);
+
+                                const subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "첫 그룹챌린지 참여");
+
+                                if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(user.uid)) {
+                                    const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
+                                    await updateDoc(subAchievementRef, {
+                                        유저아이디: arrayUnion(user.uid),
+                                    });
+                                    setAchievementName(subAchievementDoc.data().도전과제이름);
+                                    setSelectedChallenge(challenge);
+                                    setShowAchievements(true);
+                                    return;
+                                }
+                            }
                         } catch (error) {
                             console.error("챌린지 가입 중 오류 발생:", error);
                         }
@@ -341,6 +367,7 @@ const GroupList = () => {
 
                     } else {
                         setJoinPasswordModal(true);
+                        setSelectedChallenge(challenge);
                     }
                 } else {
                     alert("현재 그룹방은 인원수가 가득 찼습니다.")
@@ -354,9 +381,9 @@ const GroupList = () => {
     };
 
     const passwordButton = async () => {
-        if (passwordCheck === selectedChallenge?.비밀번호) {
+        if (passwordCheck.trim() === selectedChallenge?.비밀번호.trim()) {
             try {
-                if (user && user.uid) {
+                if (user && user.uid && selectedChallenge) {
                     const challengeRef = doc(db, "groupchallengeroom", selectedChallenge.id);
                     await updateDoc(challengeRef, {
                         유저아이디: arrayUnion(user.uid),
@@ -373,16 +400,42 @@ const GroupList = () => {
                     });
                     setChallenges(updatedChallenges);
                 }
+
+                const achievementsRef = collection(db, 'achievements');
+                const q = query(achievementsRef);
+                const querySnapshot = await getDocs(q)
+
+                const mainAchievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "그룹챌린지 참여");
+
+                if (mainAchievementDoc) {
+                    const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
+                    const subAchievementsSnapshot = await getDocs(subAchievementsRef);
+
+                    const subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "첫 그룹챌린지 참여");
+
+                    if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(user?.uid)) {
+                        const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
+                        await updateDoc(subAchievementRef, {
+                            유저아이디: arrayUnion(user?.uid),
+                        });
+                        setAchievementName(subAchievementDoc.data().도전과제이름);
+                        setJoinPasswordModal(false);
+                        setPasswordCheck("");
+                        setShowAchievements(true);
+                        return;
+                    }
+                }
+
             } catch (error) {
                 console.error("챌린지 가입 중 오류 발생:", error);
             }
-            setSelectedChallenge(selectedChallenge);
             setJoin(true);
             setJoinPasswordModal(false);
             setPasswordCheck("");
-            navigate(`/group-challenge/${selectedChallenge.id}`);
+            navigate(`/group-challenge/${selectedChallenge?.id}`);
         } else {
             alert("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
+            console.log("Password Check Failed");
             setPasswordCheck("");
         }
     };
@@ -488,7 +541,12 @@ const GroupList = () => {
         setGuide4(false)
         setGuideStart(false)
     }
-
+    const handleModalConfirm = () => {
+        setShowAchievements(false);
+        if (selectedChallenge) {
+            navigate(`/group-challenge/${selectedChallenge.id}`);
+        }
+    };
 
     return (
         <MoSlideModal onClose={() => navigate("/")}>
@@ -537,6 +595,9 @@ const GroupList = () => {
                         </PasswordWrapper>
                     </PasswordBack>
                 )}
+                {showAchievements && (
+                    <AchievementModal achievementName={achievementName} handleModalConfirm={handleModalConfirm} />
+                )}
 
                 {guideStart ? (
                     <GuideBackground>
@@ -568,7 +629,6 @@ const GroupList = () => {
                                         <span style={{ position: "relative", marginLeft: "5px" }}>
                                             <GlassBox />
                                             <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px", color: "black" }} />
-
                                         </span>
                                         <PeopleJoinWrapper>
                                             <PeopleWrapper>5/10</PeopleWrapper>
