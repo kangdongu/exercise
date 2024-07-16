@@ -43,6 +43,8 @@ const BadgesList = styled.div`
     background-color:white;
     gap:15px;
     z-index:10;
+    margin-bottom:10px;
+    padding-left:5px;
 `;
 const BadgeHeader = styled.div`
     width:60px;
@@ -61,6 +63,7 @@ const BadgeImgWrapper = styled.div`
 `;
 const Img = styled.img`
     width:100%;
+    height:60px;
 `;
 
 interface Badges {

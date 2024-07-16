@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import MoCalendarWrapper from '../slideModal/mo-calendar-click';
 import { ko } from 'date-fns/locale';
 import AchievementModal from '../achievement-alert';
+import BadgeModal from '../badge-modal';
 
 
 const Wrapper = styled.div`
@@ -66,6 +67,9 @@ export default function Calendar() {
     const [achievementName, setAchievementName] = useState("")
     const [showAchievements, setShowAchievements] = useState(false)
     const [createRecords, setCreateRecords] = useState<{ title: string; date: any }[]>([]);
+    const [showBadge, setShowBadge] = useState(false);
+    const [badgeImg, setBadgeImg] = useState("")
+    const [badgeName, setBadgeName] = useState("")
     const user = auth.currentUser;
 
     const onClick = () => {
@@ -112,7 +116,24 @@ export default function Calendar() {
                         setCreateRecords(userEvents);
 
                         const exerciseDates = [...new Set(querySnapshot.docs.map(doc => doc.data().날짜))];
-                        console.log("Fetched exercise dates: ", exerciseDates);
+
+                        if (exerciseDates.length >= 200) {
+                            const badgesRef = collection(db, "badges");
+                            const bq = query(badgesRef);
+                            const badgeQuerySnapshot = await getDocs(bq);
+
+                            const badgeDoc = badgeQuerySnapshot.docs.find(doc => doc.data().뱃지이름 === "누적 운동 200일 뱃지");
+
+                            if (badgeDoc && !badgeDoc.data().유저아이디.includes(user?.uid)) {
+                                const badgeRef = doc(db, "badges", badgeDoc.id);
+                                await updateDoc(badgeRef, {
+                                    유저아이디: arrayUnion(user?.uid),
+                                });
+                                setBadgeImg(badgeDoc.data().뱃지이미지)
+                                setBadgeName(badgeDoc.data().뱃지이름)
+                                setShowBadge(true)
+                            }
+                        }
 
                         const achievementsRef = collection(db, 'achievements');
                         const q = query(achievementsRef);
@@ -146,12 +167,10 @@ export default function Calendar() {
                                 });
                                 setAchievementName(subAchievementDoc.data().도전과제이름);
                                 setShowAchievements(true);
-
                             }
-
-                            await checkAchievements(exerciseDates);
-
                         }
+                        await checkAchievements(exerciseDates);
+                        await checkBadge(exerciseDates)
                     }
                 }
             } catch (error) {
@@ -161,10 +180,30 @@ export default function Calendar() {
         fetchRecords();
     }, [modal]);
 
-    const checkAchievements = async (dates: string[]) => {
-        console.log("Checking achievements for dates: ", dates);
+    const checkBadge = async (dates: string[]) => {
         const consecutiveDays = getConsecutiveDays(dates);
-        console.log("Consecutive days: ", consecutiveDays);
+
+        if (consecutiveDays >= 30) {
+            const badgesRef = collection(db, "badges");
+            const q = query(badgesRef);
+            const querySnapshot = await getDocs(q);
+
+            const badgeDoc = querySnapshot.docs.find(doc => doc.data().뱃지이름 === "연속 30일 운동기록 뱃지");
+
+            if (badgeDoc && !badgeDoc.data().유저아이디.includes(user?.uid)) {
+                const badgeRef = doc(db, "badges", badgeDoc.id);
+                await updateDoc(badgeRef, {
+                    유저아이디: arrayUnion(user?.uid),
+                });
+                setBadgeImg(badgeDoc.data().뱃지이미지)
+                setBadgeName(badgeDoc.data().뱃지이름)
+                setShowBadge(true)
+            }
+        }
+    };
+
+    const checkAchievements = async (dates: string[]) => {
+        const consecutiveDays = getConsecutiveDays(dates);
 
         const achievementsRef = collection(db, 'achievements');
         const q = query(achievementsRef);
@@ -185,10 +224,6 @@ export default function Calendar() {
                 subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "연속 7일 운동기록");
             }
 
-            if (subAchievementDoc) {
-                console.log("Found sub-achievement doc: ", subAchievementDoc.data());
-            }
-
             if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(user?.uid)) {
                 const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
                 await updateDoc(subAchievementRef, {
@@ -196,7 +231,6 @@ export default function Calendar() {
                 });
                 setAchievementName(subAchievementDoc.data().도전과제이름);
                 setShowAchievements(true);
-                console.log(consecutiveDays)
             }
         }
     };
@@ -242,6 +276,10 @@ export default function Calendar() {
         setShowAchievements(false)
     }
 
+    const badgeModalConfirm = () => {
+        setShowBadge(false)
+    }
+
 
     return (
         <Wrapper>
@@ -273,6 +311,9 @@ export default function Calendar() {
             {calendarClick && window.innerWidth >= 700 ? <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} /> : null}
             {showAchievements && (
                 <AchievementModal achievementName={achievementName} handleModalConfirm={handleModalConfirm} />
+            )}
+            {showBadge && (
+                <BadgeModal badgeImg={badgeImg} badgeName={badgeName} badgeModalConfirm={badgeModalConfirm} />
             )}
         </Wrapper>
     )

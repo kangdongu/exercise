@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref } from "firebase/storage";
-import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { FaUserAlt } from "react-icons/fa";
 import AchievementModal from "../components/achievement-alert";
 
@@ -112,20 +112,40 @@ export default function Home() {
                     query(longGoalRef, where("유저아이디", "==", currentUser?.uid), where("기간종료", "==", true))
                 );
 
+                const longGoalsLength = [...new Set (querySnapshot.docs.map(doc => doc.data().종료날짜))]
+
                 if (!querySnapshot.empty) {
                     const achievementsRef = collection(db, 'achievements');
                     const q = query(achievementsRef);
                     const querySnapshotAchievement = await getDocs(q);
 
-                    const achievementDoc = querySnapshotAchievement.docs.find(doc => doc.data().도전과제이름 === "장기챌린지 완료");
+                    const mainAchievementDoc = querySnapshotAchievement.docs.find(doc => doc.data().도전과제이름 === "장기챌린지 완료");
 
-                    if (achievementDoc && !achievementDoc.data().유저아이디.includes(currentUser?.uid)) {
-                        const achievementRef = doc(db, 'achievements', achievementDoc.id);
-                        await updateDoc(achievementRef, {
-                            유저아이디: [...achievementDoc.data().유저아이디, currentUser?.uid]
-                        });
-                        setShowAchievements(true);
-                        setAchievementName(achievementDoc.data().도전과제이름)
+                    if (mainAchievementDoc) {
+                        const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
+                        const subAchievementsSnapshot = await getDocs(subAchievementsRef);
+
+                        let subAchievementDoc;
+                        if(longGoalsLength.length >= 10){
+                            subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "10번째 장기챌린지 완료");
+                        }else if(longGoalsLength.length >= 8){
+                            subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "8번째 장기챌린지 완료");
+                        }else if(longGoalsLength.length >= 5){
+                            subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "5번째 장기챌린지 완료");
+                        }else if(longGoalsLength.length >= 3){
+                            subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "3번째 장기챌린지 완료");
+                        }else if(longGoalsLength.length >= 1){
+                            subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "첫 장기챌린지 완료");
+                        }
+
+                        if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(currentUser?.uid)) {
+                            const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
+                            await updateDoc(subAchievementRef, {
+                                유저아이디: arrayUnion(currentUser?.uid),
+                            });
+                            setAchievementName(subAchievementDoc.data().도전과제이름);
+                            setShowAchievements(true);
+                        }
                     }
                 }
             } catch (error) {

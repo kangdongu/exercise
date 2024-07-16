@@ -113,7 +113,7 @@ const AchievementsContent = () => {
                 }));
                 setAchievements(achievementsArray);
             } catch (error) {
-                console.error("Error fetching achievements: ", error);
+                console.error(error);
             }
         };
 
@@ -134,7 +134,7 @@ const AchievementsContent = () => {
 
             setSubAchievements((prev) => ({ ...prev, [achievementId]: subAchievementsArray }));
         } catch (error) {
-            console.error("Error fetching sub-achievements: ", error);
+            console.error(error);
         }
     };
 

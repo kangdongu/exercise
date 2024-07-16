@@ -95,13 +95,15 @@ const BadgeWrapper = styled.div`
   position:absolute;
   right:0;
   bottom:0;
+  display:flex;
+  flex-wrap: wrap;
 `;
 const ImgWrapper = styled.div`
   background-color:
 `;
 const BadgeImg = styled.img`
-  width:20px;
-  height:20px;
+  width:25px;
+  height:25px;
 `;
 const InformationWrapper = styled.div`
   width:100vw;
