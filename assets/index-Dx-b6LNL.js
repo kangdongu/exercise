@@ -3992,7 +3992,7 @@ width: 100%;
   justify-content: space-between;
 `,qce=S.div`
   background-color:
-  width:25%;
+  width:25px;
   height:25px;
   overflow:hidden;
 `,Gce=S.img`
