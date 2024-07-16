@@ -89,17 +89,21 @@ const Title = styled.h4`
   font-size:18px;
 `;
 const BadgeWrapper = styled.div`
-  width:100px;
-  height:50px;
+  width:105px;
+  height:60px;
   border:0.3px solid lightgray;
   position:absolute;
   right:0;
   bottom:0;
   display:flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 `;
 const ImgWrapper = styled.div`
   background-color:
+  width:25px;
+  height:25px;
+  overflow:hidden;
 `;
 const BadgeImg = styled.img`
   width:25px;

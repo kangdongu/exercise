@@ -1,10 +1,11 @@
 import styled from "styled-components"
 import { useState } from "react";
 import { auth, db } from "../../firebase";
-import { addDoc, collection, doc, getDocs, increment, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, doc, getDocs, increment, query, updateDoc, where } from "firebase/firestore";
 import { format } from "date-fns";
 import DateChoiceFuture from "../date-pick";
 import AchievementModal from "../achievement-alert";
+import BadgeModal from "../badge-modal";
 
 const Wrapper = styled.div`
     width: 100%;
@@ -122,6 +123,9 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
     const [showAchievements, setShowAchievements] = useState(false);
     const [achievementName, setAchievementName] = useState("")
     const [isCreating, setIsCreating] = useState(false)
+    const [badgeImg, setBadgeImg] = useState("");
+    const [badgeName, setBadgeName] = useState("");
+    const [showBadge, setShowBadge] = useState(false);
 
     const EndDateChange = (date: Date | null) => {
         setSelectedEndDate(date);
@@ -211,6 +215,24 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
                     });
     
                     const challengeCount = userDoc.data().개인챌린지생성;
+
+                    if(challengeCount >= 20){
+                        const badgesRef = collection(db, "badges")
+                        const q = query(badgesRef)
+                        const querySnapshot = await getDocs(q);
+
+                        const badgeDoc = querySnapshot.docs.find(doc => doc.data().뱃지이름 === "개인챌린지 20개 생성 뱃지");
+
+                        if (badgeDoc && !badgeDoc.data().유저아이디.includes(user?.uid)) {
+                            const badgeRef = doc(db, "badges", badgeDoc.id);
+                            await updateDoc(badgeRef, {
+                                유저아이디: arrayUnion(user?.uid),
+                            });
+                            setBadgeImg(badgeDoc.data().뱃지이미지)
+                            setBadgeName(badgeDoc.data().뱃지이름)
+                            setShowBadge(true)
+                        }
+                    }
     
                     const achievementsRef = collection(db, 'achievements');
                     const q = query(achievementsRef);
@@ -275,6 +297,9 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
             setTitle(value)
         }
     }
+    const badgeModalConfirm = () => {
+        setShowBadge(false)
+    }
 
     return (
         <Wrapper>
@@ -314,6 +339,9 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
             <Completion onClick={completClick}>완료</Completion>
             {showAchievements && (
                 <AchievementModal handleModalConfirm={handleModalConfirm} achievementName={achievementName} />
+            )}
+            {showBadge && (
+                <BadgeModal badgeImg={badgeImg} badgeName={badgeName} badgeModalConfirm={badgeModalConfirm} />
             )}
         </Wrapper>
     )

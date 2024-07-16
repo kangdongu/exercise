@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { collection, query, where, getDocs, doc, updateDoc, increment } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, updateDoc, increment, arrayUnion } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { format } from "date-fns";
 import { FaCheck } from "react-icons/fa";
 import AchievementModal from "../achievement-alert";
+import BadgeModal from "../badge-modal";
 
 
 const Wrapper = styled.div`
@@ -135,6 +136,9 @@ const TodayGoals = () => {
     const [showAchievements, setShowAchievements] = useState(false);
     const [guide, setGuide] = useState(false)
     const [achievementName, setAchievementName] = useState("")
+    const [badgeName, setBadgeName] = useState("");
+    const [badgeImg, setBadgeImg] = useState("");
+    const [showBadge, setShowBadge] = useState(false);
 
     useEffect(() => {
         const fetchGoals = async () => {
@@ -251,6 +255,24 @@ const TodayGoals = () => {
 
             const challengeCount = userDoc.data().개인챌린지완료 + incrementValue;
 
+            if(challengeCount >= 100){
+                const badgesRef = collection(db, "badges")
+                const bq = query(badgesRef)
+                const badgeQuerySnapshot = await getDocs(bq)
+
+                const badgeDoc = badgeQuerySnapshot.docs.find(doc => doc.data().뱃지이름 === "개인챌린지 100개 완료 뱃지")
+
+                if (badgeDoc && !badgeDoc.data().유저아이디.includes(currentUser?.uid)) {
+                    const badgeRef = doc(db, "badges", badgeDoc.id);
+                    await updateDoc(badgeRef, {
+                        유저아이디: arrayUnion(currentUser?.uid),
+                    });
+                    setBadgeImg(badgeDoc.data().뱃지이미지)
+                    setBadgeName(badgeDoc.data().뱃지이름)
+                    setShowBadge(true)
+                }
+            }
+
             const achievementsRef = collection(db, 'achievements');
             const q = query(achievementsRef);
             const querySnapshot = await getDocs(q);
@@ -291,6 +313,10 @@ const TodayGoals = () => {
         setGuide(false);
     }
 
+    const badgeModalConfirm = () => {
+        setShowBadge(false)
+    }
+
     return (
         <Wrapper>
             <DailyGoalsWrapper>
@@ -323,6 +349,10 @@ const TodayGoals = () => {
                     </GuideTextWrapper>
                 </GuideWrapper>
             ) : null}
+            {showBadge && (
+                <BadgeModal badgeImg={badgeImg} badgeName={badgeName} badgeModalConfirm={badgeModalConfirm} />
+            )}
+            
         </Wrapper>
     );
 }
