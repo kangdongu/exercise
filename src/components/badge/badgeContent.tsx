@@ -1,4 +1,4 @@
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 import { auth, db } from "../../firebase";
@@ -82,7 +82,7 @@ const BadgeContent = () => {
     useEffect(() => {
         const fetchBadges = async () => {
             try {
-                const q = query(collection(db, "badges"))
+                const q = query(collection(db, "badges"), orderBy("순서","asc"))
                 const querySnapshot = await getDocs(q);
 
                 const badgesArray: Badges[] = querySnapshot.docs.map((doc) => ({

@@ -97,7 +97,7 @@ const BadgeWrapper = styled.div`
   bottom:0;
   display:flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  gap:1%;
 `;
 const ImgWrapper = styled.div`
   background-color:

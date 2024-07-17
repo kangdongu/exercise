@@ -12,6 +12,7 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { FaUserAlt } from "react-icons/fa";
 import AchievementModal from "../components/achievement-alert";
+import BadgeModal from "../components/badge-modal";
 
 const Wrapper = styled.div`
     width:100vw;
@@ -54,8 +55,11 @@ export default function Home() {
     const [userProfilePicUrl, setUserProfileUrl] = useState("");
     const [nickname, setNickname] = useState("")
     const [isLoading, setLoading] = useState(false)
-    const [showAchievements ,setShowAchievements] = useState(false);
+    const [showAchievements, setShowAchievements] = useState(false);
     const [achievementName, setAchievementName] = useState("")
+    const [badgeImg, setBadgeImg] = useState("")
+    const [badgeName, setBadgeName] = useState("")
+    const [showBadge, setShowBadge] = useState(false)
     const currentUser = auth.currentUser;
 
     const handleNavigation = (path: string) => {
@@ -112,7 +116,7 @@ export default function Home() {
                     query(longGoalRef, where("유저아이디", "==", currentUser?.uid), where("기간종료", "==", true))
                 );
 
-                const longGoalsLength = [...new Set (querySnapshot.docs.map(doc => doc.data().종료날짜))]
+                const longGoalsLength = [...new Set(querySnapshot.docs.map(doc => doc.data().종료날짜))]
 
                 if (!querySnapshot.empty) {
                     const achievementsRef = collection(db, 'achievements');
@@ -126,15 +130,15 @@ export default function Home() {
                         const subAchievementsSnapshot = await getDocs(subAchievementsRef);
 
                         let subAchievementDoc;
-                        if(longGoalsLength.length >= 10){
+                        if (longGoalsLength.length >= 10) {
                             subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "10번째 장기챌린지 완료");
-                        }else if(longGoalsLength.length >= 8){
+                        } else if (longGoalsLength.length >= 8) {
                             subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "8번째 장기챌린지 완료");
-                        }else if(longGoalsLength.length >= 5){
+                        } else if (longGoalsLength.length >= 5) {
                             subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "5번째 장기챌린지 완료");
-                        }else if(longGoalsLength.length >= 3){
+                        } else if (longGoalsLength.length >= 3) {
                             subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "3번째 장기챌린지 완료");
-                        }else if(longGoalsLength.length >= 1){
+                        } else if (longGoalsLength.length >= 1) {
                             subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "첫 장기챌린지 완료");
                         }
 
@@ -152,11 +156,65 @@ export default function Home() {
                 console.log(error);
             }
         };
+
+        const countAchievementsAndAddBadges = async () => {
+            try {
+                if (currentUser) {
+                    const achievementsRef = collection(db, 'achievements');
+                    const achievementSnapshot = await getDocs(achievementsRef);
+                    let achievementCount = 0;
+
+                    for (const doc of achievementSnapshot.docs) {
+                        const subAchievementsRef = collection(db, `achievements/${doc.id}/${doc.id}`);
+                        const subAchievementsSnapshot = await getDocs(subAchievementsRef);
+
+                        subAchievementsSnapshot.docs.forEach(subDoc => {
+                            if (subDoc.data().유저아이디.includes(currentUser.uid)) {
+                                achievementCount += 1;
+                            }
+                        });
+                    }
+
+                    let badgeName;
+
+                    if (achievementCount >= 15){
+                        badgeName ="도전과제 15개 달성"
+                    } else if (achievementCount >= 10) {
+                        badgeName = "도전과제 10개 달성";
+                    } else if (achievementCount >= 5) {
+                        badgeName = "도전과제 5개 달성";
+                    } else if (achievementCount >= 1){
+                        badgeName = "도전과제 1개 달성";
+                    }
+
+                    if (badgeName) {
+                        const badgesRef = collection(db, 'badges');
+                        const badgeDoc = await getDocs(query(badgesRef, where("뱃지이름", "==", badgeName)));
+                        if (!badgeDoc.empty && !badgeDoc.docs[0].data().유저아이디.includes(currentUser.uid)) {
+                            const badgeRef = doc(db, 'badges', badgeDoc.docs[0].id);
+                            await updateDoc(badgeRef, {
+                                유저아이디: arrayUnion(currentUser.uid),
+                            });
+                            setBadgeImg(badgeDoc.docs[0].data().뱃지이미지);
+                            setBadgeName(badgeDoc.docs[0].data().뱃지이름);
+                            setShowBadge(true);
+                        }
+                    }
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+        };
         fetchPersonalLongGoals();
+        countAchievementsAndAddBadges();
     }, []);
 
     const handleModalConfirm = () => {
         setShowAchievements(false)
+    }
+    const badgeModalConfirm = () => {
+        setShowBadge(false)
     }
 
     return (
@@ -183,6 +241,9 @@ export default function Home() {
             </GridWrapper>
             {showAchievements && (
                 <AchievementModal handleModalConfirm={handleModalConfirm} achievementName={achievementName} />
+            )}
+            {showBadge && (
+                <BadgeModal badgeImg={badgeImg} badgeName={badgeName} badgeModalConfirm={badgeModalConfirm} />
             )}
         </Wrapper>
     )
