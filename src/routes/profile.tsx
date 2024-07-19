@@ -71,6 +71,7 @@ const AvatarWrapper = styled.div`
   background-color:white;
   border-radius: 10px;
   margin-bottom:20px;
+   background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
   position:relative;
 `;
 const AvatarMent = styled.h3`
@@ -97,11 +98,12 @@ const Title = styled.h4`
 const BadgeWrapper = styled.div`
   width:105px;
   height:60px;
-  border:0.3px solid lightgray;
+
   position:absolute;
   right:0;
   bottom:0;
   display:flex;
+  background-color:#f8bbd0;
   flex-wrap: wrap;
   gap:1%;
 `;
@@ -264,7 +266,7 @@ export default function Profile() {
                 }
               }
             } else {
-              setMent("오늘 아직 운동을 하지 않았어요");
+              setMent("아직 운동을 하지 않았어요");
             }
           } else {
             setCharacter(userDoc.data().캐릭터이미지);
@@ -387,7 +389,7 @@ export default function Profile() {
             </Character>
             <AvatarMent>
                 <img style={{ width: '100%', position: "absolute", top: '0', left: '0' }} src="./talk.png" />
-                <div style={{ width:'100%',height:'40px', textAlign:'center' , marginTop: '20px' }}>
+                <div style={{ width:'100%',height:'40px', textAlign:'center' , marginTop: '20px',fontSize:'15px', padding:"0px 5px" }}>
                   {ment}
                 </div>
             </AvatarMent>
