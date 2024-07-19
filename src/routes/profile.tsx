@@ -73,7 +73,12 @@ const AvatarWrapper = styled.div`
   position:relative;
 `;
 const AvatarMent = styled.h3`
-  margin:0;
+  margin: 10px 0 0 0;
+  font-size: 18px;
+  color: #666;
+  text-align: center;
+  width:150px;
+  position:relative;
 `;
 const SignOutBtn = styled.div`
   height:25px;
@@ -149,6 +154,24 @@ const Complete = styled.div`
     line-height: 40px;
     margin: 5px auto;
 `;
+const CharacterWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  justify-content: center;
+  width:90%;
+`;
+const Character = styled.div`
+  width: 100%;
+  max-width: 150px;
+  height: auto;
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+`;
 
 
 interface Badges {
@@ -163,6 +186,7 @@ export default function Profile() {
   const [userImg, setUserImg] = useState(user?.photoURL);
   const [nickname, setNickname] = useState("");
   const [ment, setMent] = useState("");
+  const [character, setCharacter] = useState("")
   const [badges, setBadge] = useState<Badges[]>([])
   const [information, setInformation] = useState(false)
 
@@ -232,7 +256,9 @@ export default function Profile() {
             const userDoc = querySnapshot.docs[0];
             const userNickname = userDoc.data().닉네임;
             const profileGuide = userDoc.data().프로필안내;
+            const userCharacter = userDoc.data().캐릭터이미지;
             setNickname(userNickname);
+            setCharacter(userCharacter);
 
             if (profileGuide === false) {
               setInformation(true);
@@ -261,7 +287,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchBadges = async () => {
       try {
-        const q = query(collection(db, "badges"),orderBy("순서","desc"))
+        const q = query(collection(db, "badges"), orderBy("순서", "desc"))
         const querySnapshot = await getDocs(q);
 
         const badgesArray: Badges[] = querySnapshot.docs.map((doc) => ({
@@ -300,9 +326,17 @@ export default function Profile() {
       <ContentWrapper>
         <Title>캐릭터 및 보유뱃지</Title>
         <AvatarWrapper>
-          <AvatarMent>
-            {ment}
-          </AvatarMent>
+          <CharacterWrapper>
+            <Character>
+              <img style={{ width: '100%', height: 'auto', objectFit: 'cover' }} src={character} alt="Character" />
+            </Character>
+            <AvatarMent>
+                <img style={{ width: '100%', position: "absolute", top: '0', left: '0' }} src="./talk.png" />
+                <div style={{ width:'100%' , textAlign:'center' , marginTop: '20px' }}>
+                  {ment}
+                </div>
+            </AvatarMent>
+          </CharacterWrapper>
           <BadgeWrapper>
             {filteredBadges.map((badge) => (
               <ImgWrapper key={badge.뱃지이름}>
@@ -316,16 +350,16 @@ export default function Profile() {
       </ContentWrapper>
       {information ? (
         <InformationWrapper>
-        <Information>
-          <InformationPhoto />
-          <FaArrowUp style={{width:"40px", height:"40px", color:"white", marginLeft:"20px"}} />
+          <Information>
+            <InformationPhoto />
+            <FaArrowUp style={{ width: "40px", height: "40px", color: "white", marginLeft: "20px" }} />
             <InformationText>
               <div>해당 부분을 클릭하면 프로필사진을 설정할 수 있습니다.</div>
               <Complete onClick={() => setInformation(false)}>확인</Complete>
             </InformationText>
-        </Information>
-      </InformationWrapper>
-      ):null}
+          </Information>
+        </InformationWrapper>
+      ) : null}
     </Wrapper>
   )
 }

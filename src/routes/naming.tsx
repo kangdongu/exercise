@@ -69,6 +69,8 @@ export default function Naming() {
         개인챌린지생성:0,
         개인챌린지완료:0,
         장기챌린지종료:0,
+        운동일수:0,
+        캐릭터:""
       });
       navigate("/gender");
     } catch (error) {

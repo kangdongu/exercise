@@ -12,10 +12,10 @@ import Running from "./running";
 
 const Wrapper = styled.div`
     width: 100vw;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 80px);
     overflow-y: scroll;
     background: linear-gradient(to bottom, #FAC1BA, #FF6F61);
-    padding-top: 20px;
+    padding: 20px;
     color: #333;
 `;
 
@@ -27,7 +27,7 @@ const Header = styled.h4`
 `;
 
 const ContentWrapper = styled.div`
-    width: 95vw;
+    width: 100%;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
