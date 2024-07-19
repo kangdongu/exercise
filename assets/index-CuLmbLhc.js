@@ -4049,11 +4049,12 @@ width: 100%;
 `,fue=S.div`
   width:105px;
   height:60px;
-  border:0.3px solid lightgray;
+
   position:absolute;
   right:0;
   bottom:0;
   display:flex;
+  background-color:#f8bbd0;
   flex-wrap: wrap;
   gap:1%;
 `,pue=S.div`
