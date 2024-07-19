@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
-import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import WeekDates from "../components/week-records";
 import { format } from "date-fns";
 import { FaArrowUp } from "react-icons/fa";
@@ -261,7 +261,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchBadges = async () => {
       try {
-        const q = query(collection(db, "badges"))
+        const q = query(collection(db, "badges"),orderBy("순서","desc"))
         const querySnapshot = await getDocs(q);
 
         const badgesArray: Badges[] = querySnapshot.docs.map((doc) => ({

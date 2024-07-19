@@ -177,8 +177,12 @@ export default function Home() {
 
                     let badgeName;
 
-                    if (achievementCount >= 15){
-                        badgeName ="도전과제 15개 달성"
+                    if (achievementCount >= 25){
+                        badgeName ="도전과제 25개 달성"
+                    } else if (achievementCount >= 20) {
+                        badgeName = "도전과제 20개 달성";
+                    } else if (achievementCount >= 15) {
+                        badgeName = "도전과제 15개 달성";
                     } else if (achievementCount >= 10) {
                         badgeName = "도전과제 10개 달성";
                     } else if (achievementCount >= 5) {

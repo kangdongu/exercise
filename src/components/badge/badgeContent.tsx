@@ -8,7 +8,8 @@ import MoSlideModal from "../slideModal/mo-slide-modal";
 const Wrapper = styled.div`
     background-color:#f3f1f1;
     width:100vw;
-    height:100vh;
+    height:calc(100vh - 110px);
+    overflow-y:scroll;
 `;
 const ContentWrapper = styled.div`
     width:90vw;
