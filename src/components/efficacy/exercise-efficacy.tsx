@@ -77,6 +77,13 @@ const ExerciseEfficacy = () => {
                     이 믿음은 나를 잘 알게 하고, 무기력증을 극복하며, 삶의 여러 도전에 맞설 수 있는 힘을 줍니다.
                 </Paragraph>
             </Section>
+
+            <Section>
+                <SectionTitle>주의점</SectionTitle>
+                <Paragraph>
+                    무리한 운동은 오히려 부상을 초래할 수 있으므로 자신의 체력에 맞게 점진적으로 강도를 높이는 것이 중요합니다.
+                </Paragraph>
+            </Section>
         </Wrapper>
     );
 }
