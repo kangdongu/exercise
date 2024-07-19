@@ -6518,7 +6518,7 @@ display:none;
     height: calc(100vh - 80px);
     overflow-y: scroll;
     background: linear-gradient(to bottom, #FAC1BA, #FF6F61);
-    padding-top: 20px;
+    padding: 20px;
     color: #333;
 `,q2e=S.h4`
     font-size: 24px;
@@ -6526,7 +6526,7 @@ display:none;
     padding-left: 2.5vw;
     color: #333;
 `,G2e=S.div`
-    width: 95vw;
+    width: 100%;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
