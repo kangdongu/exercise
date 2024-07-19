@@ -4104,6 +4104,7 @@ width: 100%;
   align-items: center;
   margin-bottom: 20px;
   justify-content: center;
+  width:90%;
 `,_ue=S.div`
   width: 100%;
   max-width: 150px;
