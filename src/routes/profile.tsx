@@ -7,6 +7,7 @@ import { collection, getDocs, orderBy, query, updateDoc, where } from "firebase/
 import WeekDates from "../components/week-records";
 import { format } from "date-fns";
 import { FaArrowUp } from "react-icons/fa";
+import LoadingScreen from "../components/loading-screen";
 
 
 const Wrapper = styled.div`
@@ -161,6 +162,7 @@ const CharacterWrapper = styled.div`
   margin-bottom: 20px;
   justify-content: center;
   width:90%;
+  height:100%;
 `;
 const Character = styled.div`
   width: 100%;
@@ -186,9 +188,10 @@ export default function Profile() {
   const [userImg, setUserImg] = useState(user?.photoURL);
   const [nickname, setNickname] = useState("");
   const [ment, setMent] = useState("");
-  const [character, setCharacter] = useState("")
   const [badges, setBadge] = useState<Badges[]>([])
   const [information, setInformation] = useState(false)
+  const [character, setCharacter] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const onUserImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
@@ -214,32 +217,72 @@ export default function Profile() {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        if (user) {
-          const currentUserUID = user.uid;
+        const currentUserUID = user.uid;
+        const today = new Date();
+        const formattedDate = format(today, 'yyyy-MM-dd');
 
-          const today = new Date();
-          const formattedDate = format(today, 'yyyy-MM-dd');
+        const usersRef = collection(db, "user");
+        const userQuerySnapshot = await getDocs(query(usersRef, where("유저아이디", "==", currentUserUID)));
 
-          const recordsCollectionRef = collection(db, "records");
-          const querySnapshot = await getDocs(
-            query(recordsCollectionRef, where("날짜", "==", formattedDate), where("유저아이디", "==", currentUserUID))
-          );
+        if (!userQuerySnapshot.empty) {
+          const userDoc = userQuerySnapshot.docs[0];
+          const todayExercise = userDoc.data().오늘운동;
 
-          if (!querySnapshot.empty) {
-            setMent("운동완료");
+          if (todayExercise === false) {
+            const recordsCollectionRef = collection(db, "records");
+            const querySnapshot = await getDocs(
+              query(recordsCollectionRef, where("날짜", "==", formattedDate), where("유저아이디", "==", currentUserUID))
+            );
+
+            if (!querySnapshot.empty) {
+              const gender = userDoc.data().성별;
+              const charactersRef = collection(db, "characters");
+              const characterSnapshot = await getDocs(query(charactersRef, where("성별", "==", gender === "남자" ? "남성" : "여성")));
+
+              if (!characterSnapshot.empty) {
+                const characterDoc = characterSnapshot.docs[0];
+                const stepsRef = collection(characterDoc.ref, "steps");
+                const step1Snapshot = await getDocs(query(stepsRef, where("단계", "==", "1단계")));
+
+                if (!step1Snapshot.empty) {
+                  const step1Doc = step1Snapshot.docs[0];
+                  const exerciseAfterImage = step1Doc.data().운동후;
+
+                  await updateDoc(userDoc.ref, {
+                    캐릭터이미지: exerciseAfterImage,
+                    오늘운동: true,
+                  });
+
+                  setCharacter(exerciseAfterImage);
+                  setMent("운동완료");
+                }
+              }
+            } else {
+              setMent("오늘 아직 운동을 하지 않았어요");
+            }
           } else {
-            setMent("오늘 아직 운동을 하지 않았어요");
+            setCharacter(userDoc.data().캐릭터이미지);
+            setMent("운동완료");
           }
+        } else {
+          setMent("유저 데이터를 찾지 못했습니다.");
         }
       } catch (error) {
-        console.error(":", error);
+        console.error("Error fetching user data:", error);
+        setMent("데이터를 가져오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchUserData();
   }, []);
-
 
   useEffect(() => {
     const fetchGender = async () => {
@@ -304,7 +347,19 @@ export default function Profile() {
     fetchBadges()
   }, [])
 
+  useEffect(() => {
+    if (nickname && character) {
+      setLoading(false);
+    }
+  }, []);
+
   const filteredBadges = badges.filter(badge => badge.유저아이디.includes(user?.uid || ''))
+
+  if (loading) {
+    return (
+      <LoadingScreen />
+    );
+  }
 
   return (
     <Wrapper>
@@ -332,7 +387,7 @@ export default function Profile() {
             </Character>
             <AvatarMent>
                 <img style={{ width: '100%', position: "absolute", top: '0', left: '0' }} src="./talk.png" />
-                <div style={{ width:'100%' , textAlign:'center' , marginTop: '20px' }}>
+                <div style={{ width:'100%',height:'40px', textAlign:'center' , marginTop: '20px' }}>
                   {ment}
                 </div>
             </AvatarMent>

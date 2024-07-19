@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 const TimerSection = styled.div<{disabled: boolean}>`
   width: 100%;
   cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
-  font-size: 30px;
+  font-size: 35px;
   text-align: center;
   margin-top: 20px;
   height:20vh;
@@ -200,12 +200,12 @@ const TimerContent = () => {
           />
           <RoundStart>{roundIndex} / {currentRound.value} 라운드</RoundStart>
         </TimerRound>
-        <TimerSection onClick={() => openTimerSetting('exercise')} disabled={TimerStart}>
+        <TimerSection style={{backgroundColor:'#ADF7B6'}} onClick={() => openTimerSetting('exercise')} disabled={TimerStart}>
           <span>운동<br /></span>
           {formatTime(exerciseTime)}
           <span style={{fontSize:"14px"}}><br />(클릭하여 시간설정)</span>
         </TimerSection>
-        <TimerSection style={{borderBottom:"1px solid #939393"}} onClick={() => openTimerSetting('relax')} disabled={TimerStart}>
+        <TimerSection style={{ backgroundColor:'#A0CED9', marginTop:'0'}} onClick={() => openTimerSetting('relax')} disabled={TimerStart}>
           <span>휴식<br /></span>
           {formatTime(relaxTime)}
           <span style={{fontSize:"14px"}}><br />(클릭하여 시간설정)</span>

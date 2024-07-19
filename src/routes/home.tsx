@@ -13,6 +13,7 @@ import { arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "f
 import { FaUserAlt } from "react-icons/fa";
 import AchievementModal from "../components/achievement-alert";
 import BadgeModal from "../components/badge-modal";
+import LoadingScreen from "../components/loading-screen";
 
 const Wrapper = styled.div`
     width:100vw;
@@ -79,7 +80,7 @@ export default function Home() {
             } catch (error) {
                 console.error("유저 프로필을 찾지 못했습니다:", error);
             } finally {
-                setLoading(true)
+                setLoading(false)
             }
         };
         fetchUserProfilePic();
@@ -220,11 +221,18 @@ export default function Home() {
     const badgeModalConfirm = () => {
         setShowBadge(false)
     }
+    
+    if (isLoading) {
+        return (
+          <LoadingScreen />
+        );
+      }
+    
 
     return (
         <Wrapper>
             <ProfileWrapper>
-                {isLoading && userProfilePicUrl === "" ? (
+                {!isLoading && userProfilePicUrl === "" ? (
                     <ProfileImgWrapper>
                         <FaUserAlt style={{ width: '60px', height: '60px', marginLeft: '10px', marginTop: '20px', color: 'gray' }} />
                     </ProfileImgWrapper>

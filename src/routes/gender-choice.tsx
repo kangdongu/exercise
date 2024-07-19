@@ -1,29 +1,27 @@
-import { addDoc, collection, getDocs, query, updateDoc, where } from "firebase/firestore";
-import styled from "styled-components"
+import { addDoc, collection, getDocs, query, updateDoc, where, arrayUnion } from "firebase/firestore";
+import styled from "styled-components";
 import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { GrUserManager } from "react-icons/gr";
-import { GrUserFemale } from "react-icons/gr";
-
+import { GrUserManager, GrUserFemale } from "react-icons/gr";
 
 const Wrapper = styled.div`
     width:100vw;
     height:100vh;
-
-    `;
+`;
 const Button = styled.div<{ selected: boolean }>`
     background-color:#f3f1f1;
     width:150px;
     height:150px;
     border-radius:50%;
     text-align:center;
-    border:${props => props.selected ? "3px solid #990033" : null}
-    `;
+    border:${props => props.selected ? "3px solid #990033" : "none"};
+    cursor: pointer;
+`;
 const Title = styled.h1`
     text-align:center;
     margin-top:50px;
-    `;
+`;
 const ChoiceWrapper = styled.div`
   width:100vw;
   height:300px;
@@ -40,53 +38,80 @@ const CompleteButton = styled.div`
   text-align:center;
   font-size:25px;
   line-height:50px;
+  cursor: pointer;
 `;
 
 export default function GenderChoice() {
-  const navigate = useNavigate()
-  const [selectedGender,setSelectedGender] = useState("")
+  const navigate = useNavigate();
+  const [selectedGender, setSelectedGender] = useState("");
   const user = auth.currentUser;
-
 
   useEffect(() => {
     const fetchLoad = async () => {
-
       const userDocRef = collection(db, "user");
       const querySnapshot = await getDocs(query(userDocRef, where("유저아이디", "==", user?.uid)));
 
       if (querySnapshot.empty) {
-        navigate("/naming")
+        navigate("/naming");
       }
-    }
+    };
     fetchLoad();
-  }, [])
+  }, [navigate, user]);
 
   const choiceClick = async () => {
     try {
-
-      const userNamingRef = collection(db, "user");
-
       const userDocRef = collection(db, "user");
       const querySnapshot = await getDocs(query(userDocRef, where("유저아이디", "==", user?.uid)));
 
-      if (!querySnapshot.empty) {
-        const existingDoc = querySnapshot.docs[0];
-        await updateDoc(existingDoc.ref, { 성별: selectedGender });
-      } else {
-        await addDoc(userNamingRef, {
-          이름: user?.displayName,
-          성별: selectedGender,
-          유저아이디: user?.uid,
-          날짜: Date.now(),
-        });
+      const characterRef = collection(db, "characters");
+      let characterQuerySnapshot;
+
+      if (selectedGender === "남자") {
+        characterQuerySnapshot = await getDocs(query(characterRef, where("성별", "==", "남성")));
+      } else if (selectedGender === "여자") {
+        characterQuerySnapshot = await getDocs(query(characterRef, where("성별", "==", "여성")));
       }
 
-      navigate("/");
+      if (characterQuerySnapshot && !characterQuerySnapshot.empty) {
+        const characterDoc = characterQuerySnapshot.docs[0];
+        const stepsRef = collection(characterDoc.ref, "steps");
+        const step1QuerySnapshot = await getDocs(query(stepsRef, where("단계", "==", "1단계")));
+
+        if (!step1QuerySnapshot.empty) {
+          const step1Doc = step1QuerySnapshot.docs[0];
+          const characterImage = step1Doc.data().운동전;
+
+          if (!querySnapshot.empty) {
+            const existingDoc = querySnapshot.docs[0];
+            await updateDoc(existingDoc.ref, {
+              성별: selectedGender,
+              캐릭터이미지: characterImage,
+            });
+
+            await updateDoc(step1Doc.ref, {
+              유저아이디: arrayUnion(user?.uid),
+            });
+          } else {
+            await addDoc(userDocRef, {
+              이름: user?.displayName,
+              성별: selectedGender,
+              유저아이디: user?.uid,
+              날짜: Date.now(),
+              캐릭터이미지: characterImage,
+            });
+
+            await updateDoc(step1Doc.ref, {
+              유저아이디: arrayUnion(user?.uid),
+            });
+          }
+
+          navigate("/");
+        }
+      }
     } catch (error) {
       console.error("Error updating gender:", error);
     }
   };
-
 
   return (
     <Wrapper>

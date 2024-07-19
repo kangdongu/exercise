@@ -70,7 +70,8 @@ export default function Naming() {
         개인챌린지완료:0,
         장기챌린지종료:0,
         운동일수:0,
-        캐릭터:""
+        캐릭터:"",
+        오늘운동:false,
       });
       navigate("/gender");
     } catch (error) {
