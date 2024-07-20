@@ -74,10 +74,10 @@ const AvatarWrapper = styled.div`
    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
   position:relative;
 `;
-const AvatarMent = styled.h3`
+const AvatarMent = styled.div`
   margin: 10px 0 0 0;
   font-size: 18px;
-  color: #666;
+  color: black;
   text-align: center;
   width:150px;
   position:relative;
@@ -250,9 +250,35 @@ export default function Profile() {
               if (!characterSnapshot.empty) {
                 const characterDoc = characterSnapshot.docs[0];
                 const stepsRef = collection(characterDoc.ref, "steps");
+                              
+                const step3Snapshot = await getDocs(query(stepsRef, where("단계", "==", "3단계")));
+                const step2Snapshot = await getDocs(query(stepsRef, where("단계", "==", "2단계")));
                 const step1Snapshot = await getDocs(query(stepsRef, where("단계", "==", "1단계")));
 
-                if (!step1Snapshot.empty) {
+
+                if (!step3Snapshot.empty && step3Snapshot.docs[0].data().유저아이디.includes(currentUserUID)) {
+                  const step3Doc = step3Snapshot.docs[0];
+                  const exerciseAfterImage = step3Doc.data().운동후;
+
+                  await updateDoc(userDoc.ref, {
+                    캐릭터이미지: exerciseAfterImage,
+                    오늘운동: true,
+                  });
+
+                  setCharacter(exerciseAfterImage);
+                  setMent("운동완료");
+                } else if (!step2Snapshot.empty && step2Snapshot.docs[0].data().유저아이디.includes(currentUserUID)) {
+                  const step2Doc = step2Snapshot.docs[0];
+                  const exerciseAfterImage = step2Doc.data().운동후;
+
+                  await updateDoc(userDoc.ref, {
+                    캐릭터이미지: exerciseAfterImage,
+                    오늘운동: true,
+                  });
+
+                  setCharacter(exerciseAfterImage);
+                  setMent("운동완료");
+                } else if (!step1Snapshot.empty && step1Snapshot.docs[0].data().유저아이디.includes(currentUserUID)) {
                   const step1Doc = step1Snapshot.docs[0];
                   const exerciseAfterImage = step1Doc.data().운동후;
 
@@ -388,8 +414,8 @@ export default function Profile() {
               <img style={{ width: '100%', height: 'auto', objectFit: 'cover' }} src={character} alt="Character" />
             </Character>
             <AvatarMent>
-                <img style={{ width: '100%', position: "absolute", top: '0', left: '0' }} src="./talk.png" />
-                <div style={{ width:'100%',height:'40px', textAlign:'center' , marginTop: '20px',fontSize:'15px', padding:"0px 5px" }}>
+                <img style={{ width: '100%', position: "absolute", top: '0', left: '0' }} src="./talk1.png" />
+                <div style={{ width:'100%',height:'40px', textAlign:'center' , marginTop: '20px',fontSize:'15px', padding:"0px 5px",position:"absolute",zIndex:'99' }}>
                   {ment}
                 </div>
             </AvatarMent>

@@ -1,5 +1,5 @@
 import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import dayGridPlugin from '@fullcalendar/daygrid'
 import styled from 'styled-components'
 import { useEffect, useState } from 'react';
 import { auth, db } from '../../firebase';
@@ -12,6 +12,7 @@ import MoCalendarWrapper from '../slideModal/mo-calendar-click';
 import { ko } from 'date-fns/locale';
 import AchievementModal from '../achievement-alert';
 import BadgeModal from '../badge-modal';
+import CharacterModal from '../character-modal';
 
 
 const Wrapper = styled.div`
@@ -70,6 +71,9 @@ export default function Calendar() {
     const [showBadge, setShowBadge] = useState(false);
     const [badgeImg, setBadgeImg] = useState("")
     const [badgeName, setBadgeName] = useState("")
+    const [showCharacter, setShowCharacter] = useState(false)
+    const [newCharacterImage, setNewCharacterImage] = useState("");
+    const [congratulationMessage, setCongratulationMessage] = useState("");
     const user = auth.currentUser;
 
     const onClick = () => {
@@ -84,93 +88,142 @@ export default function Calendar() {
             try {
                 if (user) {
                     const currentUserUID = user.uid;
-                    const recordsCollectionRef = collection(db, "records");
-                    const querySnapshot = await getDocs(query(recordsCollectionRef, where("유저아이디", "==", currentUserUID), orderBy("날짜", "asc")));
+                    const userCollectionRef = collection(db, "user");
+                    const userQuerySnapshot = await getDocs(query(userCollectionRef, where("유저아이디", "==", currentUserUID)));
 
-                    if (!querySnapshot.empty) {
-                        const groupedEvents: { [key: string]: ExerciseData[] } = {};
-                        querySnapshot.docs.forEach(doc => {
-                            const data = doc.data() as ExerciseData;
-                            const key = `${data.종류}_${data.날짜}`;
-                            if (!groupedEvents[key]) {
-                                groupedEvents[key] = [];
-                            }
-                            groupedEvents[key].push(data);
-                        });
+                    if (!userQuerySnapshot.empty) {
+                        const userDoc = userQuerySnapshot.docs[0];
+                        const gender = userDoc.data().성별;
+                        const recordsCollectionRef = collection(db, "records");
+                        const querySnapshot = await getDocs(query(recordsCollectionRef, where("유저아이디", "==", currentUserUID), orderBy("날짜", "asc")));
 
 
-                        const userEvents = Object.values(groupedEvents).map(group => {
-                            if (group.length > 1) {
-                                return {
-                                    title: group.map(item => `${item.종류} ${item.횟수 || ''}개 ${item.무게 || ''}kg`).join('<br>'),
-                                    date: group[0].날짜
-                                };
-                            } else {
-                                return {
-                                    title: `${group[0].종류} ${group[0].횟수 || ''}개 ${group[0].무게 || ''}kg`,
-                                    date: group[0].날짜
-                                };
-                            }
-                        });
+                        if (!querySnapshot.empty) {
+                            const groupedEvents: { [key: string]: ExerciseData[] } = {};
+                            querySnapshot.docs.forEach(doc => {
+                                const data = doc.data() as ExerciseData;
+                                const key = `${data.종류}_${data.날짜}`;
+                                if (!groupedEvents[key]) {
+                                    groupedEvents[key] = [];
+                                }
+                                groupedEvents[key].push(data);
+                            });
 
-                        setCreateRecords(userEvents);
 
-                        const exerciseDates = [...new Set(querySnapshot.docs.map(doc => doc.data().날짜))];
+                            const userEvents = Object.values(groupedEvents).map(group => {
+                                if (group.length > 1) {
+                                    return {
+                                        title: group.map(item => `${item.종류} ${item.횟수 || ''}개 ${item.무게 || ''}kg`).join('<br>'),
+                                        date: group[0].날짜
+                                    };
+                                } else {
+                                    return {
+                                        title: `${group[0].종류} ${group[0].횟수 || ''}개 ${group[0].무게 || ''}kg`,
+                                        date: group[0].날짜
+                                    };
+                                }
+                            });
 
-                        if (exerciseDates.length >= 200) {
-                            const badgesRef = collection(db, "badges");
-                            const bq = query(badgesRef);
-                            const badgeQuerySnapshot = await getDocs(bq);
+                            setCreateRecords(userEvents);
 
-                            const badgeDoc = badgeQuerySnapshot.docs.find(doc => doc.data().뱃지이름 === "누적 운동 200일 뱃지");
+                            const exerciseDates = [...new Set(querySnapshot.docs.map(doc => doc.data().날짜))];
 
-                            if (badgeDoc && !badgeDoc.data().유저아이디.includes(user?.uid)) {
-                                const badgeRef = doc(db, "badges", badgeDoc.id);
-                                await updateDoc(badgeRef, {
-                                    유저아이디: arrayUnion(user?.uid),
-                                });
-                                setBadgeImg(badgeDoc.data().뱃지이미지)
-                                setBadgeName(badgeDoc.data().뱃지이름)
-                                setShowBadge(true)
-                            }
-                        }
-
-                        const achievementsRef = collection(db, 'achievements');
-                        const q = query(achievementsRef);
-                        const achievementQuerySnapshot = await getDocs(q);
-
-                        const mainAchievementDoc = achievementQuerySnapshot.docs.find(doc => doc.data().도전과제이름 === "누적 운동기록");
-
-                        if (mainAchievementDoc) {
-                            const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
-                            const subAchievementsSnapshot = await getDocs(subAchievementsRef);
-
-                            let subAchievementDoc;
                             if (exerciseDates.length >= 200) {
-                                subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "운동기록 200일");
-                            } else if (exerciseDates.length >= 100) {
-                                subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "운동기록 100일");
-                            } else if (exerciseDates.length >= 50) {
-                                subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "운동기록 50일");
-                            } else if (exerciseDates.length >= 30) {
-                                subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "운동기록 30일");
-                            } else if (exerciseDates.length >= 20) {
-                                subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "운동기록 20일");
-                            } else if (exerciseDates.length >= 10) {
-                                subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "운동기록 10일");
+                                const badgesRef = collection(db, "badges");
+                                const bq = query(badgesRef);
+                                const badgeQuerySnapshot = await getDocs(bq);
+
+                                const badgeDoc = badgeQuerySnapshot.docs.find(doc => doc.data().뱃지이름 === "누적 운동 200일 뱃지");
+
+                                if (badgeDoc && !badgeDoc.data().유저아이디.includes(user?.uid)) {
+                                    const badgeRef = doc(db, "badges", badgeDoc.id);
+                                    await updateDoc(badgeRef, {
+                                        유저아이디: arrayUnion(user?.uid),
+                                    });
+                                    setBadgeImg(badgeDoc.data().뱃지이미지)
+                                    setBadgeName(badgeDoc.data().뱃지이름)
+                                    setShowBadge(true)
+                                }
                             }
 
-                            if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(user?.uid)) {
-                                const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
-                                await updateDoc(subAchievementRef, {
-                                    유저아이디: arrayUnion(user?.uid),
-                                });
-                                setAchievementName(subAchievementDoc.data().도전과제이름);
-                                setShowAchievements(true);
+                            const achievementsRef = collection(db, 'achievements');
+                            const q = query(achievementsRef);
+                            const achievementQuerySnapshot = await getDocs(q);
+
+                            const mainAchievementDoc = achievementQuerySnapshot.docs.find(doc => doc.data().도전과제이름 === "누적 운동기록");
+
+                            if (mainAchievementDoc) {
+                                const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
+                                const subAchievementsSnapshot = await getDocs(subAchievementsRef);
+
+                                let subAchievementDoc;
+                                if (exerciseDates.length >= 200) {
+                                    subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "운동기록 200일");
+                                } else if (exerciseDates.length >= 100) {
+                                    subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "운동기록 100일");
+                                } else if (exerciseDates.length >= 50) {
+                                    subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "운동기록 50일");
+                                } else if (exerciseDates.length >= 30) {
+                                    subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "운동기록 30일");
+                                } else if (exerciseDates.length >= 20) {
+                                    subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "운동기록 20일");
+                                } else if (exerciseDates.length >= 10) {
+                                    subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "운동기록 10일");
+                                }
+
+                                if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(user?.uid)) {
+                                    const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
+                                    await updateDoc(subAchievementRef, {
+                                        유저아이디: arrayUnion(user?.uid),
+                                    });
+                                    setAchievementName(subAchievementDoc.data().도전과제이름);
+                                    setShowAchievements(true);
+                                }
                             }
+
+                            const genderStr = gender === "남자" ? "남성" : "여성";
+                            const charactersRef = collection(db, 'characters');
+                            const characterSnapshot = await getDocs(query(charactersRef, where("성별", "==", genderStr)));
+
+                            if (!characterSnapshot.empty) {
+                                const characterDoc = characterSnapshot.docs[0];
+                                const stepsRef = collection(characterDoc.ref, "steps");
+
+                                if (exerciseDates.length >= 10) {
+                                    const step2Snapshot = await getDocs(query(stepsRef, where("단계", "==", "2단계")));
+
+                                    if (!step2Snapshot.empty && !step2Snapshot.docs[0].data().유저아이디.includes(user?.uid)) {
+                                        const step2Doc = step2Snapshot.docs[0];
+                                        await updateDoc(step2Doc.ref, {
+                                            유저아이디: arrayUnion(user?.uid),
+                                        });
+
+                                        const exerciseAfterImage = step2Doc.data().운동후;
+                                        setNewCharacterImage(exerciseAfterImage);
+                                        setCongratulationMessage("축하합니다! 캐릭터가 2단계로 성장했습니다.");
+                                        setShowCharacter(true);
+                                    }
+                                }
+
+                                if (exerciseDates.length >= 30) {
+                                    const step3Snapshot = await getDocs(query(stepsRef, where("단계", "==", "3단계")));
+
+                                    if (!step3Snapshot.empty && !step3Snapshot.docs[0].data().유저아이디.includes(user?.uid)) {
+                                        const step3Doc = step3Snapshot.docs[0];
+                                        await updateDoc(step3Doc.ref, {
+                                            유저아이디: arrayUnion(user?.uid),
+                                        });
+
+                                        const exerciseAfterImage = step3Doc.data().운동후;
+                                        setNewCharacterImage(exerciseAfterImage);
+                                        setCongratulationMessage("축하합니다! 캐릭터가 3단계로 성장했습니다.");
+                                        setShowCharacter(true);
+                                    }
+                                }
+                            }
+                            await checkAchievements(exerciseDates);
+                            await checkBadge(exerciseDates)
                         }
-                        await checkAchievements(exerciseDates);
-                        await checkBadge(exerciseDates)
                     }
                 }
             } catch (error) {
@@ -279,6 +332,9 @@ export default function Calendar() {
     const badgeModalConfirm = () => {
         setShowBadge(false)
     }
+    const characterModalConfirm = () => {
+        setShowCharacter(false);
+    }
 
 
     return (
@@ -314,6 +370,13 @@ export default function Calendar() {
             )}
             {showBadge && (
                 <BadgeModal badgeImg={badgeImg} badgeName={badgeName} badgeModalConfirm={badgeModalConfirm} />
+            )}
+            {showCharacter && (
+                <CharacterModal
+                    characterModalConfirm={characterModalConfirm}
+                    characterImage={newCharacterImage}
+                    message={congratulationMessage}
+                />
             )}
         </Wrapper>
     )
