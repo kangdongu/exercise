@@ -232,9 +232,10 @@ interface Exercise {
 
 interface ExerciseRegistrationProps {
   closeModal: () => void;
+  congratulations: () => void;
 }
 
-export default function ExerciseRegistration({ closeModal, }: ExerciseRegistrationProps) {
+export default function ExerciseRegistration({ closeModal, congratulations }: ExerciseRegistrationProps) {
   const user = auth.currentUser;
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [exerciseType, setExerciseType] = useState("");
@@ -310,6 +311,7 @@ export default function ExerciseRegistration({ closeModal, }: ExerciseRegistrati
         );
         await Promise.all(promises);
         closeModal();
+        congratulations()
       } catch (error) {
         console.error('문서 추가 오류: ', error);
       }

@@ -16,6 +16,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingScreen from "../loading-screen";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import Congratulations from "../congratulations";
 
 const Wrapper = styled.div`
     width:100vw;
@@ -216,6 +217,7 @@ const JoinedRoom: React.FC = () => {
     const [viewPhoto, setViewPhoto] = useState<Photo | null>(null);
     const [ourView, setOurView] = useState<Photo | null>(null);
     const [isCreating, setIsCreating] = useState(false);
+    const [showCongratulations,setShowCongratulations] = useState(false)
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -365,6 +367,7 @@ const JoinedRoom: React.FC = () => {
             setMemo("")
             setPreviewUrl(null)
             setFile(null)
+            congratulations()
         } catch (error) {
             console.log(error)
         } finally {
@@ -383,6 +386,13 @@ const JoinedRoom: React.FC = () => {
 
     if (!challenge) {
         return <LoadingScreen />;
+    }
+
+    const congratulations = () => {
+        setShowCongratulations(true);
+        setTimeout(() => {
+            setShowCongratulations(false);
+          }, 3000);
     }
 
     return (
@@ -470,7 +480,9 @@ const JoinedRoom: React.FC = () => {
                     <OurViewDetails photo={ourView} />
                 </MoSlideLeft>
             ) : null}
-
+            {showCongratulations && (
+                <Congratulations title="인증완료" content="축하합니다. 그룹 인증을 완료하였습니다!" />
+            )}
         </Wrapper>
     )
 }

@@ -3,7 +3,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import styled from 'styled-components'
 import { useEffect, useState } from 'react';
 import { auth, db } from '../../firebase';
-import { arrayUnion, collection, doc, getDocs, orderBy, query, updateDoc, where } from 'firebase/firestore';
+import { arrayUnion, collection, doc, DocumentData, getDocs, orderBy, query, QuerySnapshot, updateDoc, where } from 'firebase/firestore';
 import ExerciseRegistration from './records-registration';
 import './calendar.css'
 import CalendarClickModal from './calendar-click-component';
@@ -13,6 +13,7 @@ import { ko } from 'date-fns/locale';
 import AchievementModal from '../achievement-alert';
 import BadgeModal from '../badge-modal';
 import CharacterModal from '../character-modal';
+import Congratulations from '../congratulations';
 
 
 const Wrapper = styled.div`
@@ -74,14 +75,73 @@ export default function Calendar() {
     const [showCharacter, setShowCharacter] = useState(false)
     const [newCharacterImage, setNewCharacterImage] = useState("");
     const [congratulationMessage, setCongratulationMessage] = useState("");
+    const [showCongratulations, setShowCongratulations] = useState(false)
     const user = auth.currentUser;
 
-    const onClick = () => {
-        setModal(true)
-    }
-    const closeModal = () => {
-        setModal(false);
-    }
+    const onClick = () => setModal(true);
+    const closeModal = () => setModal(false);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const currentUser = auth.currentUser
+                const currentUserUID = currentUser?.uid;
+                const today = new Date();
+                const formattedDate = format(today, 'yyyy-MM-dd');
+
+                const usersRef = collection(db, "user");
+                const userQuerySnapshot = await getDocs(query(usersRef, where("유저아이디", "==", currentUserUID)));
+
+                if (!userQuerySnapshot.empty) {
+                    const userDoc = userQuerySnapshot.docs[0];
+                    const todayExercise = userDoc.data().오늘운동;
+                    const userStep = userDoc.data().단계;
+
+                    if (todayExercise === false) {
+                        const recordsCollectionRef = collection(db, "records");
+                        const querySnapshot = await getDocs(
+                            query(recordsCollectionRef, where("날짜", "==", formattedDate), where("유저아이디", "==", currentUserUID))
+                        );
+
+                        if (!querySnapshot.empty) {
+                            const gender = userDoc.data().성별;
+                            const charactersRef = collection(db, "characters");
+                            const characterSnapshot = await getDocs(query(charactersRef, where("성별", "==", gender === "남자" ? "남성" : "여성")));
+
+                            if (!characterSnapshot.empty) {
+                                const characterDoc = characterSnapshot.docs[0];
+                                const stepsRef = collection(characterDoc.ref, "steps");
+
+                                let stepSnapshot: QuerySnapshot<DocumentData> | null = null;
+                                if (userStep === "3단계") {
+                                    stepSnapshot = await getDocs(query(stepsRef, where("단계", "==", "3단계")));
+                                } else if (userStep === "2단계") {
+                                    stepSnapshot = await getDocs(query(stepsRef, where("단계", "==", "2단계")));
+                                } else if (userStep === "1단계") {
+                                    stepSnapshot = await getDocs(query(stepsRef, where("단계", "==", "1단계")));
+                                }
+
+                                if (stepSnapshot && !stepSnapshot.empty) {
+                                    const stepDoc = stepSnapshot.docs[0];
+                                    const exerciseAfterImage = stepDoc.data().운동후;
+
+                                    await updateDoc(userDoc.ref, {
+                                        캐릭터이미지: exerciseAfterImage,
+                                        오늘운동: true,
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        };
+
+        fetchUserData();
+    }, [modal]);
+
 
     useEffect(() => {
         const fetchRecords = async () => {
@@ -189,49 +249,65 @@ export default function Calendar() {
                                 const characterDoc = characterSnapshot.docs[0];
                                 const stepsRef = collection(characterDoc.ref, "steps");
 
-                                if (exerciseDates.length >= 10) {
-                                    const step2Snapshot = await getDocs(query(stepsRef, where("단계", "==", "2단계")));
+                                const today = new Date();
+                                const formattedDate = format(today, 'yyyy-MM-dd');
+                                const recordsQuerySnapshot = await getDocs(
+                                    query(recordsCollectionRef, where("날짜", "==", formattedDate), where("유저아이디", "==", currentUserUID))
+                                );
 
-                                    if (!step2Snapshot.empty && !step2Snapshot.docs[0].data().유저아이디.includes(user?.uid)) {
-                                        const step2Doc = step2Snapshot.docs[0];
-                                        await updateDoc(step2Doc.ref, {
-                                            유저아이디: arrayUnion(user?.uid),
-                                        });
-
-                                        const exerciseAfterImage = step2Doc.data().운동후;
-                                        setNewCharacterImage(exerciseAfterImage);
-                                        setCongratulationMessage("축하합니다! 캐릭터가 2단계로 성장했습니다.");
-                                        setShowCharacter(true);
-                                    }
-                                }
+                                const hasExerciseToday = !recordsQuerySnapshot.empty;
 
                                 if (exerciseDates.length >= 30) {
                                     const step3Snapshot = await getDocs(query(stepsRef, where("단계", "==", "3단계")));
-
                                     if (!step3Snapshot.empty && !step3Snapshot.docs[0].data().유저아이디.includes(user?.uid)) {
                                         const step3Doc = step3Snapshot.docs[0];
+                                        const newCharacterImage = hasExerciseToday ? step3Doc.data().운동후 : step3Doc.data().운동전;
+
                                         await updateDoc(step3Doc.ref, {
                                             유저아이디: arrayUnion(user?.uid),
                                         });
+                                        await updateDoc(userDoc.ref, {
+                                            캐릭터이미지: newCharacterImage,
+                                            오늘운동: hasExerciseToday,
+                                            단계: "3단계"
+                                        });
 
-                                        const exerciseAfterImage = step3Doc.data().운동후;
-                                        setNewCharacterImage(exerciseAfterImage);
+                                        setNewCharacterImage(newCharacterImage);
                                         setCongratulationMessage("축하합니다! 캐릭터가 3단계로 성장했습니다.");
+                                        setShowCharacter(true);
+                                    }
+                                } else if (exerciseDates.length >= 10) {
+                                    const step2Snapshot = await getDocs(query(stepsRef, where("단계", "==", "2단계")));
+                                    if (!step2Snapshot.empty && !step2Snapshot.docs[0].data().유저아이디.includes(user?.uid)) {
+                                        const step2Doc = step2Snapshot.docs[0];
+                                        const newCharacterImage = hasExerciseToday ? step2Doc.data().운동후 : step2Doc.data().운동전;
+
+                                        await updateDoc(step2Doc.ref, {
+                                            유저아이디: arrayUnion(user?.uid),
+                                        });
+                                        await updateDoc(userDoc.ref, {
+                                            캐릭터이미지: newCharacterImage,
+                                            오늘운동: hasExerciseToday,
+                                            단계: "2단계"
+                                        });
+
+                                        setNewCharacterImage(newCharacterImage);
+                                        setCongratulationMessage("축하합니다! 캐릭터가 2단계로 성장했습니다.");
                                         setShowCharacter(true);
                                     }
                                 }
                             }
                             await checkAchievements(exerciseDates);
-                            await checkBadge(exerciseDates)
+                            await checkBadge(exerciseDates);
                         }
                     }
                 }
             } catch (error) {
                 console.error("데이터 가져오기 오류:", error);
             }
-        }
+        };
         fetchRecords();
-    }, [modal]);
+    }, [modal])
 
     const checkBadge = async (dates: string[]) => {
         const consecutiveDays = getConsecutiveDays(dates);
@@ -336,6 +412,14 @@ export default function Calendar() {
         setShowCharacter(false);
     }
 
+    const congratulations = () => {
+        setShowCongratulations(true);
+        setTimeout(() => {
+            setShowCongratulations(false);
+          }, 3000);
+    }
+
+
 
     return (
         <Wrapper>
@@ -358,7 +442,7 @@ export default function Calendar() {
                 dayCellContent={renderDayCellContent}
                 eventClick={handleEventClick}
             />
-            {modal ? <ExerciseRegistration closeModal={closeModal} /> : null}
+            {modal ? <ExerciseRegistration closeModal={closeModal} congratulations={congratulations} /> : null}
             {calendarClick && window.innerWidth <= 700 ? (
                 <MoCalendarWrapper onClose={() => setCalendarClick(false)}>
                     <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} />;
@@ -377,6 +461,9 @@ export default function Calendar() {
                     characterImage={newCharacterImage}
                     message={congratulationMessage}
                 />
+            )}
+            {showCongratulations && (
+                <Congratulations title='운동기록 완료' content='운동기록을 완료하였습니다' />
             )}
         </Wrapper>
     )

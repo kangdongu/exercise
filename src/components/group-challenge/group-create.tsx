@@ -8,6 +8,7 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { Challenge, useChallenges } from "./group-context";
 import PeopleModal from "./people-modal";
 import AchievementModal from "../achievement-alert";
+import { useNavigate } from "react-router-dom";
 
 
 const Wrapper = styled.div`
@@ -211,6 +212,8 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
     const [isCreating, setIsCreating] = useState(false)
     const [achievementName, setAchievementName] = useState("")
     const [showAchievements, setShowAchievements] = useState(false)
+    const [docId, setDocId] = useState<string>("");
+    const navigate = useNavigate()
     const currentUser = auth.currentUser
 
 
@@ -351,6 +354,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                     ...prevChallenges,
                     { id: docRef.id, ...newChallenge } as Challenge,
                 ]);
+                setDocId(docRef.id); 
 
                 const achievementsRef = collection(db, 'achievements');
                 const q = query(achievementsRef);
@@ -376,7 +380,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                 }
 
                 alert("방이 생성되었습니다!");
-                onBack();
+                navigate(`/group-challenge/${docRef.id}`);
             } catch (error) {
                 console.error("방 생성 중 오류가 발생했습니다: ", error);
             } finally {
@@ -398,10 +402,12 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
             alert("인원수를 선택해주세요")
         }
     };
+
     const handleModalConfirm = () => {
         alert("방이 생성되었습니다!");
-        onBack();
-    }
+        setShowAchievements(false);
+        navigate(`/group-challenge/${docId}`);
+    };
 
     return (
         <Wrapper>

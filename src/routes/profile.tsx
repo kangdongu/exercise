@@ -243,59 +243,14 @@ export default function Profile() {
             );
 
             if (!querySnapshot.empty) {
-              const gender = userDoc.data().성별;
-              const charactersRef = collection(db, "characters");
-              const characterSnapshot = await getDocs(query(charactersRef, where("성별", "==", gender === "남자" ? "남성" : "여성")));
-
-              if (!characterSnapshot.empty) {
-                const characterDoc = characterSnapshot.docs[0];
-                const stepsRef = collection(characterDoc.ref, "steps");
-                              
-                const step3Snapshot = await getDocs(query(stepsRef, where("단계", "==", "3단계")));
-                const step2Snapshot = await getDocs(query(stepsRef, where("단계", "==", "2단계")));
-                const step1Snapshot = await getDocs(query(stepsRef, where("단계", "==", "1단계")));
-
-
-                if (!step3Snapshot.empty && step3Snapshot.docs[0].data().유저아이디.includes(currentUserUID)) {
-                  const step3Doc = step3Snapshot.docs[0];
-                  const exerciseAfterImage = step3Doc.data().운동후;
-
-                  await updateDoc(userDoc.ref, {
-                    캐릭터이미지: exerciseAfterImage,
-                    오늘운동: true,
-                  });
-
-                  setCharacter(exerciseAfterImage);
-                  setMent("운동완료");
-                } else if (!step2Snapshot.empty && step2Snapshot.docs[0].data().유저아이디.includes(currentUserUID)) {
-                  const step2Doc = step2Snapshot.docs[0];
-                  const exerciseAfterImage = step2Doc.data().운동후;
-
-                  await updateDoc(userDoc.ref, {
-                    캐릭터이미지: exerciseAfterImage,
-                    오늘운동: true,
-                  });
-
-                  setCharacter(exerciseAfterImage);
-                  setMent("운동완료");
-                } else if (!step1Snapshot.empty && step1Snapshot.docs[0].data().유저아이디.includes(currentUserUID)) {
-                  const step1Doc = step1Snapshot.docs[0];
-                  const exerciseAfterImage = step1Doc.data().운동후;
-
-                  await updateDoc(userDoc.ref, {
-                    캐릭터이미지: exerciseAfterImage,
-                    오늘운동: true,
-                  });
-
-                  setCharacter(exerciseAfterImage);
-                  setMent("운동완료");
-                }
-              }
+              await updateDoc(userDoc.ref, {
+                오늘운동: true,
+              });
+              setMent("운동완료");
             } else {
               setMent("아직 운동을 하지 않았어요");
             }
           } else {
-            setCharacter(userDoc.data().캐릭터이미지);
             setMent("운동완료");
           }
         } else {
@@ -414,10 +369,10 @@ export default function Profile() {
               <img style={{ width: '100%', height: 'auto', objectFit: 'cover' }} src={character} alt="Character" />
             </Character>
             <AvatarMent>
-                <img style={{ width: '100%', position: "absolute", top: '0', left: '0' }} src="./talk1.png" />
-                <div style={{ width:'100%',height:'40px', textAlign:'center' , marginTop: '20px',fontSize:'15px', padding:"0px 5px",position:"absolute",zIndex:'99' }}>
-                  {ment}
-                </div>
+              <img style={{ width: '100%', position: "absolute", top: '0', left: '0' }} src="./talk1.png" />
+              <div style={{ width: '100%', height: '40px', textAlign: 'center', marginTop: '20px', fontSize: '15px', padding: "0px 5px", position: "absolute", zIndex: '99' }}>
+                {ment}
+              </div>
             </AvatarMent>
           </CharacterWrapper>
           <BadgeWrapper>
