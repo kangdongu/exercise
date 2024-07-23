@@ -71,7 +71,7 @@ const AvatarWrapper = styled.div`
   background-color:white;
   border-radius: 10px;
   margin-bottom:20px;
-   background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+   background: linear-gradient(135deg, #BBDEFB , #D1C4E9);
   position:relative;
 `;
 const AvatarMent = styled.div`
@@ -103,7 +103,7 @@ const BadgeWrapper = styled.div`
   right:0;
   bottom:0;
   display:flex;
-  background-color:#f8bbd0;
+  background-color:#D1C4E9 ;
   flex-wrap: wrap;
   gap:1%;
 `;
@@ -159,11 +159,11 @@ const Complete = styled.div`
 `;
 const CharacterWrapper = styled.div`
   display: flex;
-  flex-direction: column;
   align-items: center;
   margin-bottom: 20px;
   justify-content: center;
-  width:90%;
+  width:100%;
+  gap:10px;
   height:100%;
 `;
 const Character = styled.div`
@@ -369,8 +369,8 @@ export default function Profile() {
               <img style={{ width: '100%', height: 'auto', objectFit: 'cover' }} src={character} alt="Character" />
             </Character>
             <AvatarMent>
-              <img style={{ width: '100%', position: "absolute", top: '0', left: '0' }} src="./talk1.png" />
-              <div style={{ width: '100%', height: '40px', textAlign: 'center', marginTop: '20px', fontSize: '15px', padding: "0px 5px", position: "absolute", zIndex: '99' }}>
+              <img style={{ width: '100%', position: "absolute", top: '0', left: '0' }} src="./talk2.png" />
+              <div style={{ width: '100%', height: '55px', textAlign: 'center', fontSize: '15px', padding: "7px 5px", paddingLeft:'15px', position: "absolute", zIndex: '99' }}>
                 {ment}
               </div>
             </AvatarMent>

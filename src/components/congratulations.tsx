@@ -17,11 +17,11 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
     display:flex;
+    margin-top:30px;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
     z-index: 1000;
     animation: ${WrapperAnimation} 3s forwards;
 `;

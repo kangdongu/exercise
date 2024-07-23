@@ -14,6 +14,7 @@ import { FaUserAlt } from "react-icons/fa";
 import AchievementModal from "../components/achievement-alert";
 import BadgeModal from "../components/badge-modal";
 import LoadingScreen from "../components/loading-screen";
+import { format, isBefore, startOfToday } from "date-fns";
 
 const Wrapper = styled.div`
     width:100vw;
@@ -66,6 +67,71 @@ export default function Home() {
     const handleNavigation = (path: string) => {
         navigate(path);
     };
+
+    useEffect(() => {
+        const todayExerciseReset = async () => {
+            try {
+                const currentUser = auth.currentUser;
+                if (currentUser) {
+                    const currentUserUID = currentUser.uid;
+                    const today = new Date();
+                    const formattedDate = format(today, 'yyyy-MM-dd');
+
+                    const usersRef = collection(db, "user");
+                    const userQuerySnapshot = await getDocs(query(usersRef, where("유저아이디", "==", currentUserUID)));
+
+                    if (!userQuerySnapshot.empty) {
+                        const userDoc = userQuerySnapshot.docs[0];
+                        const lastExerciseDate = userDoc.data().운동날짜 || '';
+                        const isExerciseDoneToday = format(new Date(), 'yyyy-MM-dd') === lastExerciseDate;
+
+                        if (!isExerciseDoneToday) {
+                            await updateDoc(userDoc.ref, { 오늘운동: false });
+
+                            const gender = userDoc.data().성별;
+                            const charactersRef = collection(db, "characters");
+                            const characterSnapshot = await getDocs(query(charactersRef, where("성별", "==", gender === "남자" ? "남성" : "여성")));
+
+                            if (!characterSnapshot.empty) {
+                                const characterDoc = characterSnapshot.docs[0];
+                                const stepsRef = collection(characterDoc.ref, "steps");
+
+                                const stepSnapshot = await getDocs(query(stepsRef, where("단계", "==", userDoc.data().단계)));
+
+                                if (stepSnapshot && !stepSnapshot.empty) {
+                                    const stepDoc = stepSnapshot.docs[0];
+                                    const exerciseBeforeImage = stepDoc.data().운동전;
+
+                                    await updateDoc(userDoc.ref, {
+                                        캐릭터이미지: exerciseBeforeImage,
+                                        운동날짜: formattedDate,
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("Error updating user data:", error);
+            }
+        };
+
+        const now = new Date();
+        const midnight = new Date();
+        midnight.setHours(0, 0, 0, 0);
+
+        if (isBefore(now, startOfToday())) {
+            todayExerciseReset();
+        }
+
+        const timer = setTimeout(() => {
+            todayExerciseReset();
+        }, midnight.getTime() - now.getTime());
+
+        return () => clearTimeout(timer);
+    }, [currentUser]);
+    
+
 
     useEffect(() => {
         const fetchUserProfilePic = async () => {
@@ -178,8 +244,8 @@ export default function Home() {
 
                     let badgeName;
 
-                    if (achievementCount >= 25){
-                        badgeName ="도전과제 25개 달성"
+                    if (achievementCount >= 25) {
+                        badgeName = "도전과제 25개 달성"
                     } else if (achievementCount >= 20) {
                         badgeName = "도전과제 20개 달성";
                     } else if (achievementCount >= 15) {
@@ -188,7 +254,7 @@ export default function Home() {
                         badgeName = "도전과제 10개 달성";
                     } else if (achievementCount >= 5) {
                         badgeName = "도전과제 5개 달성";
-                    } else if (achievementCount >= 1){
+                    } else if (achievementCount >= 1) {
                         badgeName = "도전과제 1개 달성";
                     }
 
@@ -221,13 +287,13 @@ export default function Home() {
     const badgeModalConfirm = () => {
         setShowBadge(false)
     }
-    
+
     if (isLoading) {
         return (
-          <LoadingScreen />
+            <LoadingScreen />
         );
-      }
-    
+    }
+
 
     return (
         <Wrapper>

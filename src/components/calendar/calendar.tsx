@@ -113,7 +113,9 @@ export default function Calendar() {
                                 const stepsRef = collection(characterDoc.ref, "steps");
 
                                 let stepSnapshot: QuerySnapshot<DocumentData> | null = null;
-                                if (userStep === "3단계") {
+                                if (userStep === "4단계") {
+                                    stepSnapshot = await getDocs(query(stepsRef, where("단계", "==", "4단계")));
+                                } else if (userStep === "3단계") {
                                     stepSnapshot = await getDocs(query(stepsRef, where("단계", "==", "3단계")));
                                 } else if (userStep === "2단계") {
                                     stepSnapshot = await getDocs(query(stepsRef, where("단계", "==", "2단계")));
@@ -135,7 +137,7 @@ export default function Calendar() {
                     }
                 }
             } catch (error) {
-                console.error("Error fetching user data:", error);
+                console.error("유저 데이터 에러:", error);
             }
         };
 
@@ -257,7 +259,26 @@ export default function Calendar() {
 
                                 const hasExerciseToday = !recordsQuerySnapshot.empty;
 
-                                if (exerciseDates.length >= 30) {
+                                if (exerciseDates.length >= 50) {
+                                    const step4Snapshot = await getDocs(query(stepsRef, where("단계", "==", "4단계")));
+                                    if (!step4Snapshot.empty && !step4Snapshot.docs[0].data().유저아이디.includes(user?.uid)) {
+                                        const step4Doc = step4Snapshot.docs[0];
+                                        const newCharacterImage = hasExerciseToday ? step4Doc.data().운동후 : step4Doc.data().운동전;
+
+                                        await updateDoc(step4Doc.ref, {
+                                            유저아이디: arrayUnion(user?.uid),
+                                        });
+                                        await updateDoc(userDoc.ref, {
+                                            캐릭터이미지: newCharacterImage,
+                                            오늘운동: hasExerciseToday,
+                                            단계: "4단계"
+                                        });
+
+                                        setNewCharacterImage(newCharacterImage);
+                                        setCongratulationMessage("축하합니다! 캐릭터가 4단계로 성장했습니다.");
+                                        setShowCharacter(true);
+                                    }
+                                } else if (exerciseDates.length >= 30) {
                                     const step3Snapshot = await getDocs(query(stepsRef, where("단계", "==", "3단계")));
                                     if (!step3Snapshot.empty && !step3Snapshot.docs[0].data().유저아이디.includes(user?.uid)) {
                                         const step3Doc = step3Snapshot.docs[0];
@@ -416,7 +437,7 @@ export default function Calendar() {
         setShowCongratulations(true);
         setTimeout(() => {
             setShowCongratulations(false);
-          }, 3000);
+        }, 3000);
     }
 
 

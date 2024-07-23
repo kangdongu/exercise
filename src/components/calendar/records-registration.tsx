@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, updateDoc, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { auth, db } from "../../firebase";
@@ -273,7 +273,7 @@ export default function ExerciseRegistration({ closeModal, congratulations }: Ex
       });
 
       setExerciseData(exercises);
-      
+
     } catch (error) {
       console.error("Error fetching exercise data: ", error);
     }
@@ -309,6 +309,18 @@ export default function ExerciseRegistration({ closeModal, congratulations }: Ex
             날짜: date,
           })
         );
+
+        const usersRef = collection(db, 'user');
+        const userQuerySnapshot = await getDocs(query(usersRef, where("유저아이디", "==", user?.uid)));
+
+        if (!userQuerySnapshot.empty) {
+          const userDoc = userQuerySnapshot.docs[0];
+          await updateDoc(userDoc.ref, {
+            마지막운동: date,
+          });
+        }
+
+
         await Promise.all(promises);
         closeModal();
         congratulations()
@@ -338,7 +350,7 @@ export default function ExerciseRegistration({ closeModal, congratulations }: Ex
     setSearchTerm(e.target.value);
   }
 
-  const filteredExercises = exerciseData.filter((exercise) => 
+  const filteredExercises = exerciseData.filter((exercise) =>
     (selectedType === "전체" || exercise.type === selectedType) &&
     (selectedArea === "전체" || exercise.area === selectedArea) &&
     exercise.name.includes(searchTerm)
@@ -365,59 +377,59 @@ export default function ExerciseRegistration({ closeModal, congratulations }: Ex
             </Label>
           </ExerciseNameWrapper>
           <ListSetButtonWrapper>
-          <ExerciseDataBtn onClick={ExerciseChoice}>운동선택<span style={{marginLeft:"auto",fontSize:"20px", fontWeight:'600'}}>&gt;</span></ExerciseDataBtn>
-          <SetPlus onClick={addSet}>세트추가<span style={{marginLeft:"auto", fontSize:"20px", fontWeight:'600'}}>+</span></SetPlus>
+            <ExerciseDataBtn onClick={ExerciseChoice}>운동선택<span style={{ marginLeft: "auto", fontSize: "20px", fontWeight: '600' }}>&gt;</span></ExerciseDataBtn>
+            <SetPlus onClick={addSet}>세트추가<span style={{ marginLeft: "auto", fontSize: "20px", fontWeight: '600' }}>+</span></SetPlus>
           </ListSetButtonWrapper>
           <SetList>
             {sets.map((set, index) => (
               <ListBody key={index}>
-              <span>{index + 1}. 세트</span>
-              <Input
-                type="number"
-                name="kg"
-                value={set.kg}
-                onChange={(e) => onChange(index, e)}
-                placeholder="kg"
-              />
-              <Input
-                type="number"
-                name="count"
-                value={set.count}
-                onChange={(e) => onChange(index, e)}
-                placeholder="회/분"
-              />
-              <SetDelete onClick={(event) => onDelete(index, event)}>-</SetDelete>
-            </ListBody>
+                <span>{index + 1}. 세트</span>
+                <Input
+                  type="number"
+                  name="kg"
+                  value={set.kg}
+                  onChange={(e) => onChange(index, e)}
+                  placeholder="kg"
+                />
+                <Input
+                  type="number"
+                  name="count"
+                  value={set.count}
+                  onChange={(e) => onChange(index, e)}
+                  placeholder="회/분"
+                />
+                <SetDelete onClick={(event) => onDelete(index, event)}>-</SetDelete>
+              </ListBody>
             ))}
           </SetList>
           <Button onClick={onClick}>운동 완료</Button>
         </RecordsWrapper>
       </BottomSheet>
-     
+
       {exerciseModal ? <MoSlideModal onClose={() => setExerciseModal(false)}>
         <ExerciseChoiceModal>
           {searchBox ? (
             <SearchWrapper>
-            <IoSearch style={{width:'20px',height:'20px'}} />
-             <SearchBox value={searchTerm} onChange={handleSearchChange} placeholder="운동 검색" />
+              <IoSearch style={{ width: '20px', height: '20px' }} />
+              <SearchBox value={searchTerm} onChange={handleSearchChange} placeholder="운동 검색" />
             </SearchWrapper>
-          ):(
-            <IoSearch onClick={() => setSearchBox(true)} style={{width:'20px',height:'20px'}} />
+          ) : (
+            <IoSearch onClick={() => setSearchBox(true)} style={{ width: '20px', height: '20px' }} />
           )}
-          
-          <TypeWrapper style={{gap:"0.5%"}}>
-            <TypeMenu style={{width:'15.47%'}} onClick={() => setSelectedType("전체")}
+
+          <TypeWrapper style={{ gap: "0.5%" }}>
+            <TypeMenu style={{ width: '15.47%' }} onClick={() => setSelectedType("전체")}
               selected={selectedType === "전체"}>전체</TypeMenu>
-            <TypeMenu style={{width:'25.79%'}} onClick={() => setSelectedType("맨몸운동")}
+            <TypeMenu style={{ width: '25.79%' }} onClick={() => setSelectedType("맨몸운동")}
               selected={selectedType === "맨몸운동"}>맨몸운동</TypeMenu>
-            <TypeMenu style={{width:'15.47%'}} onClick={() => setSelectedType("헬스")}
+            <TypeMenu style={{ width: '15.47%' }} onClick={() => setSelectedType("헬스")}
               selected={selectedType === "헬스"}>헬스</TypeMenu>
-            <TypeMenu style={{width:'15.47%'}} onClick={() => setSelectedType("수영")}
+            <TypeMenu style={{ width: '15.47%' }} onClick={() => setSelectedType("수영")}
               selected={selectedType === "수영"}>수영</TypeMenu>
-              <TypeMenu style={{width:'25.79%'}} onClick={() => setSelectedType("구기종목")}
+            <TypeMenu style={{ width: '25.79%' }} onClick={() => setSelectedType("구기종목")}
               selected={selectedType === "구기종목"}>구기종목</TypeMenu>
           </TypeWrapper>
-          <TypeWrapper style={{gap:"0.5%"}}>
+          <TypeWrapper style={{ gap: "0.5%" }}>
             <AreaMenu onClick={() => setSelectedArea("전체")}
               selected={selectedArea === "전체"}>전체</AreaMenu>
             <AreaMenu onClick={() => setSelectedArea("가슴")}
@@ -430,17 +442,17 @@ export default function ExerciseRegistration({ closeModal, congratulations }: Ex
               selected={selectedArea === "삼두"}>삼두</AreaMenu>
             <AreaMenu onClick={() => setSelectedArea("어깨")}
               selected={selectedArea === "어깨"}>어깨</AreaMenu>
-               <AreaMenu onClick={() => setSelectedArea("유산소")}
+            <AreaMenu onClick={() => setSelectedArea("유산소")}
               selected={selectedArea === "유산소"}>유산소</AreaMenu>
           </TypeWrapper>
           <ExerciseList>
-          {filteredExercises.map((exercise, index) => (
-                <ExerciseItem key={index} onClick={() => { setExerciseType(exercise.name); setAreaDb(exercise.area); setExerciseModal(false); }}>
-                  <div>운동이름: {exercise.name}</div>
-                  <div>운동종류: {exercise.type}</div>
-                  <div>운동부위: {exercise.area}</div>
-                </ExerciseItem>
-              ))}
+            {filteredExercises.map((exercise, index) => (
+              <ExerciseItem key={index} onClick={() => { setExerciseType(exercise.name); setAreaDb(exercise.area); setExerciseModal(false); }}>
+                <div>운동이름: {exercise.name}</div>
+                <div>운동종류: {exercise.type}</div>
+                <div>운동부위: {exercise.area}</div>
+              </ExerciseItem>
+            ))}
           </ExerciseList>
         </ExerciseChoiceModal>
       </MoSlideModal> : null}

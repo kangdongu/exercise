@@ -72,7 +72,8 @@ export default function Naming() {
         운동일수:0,
         캐릭터:"",
         오늘운동:false,
-        단계:"1단계"
+        단계:"1단계",
+        마지막운동:""
       });
       navigate("/gender");
     } catch (error) {

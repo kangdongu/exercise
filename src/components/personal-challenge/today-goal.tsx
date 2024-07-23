@@ -127,7 +127,7 @@ interface Goal {
     챌린지내용: string;
     완료여부: string;
     기한선택: string;
-    longGoalId?:string;
+    longGoalId?: string;
 }
 
 const TodayGoals = () => {
@@ -148,7 +148,7 @@ const TodayGoals = () => {
 
                 const date = format(new Date(), 'yyyy-MM-dd');
                 const personalGoalsQuery = query(collection(db, 'personalgoals'), where('유저아이디', '==', user.uid), where('날짜', '==', date));
-                const longGoalsQuery = query(collection(db, 'personallonggoals'),where('유저아이디', '==', user.uid));
+                const longGoalsQuery = query(collection(db, 'personallonggoals'), where('유저아이디', '==', user.uid));
 
                 const [personalGoalsSnapshot, longGoalsSnapshot] = await Promise.all([getDocs(personalGoalsQuery), getDocs(longGoalsQuery)]);
 
@@ -220,94 +220,94 @@ const TodayGoals = () => {
         fetchUser();
     }, []);
 
-   const toggleCompletion = async (id: string, currentStatus: string, longGoalId?: string) => {
-    try {
-        const currentUser = auth.currentUser;
-        const goal = goals.find(goal => goal.id === id);
-        if (!goal) return;
+    const toggleCompletion = async (id: string, currentStatus: string, longGoalId?: string) => {
+        try {
+            const currentUser = auth.currentUser;
+            const goal = goals.find(goal => goal.id === id);
+            if (!goal) return;
 
-        const collectionName = longGoalId ? `personallonggoals/${longGoalId}/longgoals` : 'personalgoals';
-        const goalDoc = doc(db, collectionName, id);
-        const newStatus = currentStatus === '완료' ? '미완' : '완료';
+            const collectionName = longGoalId ? `personallonggoals/${longGoalId}/longgoals` : 'personalgoals';
+            const goalDoc = doc(db, collectionName, id);
+            const newStatus = currentStatus === '완료' ? '미완' : '완료';
 
-        await updateDoc(goalDoc, { 완료여부: newStatus });
+            await updateDoc(goalDoc, { 완료여부: newStatus });
 
-        setGoals(goals.map(goal => {
-            if (goal.id === id) {
-                if (newStatus === '완료') {
-                    setCompletedCount(completedCount + 1);
-                } else {
-                    setCompletedCount(completedCount - 1);
+            setGoals(goals.map(goal => {
+                if (goal.id === id) {
+                    if (newStatus === '완료') {
+                        setCompletedCount(completedCount + 1);
+                    } else {
+                        setCompletedCount(completedCount - 1);
+                    }
+                    return { ...goal, 완료여부: newStatus };
                 }
-                return { ...goal, 완료여부: newStatus };
-            }
-            return goal;
-        }));
+                return goal;
+            }));
 
-        const userQuery = query(collection(db, 'user'), where("유저아이디", "==", currentUser?.uid));
-        const userSnapshot = await getDocs(userQuery);
-        if (!userSnapshot.empty) {
-            const userDoc = userSnapshot.docs[0];
-            const incrementValue = newStatus === '완료' ? 1 : -1;
-            await updateDoc(userDoc.ref, {
-                개인챌린지완료: increment(incrementValue)
-            });
+            const userQuery = query(collection(db, 'user'), where("유저아이디", "==", currentUser?.uid));
+            const userSnapshot = await getDocs(userQuery);
+            if (!userSnapshot.empty) {
+                const userDoc = userSnapshot.docs[0];
+                const incrementValue = newStatus === '완료' ? 1 : -1;
+                await updateDoc(userDoc.ref, {
+                    개인챌린지완료: increment(incrementValue)
+                });
 
-            const challengeCount = userDoc.data().개인챌린지완료 + incrementValue;
+                const challengeCount = userDoc.data().개인챌린지완료 + incrementValue;
 
-            if(challengeCount >= 100){
-                const badgesRef = collection(db, "badges")
-                const bq = query(badgesRef)
-                const badgeQuerySnapshot = await getDocs(bq)
+                if (challengeCount >= 100) {
+                    const badgesRef = collection(db, "badges")
+                    const bq = query(badgesRef)
+                    const badgeQuerySnapshot = await getDocs(bq)
 
-                const badgeDoc = badgeQuerySnapshot.docs.find(doc => doc.data().뱃지이름 === "개인챌린지 100개 완료 뱃지")
+                    const badgeDoc = badgeQuerySnapshot.docs.find(doc => doc.data().뱃지이름 === "개인챌린지 100개 완료 뱃지")
 
-                if (badgeDoc && !badgeDoc.data().유저아이디.includes(currentUser?.uid)) {
-                    const badgeRef = doc(db, "badges", badgeDoc.id);
-                    await updateDoc(badgeRef, {
-                        유저아이디: arrayUnion(currentUser?.uid),
-                    });
-                    setBadgeImg(badgeDoc.data().뱃지이미지)
-                    setBadgeName(badgeDoc.data().뱃지이름)
-                    setShowBadge(true)
+                    if (badgeDoc && !badgeDoc.data().유저아이디.includes(currentUser?.uid)) {
+                        const badgeRef = doc(db, "badges", badgeDoc.id);
+                        await updateDoc(badgeRef, {
+                            유저아이디: arrayUnion(currentUser?.uid),
+                        });
+                        setBadgeImg(badgeDoc.data().뱃지이미지)
+                        setBadgeName(badgeDoc.data().뱃지이름)
+                        setShowBadge(true)
+                    }
+                }
+
+                const achievementsRef = collection(db, 'achievements');
+                const q = query(achievementsRef);
+                const querySnapshot = await getDocs(q);
+
+                const mainAchievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 완료");
+
+                if (mainAchievementDoc) {
+                    const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
+                    const subAchievementsSnapshot = await getDocs(subAchievementsRef);
+
+                    const subAchievementDoc =
+                        challengeCount >= 100
+                            ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "총 100개 개인챌린지 완료")
+                            : challengeCount >= 50
+                                ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "총 50개 개인챌린지 완료")
+                                : challengeCount >= 30
+                                    ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "총 30개 개인챌린지 완료")
+                                    : challengeCount >= 10
+                                        ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "총 10개 개인챌린지 완료")
+                                        : subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "첫 개인챌린지 완료");
+
+                    if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(currentUser?.uid)) {
+                        const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
+                        await updateDoc(subAchievementRef, {
+                            유저아이디: [...subAchievementDoc.data().유저아이디, currentUser?.uid]
+                        });
+                        setAchievementName(subAchievementDoc.data().도전과제이름);
+                        setShowAchievements(true);
+                    }
                 }
             }
-
-            const achievementsRef = collection(db, 'achievements');
-            const q = query(achievementsRef);
-            const querySnapshot = await getDocs(q);
-
-            const mainAchievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 완료");
-
-            if (mainAchievementDoc) {
-                const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
-                const subAchievementsSnapshot = await getDocs(subAchievementsRef);
-
-                const subAchievementDoc =
-                    challengeCount >= 100
-                        ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "총 100개 개인챌린지 완료")
-                        : challengeCount >= 50
-                            ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "총 50개 개인챌린지 완료")
-                            : challengeCount >= 30
-                                ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "총 30개 개인챌린지 완료")
-                                : challengeCount >= 10
-                                    ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "총 10개 개인챌린지 완료")
-                                    : subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "첫 개인챌린지 완료");
-
-                if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(currentUser?.uid)) {
-                    const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
-                    await updateDoc(subAchievementRef, {
-                        유저아이디: [...subAchievementDoc.data().유저아이디, currentUser?.uid]
-                    });
-                    setAchievementName(subAchievementDoc.data().도전과제이름);
-                    setShowAchievements(true);
-                }
-            }
+        } catch (error) {
+            console.error(error);
         }
-    } catch (error) {
-        console.error(error);
-    }
-};
+    };
 
     const GuideClick = () => {
         setGuide(false);
@@ -320,14 +320,16 @@ const TodayGoals = () => {
     return (
         <Wrapper>
             <DailyGoalsWrapper>
-            {goals.map((goal, index) => (
-                <DailyGoal key={index} completed={goal.완료여부 === '완료'}>
-                    <GoalText>{goal.챌린지내용}</GoalText>
-                    <GoalComplet onClick={() => toggleCompletion(goal.id, goal.완료여부, goal.longGoalId)}>
-                        {goal.완료여부 === '완료' ? <FaCheck style={{ fontSize: "30px", color: 'green' }} /> : <FaCheck style={{ fontSize: "30px", color: '#dcdcdc' }} />}
-                    </GoalComplet>
-                </DailyGoal>
-            ))}
+                {goals.map((goal, index) => (
+                    <DailyGoal key={index} completed={goal.완료여부 === '완료'}>
+                        <GoalText>{goal.챌린지내용}</GoalText>
+                        <GoalComplet onClick={() => toggleCompletion(goal.id, goal.완료여부, goal.longGoalId)}>
+                            <div style={{border:goal.완료여부 === '완료' ? "3px solid green": "3px solid #dcdcdc", borderRadius:'50%', width:'45px',height:'45px',marginTop:'2.5px' ,marginLeft:'5px'}}>
+                                {goal.완료여부 === '완료' ? <FaCheck style={{ fontSize: "30px", color: 'green' }} /> : <FaCheck style={{ fontSize: "30px", color: '#dcdcdc' }} />}
+                            </div>
+                        </GoalComplet>
+                    </DailyGoal>
+                ))}
             </DailyGoalsWrapper>
             <CompletCountWrapper>
                 <Complet>{completedCount}개</Complet>
@@ -339,9 +341,9 @@ const TodayGoals = () => {
             {guide ? (
                 <GuideWrapper>
                     <GuideMenu>
-                        <GuideMenuList style={{color:"#990033"}}>오늘의 목표</GuideMenuList>
-                        <GuideMenuList style={{ color:"#939393",position: "relative" }}>목표설정<Box style={{ position: "absolute" }}></Box></GuideMenuList>
-                        <GuideMenuList style={{color:"#939393"}}>장기챌린지현황</GuideMenuList>
+                        <GuideMenuList style={{ color: "#990033" }}>오늘의 목표</GuideMenuList>
+                        <GuideMenuList style={{ color: "#939393", position: "relative" }}>목표설정<Box style={{ position: "absolute" }}></Box></GuideMenuList>
+                        <GuideMenuList style={{ color: "#939393" }}>장기챌린지현황</GuideMenuList>
                     </GuideMenu>
                     <GuideTextWrapper>
                         <span>목표설정을 눌러 개인목표를 생성하여 보세요.</span>
@@ -352,7 +354,7 @@ const TodayGoals = () => {
             {showBadge && (
                 <BadgeModal badgeImg={badgeImg} badgeName={badgeName} badgeModalConfirm={badgeModalConfirm} />
             )}
-            
+
         </Wrapper>
     );
 }
