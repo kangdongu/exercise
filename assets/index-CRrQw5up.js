@@ -6247,6 +6247,7 @@ display:none;
     border: 1px solid #ddd;
     border-radius: 5px;
     display: flex;
+    position:relative;
     margin-top: 5px;
     padding: 0 10px;
     box-sizing: border-box;
