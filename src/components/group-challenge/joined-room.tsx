@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components"
+import styled, { keyframes } from "styled-components"
 import MyChallenge from "./group-room/my-challenge";
 import { auth, db, storage } from "../../firebase";
 import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
@@ -18,9 +18,14 @@ import LoadingScreen from "../loading-screen";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Congratulations from "../congratulations";
 
+const WrapperAnimation = keyframes`
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; }
+`;
 const Wrapper = styled.div`
     width:100vw;
-    height:97vh;
+    height:calc(100vh - 40px);
     position:fixed;
     top:0;
     left:0;
@@ -148,7 +153,6 @@ const PhotoWrapper = styled.div`
 `;
 const GroupViewWrapper = styled.div`
     width:100%;
-    height:70px;
     box-sizing: border-box;
     display:flex;
     border:1px solid #333333;
@@ -175,6 +179,30 @@ const ViewButton = styled.div`
     text-align: center;
     font-size: 35px;
 `;
+const EndWrapper = styled.div`
+    width:100%;
+    position:fixed;
+    display:flex;
+    z-index: 1000;
+    justify-content: center;
+    top:50%;
+    transform:translate( 0, -60%);
+    left:0px;
+    animation: ${WrapperAnimation} 3s forwards;
+`;
+const EndMessage = styled.div`
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width:80%;
+`;
+const EndMessageTitle = styled.div`
+    text-align: center;
+    font-size: 24px;
+    color: #ff0000;
+`;
 
 export interface Challenge {
     id: string;
@@ -187,8 +215,8 @@ export interface Challenge {
     종료날짜: string;
     요일선택: string[];
     유저아이디: string[];
-    인원수:string;
-    기간종료:boolean;
+    인원수: string;
+    기간종료: boolean;
 }
 export interface Photo {
     id: string;
@@ -217,7 +245,7 @@ const JoinedRoom: React.FC = () => {
     const [viewPhoto, setViewPhoto] = useState<Photo | null>(null);
     const [ourView, setOurView] = useState<Photo | null>(null);
     const [isCreating, setIsCreating] = useState(false);
-    const [showCongratulations,setShowCongratulations] = useState(false)
+    const [showCongratulations, setShowCongratulations] = useState(false)
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -392,8 +420,15 @@ const JoinedRoom: React.FC = () => {
         setShowCongratulations(true);
         setTimeout(() => {
             setShowCongratulations(false);
-          }, 3000);
+        }, 3000);
     }
+
+    const getRemainingDays = (endDateString: string) => {
+        const endDate = parseISO(endDateString);
+        const now = new Date();
+        const diff = differenceInDays(now, endDate);
+        return 10 - diff;
+    };
 
     return (
         <Wrapper>
@@ -482,6 +517,14 @@ const JoinedRoom: React.FC = () => {
             ) : null}
             {showCongratulations && (
                 <Congratulations title="인증완료" content="축하합니다. 그룹 인증을 완료하였습니다!" />
+            )}
+            {challenge.기간종료 && (
+                <EndWrapper>
+                    <EndMessage>
+                        <EndMessageTitle>챌린지가 종료되었습니다.</EndMessageTitle>
+                        <div style={{marginTop:'10px', fontSize:'18px', padding:'0px 15px'}}>해당 챌린지방은 {getRemainingDays(challenge.종료날짜)}일 뒤에 삭제됩니다.</div>
+                    </EndMessage>
+                </EndWrapper>
             )}
         </Wrapper>
     )

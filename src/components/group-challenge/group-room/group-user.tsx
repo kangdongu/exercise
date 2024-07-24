@@ -164,9 +164,23 @@ const GroupUser: React.FC<GroupUser> = ({ challenge }) => {
     if (currentUser && currentUser.uid === challenge.방장아이디) {
       const confirmDelete = window.confirm("정말로 삭제하시겠습니까? 삭제하시면 되돌릴 수 없습니다.");
       if (!confirmDelete) return;
-
+  
       try {
-        await deleteDoc(doc(db, "groupchallengeroom", challenge.id));
+        const deleteSubcollections = async (roomId:string) => {
+          const subcollections = ["photos", "messages"];
+          for (const subcollectionName of subcollections) {
+            const subcollectionRef = collection(db, `groupchallengeroom/${roomId}/${subcollectionName}`);
+            const subcollectionSnapshot = await getDocs(subcollectionRef);
+            subcollectionSnapshot.forEach(async (subDoc) => {
+              await deleteDoc(doc(db, `groupchallengeroom/${roomId}/${subcollectionName}`, subDoc.id));
+            });
+          }
+        };
+  
+        await deleteSubcollections(challenge.id);
+  
+        await deleteDoc(doc(db, "groupchallengeroom", challenge.id)); 
+  
         alert("그룹방이 삭제되었습니다.");
         navigate("/group-challenge");
       } catch (error) {

@@ -82,7 +82,7 @@ export default function Home() {
 
                     if (!userQuerySnapshot.empty) {
                         const userDoc = userQuerySnapshot.docs[0];
-                        const lastExerciseDate = userDoc.data().운동날짜 || '';
+                        const lastExerciseDate = userDoc.data().마지막운동 || '';
                         const isExerciseDoneToday = format(new Date(), 'yyyy-MM-dd') === lastExerciseDate;
 
                         if (!isExerciseDoneToday) {

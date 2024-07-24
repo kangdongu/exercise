@@ -59,7 +59,17 @@ const List = styled.div`
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 `;
+const ExpiredList = styled(List)`
+    background-color: #e0e0e0;
+`;
 const ListTitle = styled.span`
+   font-size: 16px;
+    font-weight: 600;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+`;
+const ListTitleGuide = styled.span`
    font-size: 16px;
     font-weight: 600;
     flex-grow: 1;
@@ -82,7 +92,25 @@ const PeopleWrapper = styled.div`
     font-size: 12px;
     color: #666;
 `;
-const JoinButton = styled.div`
+const JoinButton = styled.div<{ disabled: boolean }>`
+    background-color: #003187;
+    width: 70px;
+    height: 30px;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 30px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+        background-color: #002766;
+    }
+    &:disabled {
+    background-color: #888;
+    cursor: not-allowed;
+    }
+`;
+const JoinButtonGuide = styled.div`
     background-color: #003187;
     width: 70px;
     height: 30px;
@@ -262,6 +290,19 @@ const JoinText = styled.div`
     align-items: center;
     gap: 10px;
 `;
+const ExpiredLabel = styled.span`
+    background-color: red;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-left: 10px;
+    position:absolute;
+    left:55%;
+`;
+const RoomFilterWrapper = styled.div`
+
+`;
 
 interface Challenge {
     id: string;
@@ -300,6 +341,15 @@ const GroupList = () => {
     const [guide3, setGuide3] = useState(false)
     const [guide4, setGuide4] = useState(false)
 
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
     const createClick = () => {
         setCreate(true)
     }
@@ -307,8 +357,6 @@ const GroupList = () => {
         setSelectedChallenge(challenge);
         setGlasses(true);
     };
-
-
 
     const joinClick = async (challenge: Challenge) => {
         if (user && user.uid) {
@@ -444,45 +492,6 @@ const GroupList = () => {
         setSelectedRender(e.target.value)
     }
 
-    useEffect(() => {
-        const fetchChallenges = async () => {
-            try {
-                const q = query(collection(db, "groupchallengeroom"))
-                const querySnapshot = await getDocs(q);
-
-                const challengesArray: Challenge[] = querySnapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    방장아이디: doc.data().방장아이디,
-                    비밀방여부: doc.data().비밀방여부,
-                    그룹챌린지제목: doc.data().그룹챌린지제목,
-                    그룹챌린지내용: doc.data().그룹챌린지내용,
-                    유저아이디: doc.data().유저아이디,
-                    요일선택: doc.data().요일선택,
-                    주에몇일: doc.data().주에몇일,
-                    시작날짜: doc.data().시작날짜,
-                    종료날짜: doc.data().종료날짜,
-                    비밀번호: doc.data().비밀번호,
-                    방장프로필: doc.data().방장프로필,
-                    방장닉네임: doc.data().방장닉네임,
-                    인원수: doc.data().인원수,
-                    기간종료: doc.data().기간종료,
-                }));
-                setChallenges(challengesArray)
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        fetchChallenges()
-    }, [])
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-        });
-
-        return () => unsubscribe();
-    }, []);
-
     const filteredChallenges = selectedRender === "join" && user
         ? challenges.filter(challenge => challenge.유저아이디.includes(user.uid))
         : challenges;
@@ -558,30 +567,39 @@ const GroupList = () => {
                     </CreateChallengeButton>
                 </CreateButtonWrapper>
                 {create && <GroupCreate onBack={() => setCreate(false)} />}
-                <SelectRender value={selectedRender} onChange={renderChange}>
-                    <RenderOption value="total">전체</RenderOption>
-                    <RenderOption value="join">가입된 그룹방</RenderOption>
-                </SelectRender>
+                <div>
+                    <SelectRender value={selectedRender} onChange={renderChange}>
+                        <RenderOption value="total">전체</RenderOption>
+                        <RenderOption value="join">가입된 그룹방</RenderOption>
+                    </SelectRender>
+                    <RoomFilterWrapper>
+
+                    </RoomFilterWrapper>
+                </div>
                 <ListWrapper>
-                    {filteredChallenges.map((challenge) => (
-                        <List key={challenge.id}>
-                            {challenge.비밀방여부 && (
-                                <Secret>
-                                    <CiLock style={{ width: "20px", height: "20px" }} />
-                                </Secret>
-                            )}
-                            <ListTitle>{challenge.그룹챌린지제목}</ListTitle>
-                            <span style={{ marginLeft: "5px" }} onClick={() => glassesClick(challenge)}>
-                                <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px" }} />
-                            </span>
-                            <PeopleJoinWrapper>
-                                <PeopleWrapper>{challenge.유저아이디.length}/{challenge.인원수}</PeopleWrapper>
-                                <JoinButton onClick={() => joinClick(challenge)}>
-                                    {challenge.유저아이디.includes(user?.uid ?? '') ? "인증" : "가입"}
-                                </JoinButton>
-                            </PeopleJoinWrapper>
-                        </List>
-                    ))}
+                    {filteredChallenges.map((challenge) => {
+                        const isExpired = challenge.기간종료;
+                        return (
+                            <List key={challenge.id} as={isExpired ? ExpiredList : List}>
+                                {challenge.비밀방여부 && (
+                                    <Secret>
+                                        <CiLock style={{ width: "20px", height: "20px" }} />
+                                    </Secret>
+                                )}
+                                <ListTitle>{challenge.그룹챌린지제목}</ListTitle>
+                                {isExpired && <ExpiredLabel>종료됨</ExpiredLabel>}
+                                <span style={{ marginLeft: "5px" }} onClick={() => glassesClick(challenge)}>
+                                    <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px" }} />
+                                </span>
+                                <PeopleJoinWrapper>
+                                    <PeopleWrapper>{challenge.유저아이디.length}/{challenge.인원수}</PeopleWrapper>
+                                    <JoinButton onClick={() => joinClick(challenge)} disabled={isExpired}>
+                                        {challenge.유저아이디.includes(user?.uid ?? '') ? "인증" : "가입"}
+                                    </JoinButton>
+                                </PeopleJoinWrapper>
+                            </List>
+                        )
+                    })}
                 </ListWrapper>
                 {join && selectedChallenge && <JoinedRoom />}
                 {glasses && selectedChallenge && <GroupGlasses onBack={() => setGlasses(false)} challenge={selectedChallenge} />}
@@ -625,16 +643,16 @@ const GroupList = () => {
                             <GlassGuide>
                                 <GuideRoom>
                                     <GuideList>
-                                        <ListTitle>주4일 운동하기</ListTitle>
+                                        <ListTitleGuide>주4일 운동하기</ListTitleGuide>
                                         <span style={{ position: "relative", marginLeft: "5px" }}>
                                             <GlassBox />
                                             <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px", color: "black" }} />
                                         </span>
                                         <PeopleJoinWrapper>
                                             <PeopleWrapper>5/10</PeopleWrapper>
-                                            <JoinButton>
+                                            <JoinButtonGuide>
                                                 인증
-                                            </JoinButton>
+                                            </JoinButtonGuide>
                                         </PeopleJoinWrapper>
                                     </GuideList>
                                 </GuideRoom>
@@ -649,16 +667,16 @@ const GroupList = () => {
                             <JoinGuide>
                                 <GuideRoom>
                                     <GuideList>
-                                        <ListTitle>주4일 운동하기</ListTitle>
+                                        <ListTitleGuide>주4일 운동하기</ListTitleGuide>
                                         <span style={{ marginLeft: "5px" }}>
                                             <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px" }} />
                                         </span>
                                         <PeopleJoinWrapper>
                                             <PeopleWrapper>5/10</PeopleWrapper>
-                                            <JoinButton style={{ position: "relative" }}>
+                                            <JoinButtonGuide style={{ position: "relative" }}>
                                                 인증
                                                 <JoinBox />
-                                            </JoinButton>
+                                            </JoinButtonGuide>
 
                                         </PeopleJoinWrapper>
                                     </GuideList>

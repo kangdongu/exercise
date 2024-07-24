@@ -1,4 +1,6 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { collection, doc, onSnapshot, query, updateDoc } from 'firebase/firestore';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { db } from '../../firebase';
 
 export interface Challenge {
     id: string;
@@ -15,7 +17,7 @@ export interface Challenge {
     방장프로필: string;
     방장닉네임: string;
     인원수: number;
-    기간종료:boolean;
+    기간종료: boolean;
 }
 
 interface ChallengeContextType {
@@ -28,13 +30,50 @@ const ChallengeContext = createContext<ChallengeContextType | undefined>(undefin
 export const useChallenges = () => {
     const context = useContext(ChallengeContext);
     if (!context) {
-        throw new Error('useChallenges must be used within a ChallengeProvider');
+        throw new Error('useChallenge는 ChallengeProvider 내에서 사용해야 합니다.');
     }
     return context;
 };
 
 export const ChallengeProvider = ({ children }: { children: ReactNode }) => {
     const [challenges, setChallenges] = useState<Challenge[]>([]);
+
+    useEffect(() => {
+        const q = query(collection(db, "groupchallengeroom"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const challengesArray: Challenge[] = querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                방장아이디: doc.data().방장아이디,
+                비밀방여부: doc.data().비밀방여부,
+                그룹챌린지제목: doc.data().그룹챌린지제목,
+                그룹챌린지내용: doc.data().그룹챌린지내용,
+                주에몇일: doc.data().주에몇일,
+                시작날짜: doc.data().시작날짜,
+                종료날짜: doc.data().종료날짜,
+                요일선택: doc.data().요일선택,
+                유저아이디: doc.data().유저아이디,
+                비밀번호: doc.data().비밀번호,
+                방장프로필: doc.data().방장프로필,
+                방장닉네임: doc.data().방장닉네임,
+                인원수: doc.data().인원수,
+                기간종료: doc.data().기간종료,
+            }));
+
+            const today = new Date();
+            const updatedChallenges = [];
+
+            for(let challenge of challengesArray){
+                const 종료날짜 = new Date(challenge.종료날짜);
+                if (종료날짜 < today && !challenge.기간종료) {
+                    updateDoc(doc(db, "groupchallengeroom", challenge.id), { 기간종료: true });
+                    challenge.기간종료 = true;
+                }
+                updatedChallenges.push(challenge);
+            }
+            setChallenges(updatedChallenges);
+        })
+        return () => unsubscribe();
+    },[])
 
     return (
         <ChallengeContext.Provider value={{ challenges, setChallenges }}>
