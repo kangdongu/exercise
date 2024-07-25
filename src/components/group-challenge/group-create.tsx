@@ -22,6 +22,7 @@ const Wrapper = styled.div`
     box-sizing:border-box;
     overflow:hidden;
     overflow-y:scroll;
+    z-index:999;
 `;
 
 const Back = styled.div`

@@ -13,6 +13,8 @@ import { FaArrowUp } from "react-icons/fa";
 import MoSlideModal from "../slideModal/mo-slide-modal";
 import { useNavigate } from "react-router-dom";
 import AchievementModal from "../achievement-alert";
+import { CiFilter } from "react-icons/ci";
+import FilterComponent from "./filter";
 
 const Wrapper = styled.div`
     width:100%;
@@ -36,8 +38,10 @@ const CreateChallengeButton = styled.div`
     }
 `;
 const SelectRender = styled.select`
-    margin-top:10px;
     border-radius:5px;
+    height:25px;
+    font-size:16px;
+    border:1px solid black;
 `;
 const RenderOption = styled.option`
 
@@ -52,6 +56,7 @@ const List = styled.div`
     border: 1px solid #ddd;
     border-radius: 5px;
     display: flex;
+    position:relative;
     margin-top: 5px;
     padding: 0 10px;
     box-sizing: border-box;
@@ -301,7 +306,11 @@ const ExpiredLabel = styled.span`
     left:55%;
 `;
 const RoomFilterWrapper = styled.div`
-
+    margin-left:auto;
+    height:25px;
+    border:1px solid black;
+    padding:0px 5px;
+    display:flex;
 `;
 
 interface Challenge {
@@ -336,6 +345,11 @@ const GroupList = () => {
     const [guideStart, setGuideStart] = useState(false);
     const [achievementName, setAchievementName] = useState("")
     const [showAchievements, setShowAchievements] = useState(false)
+    const [filter, setFilter] = useState(false)
+    const [selectedFilter, setSelectedFilter] = useState<string | null>("all");
+    const [selectedSecret, setSelectedSecret] = useState<string | null>("all");
+    const [selectedFull, setSelectedFull] = useState<string | null>("all")
+    const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>(["매일"]);
     const [guide1, setGuide1] = useState(false)
     const [guide2, setGuide2] = useState(false)
     const [guide3, setGuide3] = useState(false)
@@ -556,6 +570,12 @@ const GroupList = () => {
             navigate(`/group-challenge/${selectedChallenge.id}`);
         }
     };
+    const handleFilterApply = (filter: string | null, secret:string | null, full:string | null, weekdays: string[]) => {
+        setSelectedFilter(filter);
+        setSelectedSecret(secret);
+        setSelectedFull(full)
+        setSelectedWeekdays(weekdays);
+    };
 
     return (
         <MoSlideModal onClose={() => navigate("/")}>
@@ -567,13 +587,14 @@ const GroupList = () => {
                     </CreateChallengeButton>
                 </CreateButtonWrapper>
                 {create && <GroupCreate onBack={() => setCreate(false)} />}
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid gray', padding: '7px 0', marginTop: '10px' }}>
                     <SelectRender value={selectedRender} onChange={renderChange}>
                         <RenderOption value="total">전체</RenderOption>
                         <RenderOption value="join">가입된 그룹방</RenderOption>
                     </SelectRender>
-                    <RoomFilterWrapper>
-
+                    <RoomFilterWrapper onClick={() => setFilter(true)}>
+                        <span>필터</span>
+                        <CiFilter style={{ width: '18px', height: '18px', marginTop: '2px' }} />
                     </RoomFilterWrapper>
                 </div>
                 <ListWrapper>
@@ -691,6 +712,9 @@ const GroupList = () => {
                         ) : null}
                     </GuideBackground>
                 ) : null}
+                {filter && (
+                    <FilterComponent onClose={() => setFilter(false)} onFilterApply={handleFilterApply} />
+                )}
             </Wrapper>
         </MoSlideModal>
     );

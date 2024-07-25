@@ -104,7 +104,7 @@ export default function Home() {
 
                                     await updateDoc(userDoc.ref, {
                                         캐릭터이미지: exerciseBeforeImage,
-                                        운동날짜: formattedDate,
+                                        마지막운동: formattedDate,
                                     });
                                 }
                             }
