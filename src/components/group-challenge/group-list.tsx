@@ -349,7 +349,7 @@ const GroupList = () => {
     const [selectedFilter, setSelectedFilter] = useState<string | null>("");
     const [selectedSecret, setSelectedSecret] = useState<string | null>("");
     const [selectedFull, setSelectedFull] = useState<string | null>("")
-    // const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>([""]);
+    const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>([""]);
     const [guide1, setGuide1] = useState(false)
     const [guide2, setGuide2] = useState(false)
     const [guide3, setGuide3] = useState(false)
@@ -567,11 +567,11 @@ const GroupList = () => {
             navigate(`/group-challenge/${selectedChallenge.id}`);
         }
     };
-    const handleFilterApply = (filter: string | null, secret: string | null, full: string | null, {/*weekdays: string[]*/}) => {
+    const handleFilterApply = (filter: string | null, secret: string | null, full: string | null, weekdays: string[]) => {
         setSelectedFilter(filter);
         setSelectedSecret(secret);
         setSelectedFull(full)
-        // setSelectedWeekdays(weekdays);
+        setSelectedWeekdays(weekdays);
     };
 
     // const filteredChallenges = selectedRender === "join" && user
@@ -607,8 +607,7 @@ const GroupList = () => {
                 filtered = filtered.filter(challenge => !challenge.비밀방여부)
             } else if (selectedSecret === "secret") {
                 filtered = filtered.filter(challenge => challenge.비밀방여부)
-            }
-            if(selectedFull === "empty"){
+            }if(selectedFull === "empty"){
                 filtered = filtered.filter(challenge => Number(challenge.인원수) !== challenge.유저아이디.length)
             }else if(selectedFull === "full"){
                 filtered = filtered.filter(challenge => Number(challenge.인원수) === challenge.유저아이디.length)
