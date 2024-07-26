@@ -346,10 +346,10 @@ const GroupList = () => {
     const [achievementName, setAchievementName] = useState("")
     const [showAchievements, setShowAchievements] = useState(false)
     const [filter, setFilter] = useState(false)
-    const [selectedFilter, setSelectedFilter] = useState<string | null>("all");
-    const [selectedSecret, setSelectedSecret] = useState<string | null>("all");
-    const [selectedFull, setSelectedFull] = useState<string | null>("all")
-    const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>(["매일"]);
+    const [selectedFilter, setSelectedFilter] = useState<string | null>("");
+    const [selectedSecret, setSelectedSecret] = useState<string | null>("");
+    const [selectedFull, setSelectedFull] = useState<string | null>("")
+    // const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>([""]);
     const [guide1, setGuide1] = useState(false)
     const [guide2, setGuide2] = useState(false)
     const [guide3, setGuide3] = useState(false)
@@ -506,9 +506,6 @@ const GroupList = () => {
         setSelectedRender(e.target.value)
     }
 
-    const filteredChallenges = selectedRender === "join" && user
-        ? challenges.filter(challenge => challenge.유저아이디.includes(user.uid))
-        : challenges;
 
     const passwordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -570,12 +567,57 @@ const GroupList = () => {
             navigate(`/group-challenge/${selectedChallenge.id}`);
         }
     };
-    const handleFilterApply = (filter: string | null, secret:string | null, full:string | null, weekdays: string[]) => {
+    const handleFilterApply = (filter: string | null, secret: string | null, full: string | null, {/*weekdays: string[]*/}) => {
         setSelectedFilter(filter);
         setSelectedSecret(secret);
         setSelectedFull(full)
-        setSelectedWeekdays(weekdays);
+        // setSelectedWeekdays(weekdays);
     };
+
+    // const filteredChallenges = selectedRender === "join" && user
+    //     ? challenges.filter(challenge => challenge.유저아이디.includes(user.uid))
+    //     : challenges;
+
+    const filteredChallenges = () => {
+        let filtered = challenges;
+        if (selectedRender === "join" && user) {
+            filtered = filtered.filter(challenge => challenge.유저아이디.includes(user.uid));
+            if (selectedFilter === "ongoing") {
+                filtered = filtered.filter(challenge => !challenge.기간종료);
+            } else if (selectedFilter === "ended") {
+                filtered = filtered.filter(challenge => challenge.기간종료);
+            }
+            if (selectedSecret === "public") {
+                filtered = filtered.filter(challenge => !challenge.비밀방여부)
+            } else if (selectedSecret === "secret") {
+                filtered = filtered.filter(challenge => challenge.비밀방여부)
+            }
+            if(selectedFull === "empty"){
+                filtered = filtered.filter(challenge => Number(challenge.인원수) !== challenge.유저아이디.length)
+            }else if(selectedFull === "full"){
+                filtered = filtered.filter(challenge => Number(challenge.인원수) === challenge.유저아이디.length)
+            }
+        } else {
+            if (selectedFilter === "ongoing") {
+                filtered = filtered.filter(challenge => !challenge.기간종료);
+            } else if (selectedFilter === "ended") {
+                filtered = filtered.filter(challenge => challenge.기간종료);
+            }
+            if (selectedSecret === "public") {
+                filtered = filtered.filter(challenge => !challenge.비밀방여부)
+            } else if (selectedSecret === "secret") {
+                filtered = filtered.filter(challenge => challenge.비밀방여부)
+            }
+            if(selectedFull === "empty"){
+                filtered = filtered.filter(challenge => Number(challenge.인원수) !== challenge.유저아이디.length)
+            }else if(selectedFull === "full"){
+                filtered = filtered.filter(challenge => Number(challenge.인원수) === challenge.유저아이디.length)
+            }
+        }
+        return filtered;
+    }
+
+    const filteredChallengesList = filteredChallenges();
 
     return (
         <MoSlideModal onClose={() => navigate("/")}>
@@ -598,7 +640,7 @@ const GroupList = () => {
                     </RoomFilterWrapper>
                 </div>
                 <ListWrapper>
-                    {filteredChallenges.map((challenge) => {
+                    {filteredChallengesList.map((challenge) => {
                         const isExpired = challenge.기간종료;
                         return (
                             <List key={challenge.id} as={isExpired ? ExpiredList : List}>
