@@ -427,7 +427,10 @@ const JoinedRoom: React.FC = () => {
         const endDate = parseISO(endDateString);
         const now = new Date();
         const diff = differenceInDays(now, endDate);
-        return 10 - diff;
+        if (diff == 10) {
+            return "내일";
+        }
+        return 10 - diff + "일 뒤에";
     };
 
     return (
@@ -522,7 +525,7 @@ const JoinedRoom: React.FC = () => {
                 <EndWrapper>
                     <EndMessage>
                         <EndMessageTitle>챌린지가 종료되었습니다.</EndMessageTitle>
-                        <div style={{marginTop:'10px', fontSize:'18px', padding:'0px 15px'}}>해당 챌린지방은 {getRemainingDays(challenge.종료날짜)}일 뒤에 삭제됩니다.</div>
+                        <div style={{ marginTop: '10px', fontSize: '18px', padding: '0px 15px' }}>해당 챌린지방은 {getRemainingDays(challenge.종료날짜)} 삭제됩니다.</div>
                     </EndMessage>
                 </EndWrapper>
             )}

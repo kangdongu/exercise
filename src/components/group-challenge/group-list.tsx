@@ -305,12 +305,16 @@ const ExpiredLabel = styled.span`
     position:absolute;
     left:55%;
 `;
-const RoomFilterWrapper = styled.div`
+const RoomFilterWrapper = styled.div<{ filterOn: boolean }>`
     margin-left:auto;
     height:25px;
-    border:1px solid black;
+    border:1px solid ${({ filterOn }) => (filterOn ? "blue" : "black")};
     padding:0px 5px;
     display:flex;
+    color: ${({ filterOn }) => (filterOn ? 'blue' : 'black')};
+  svg {
+    color: ${({ filterOn }) => (filterOn ? 'blue' : 'black')};
+  }
 `;
 
 interface Challenge {
@@ -345,11 +349,12 @@ const GroupList = () => {
     const [guideStart, setGuideStart] = useState(false);
     const [achievementName, setAchievementName] = useState("")
     const [showAchievements, setShowAchievements] = useState(false)
-    const [filter, setFilter] = useState(false)
-    const [selectedFilter, setSelectedFilter] = useState<string | null>("");
-    const [selectedSecret, setSelectedSecret] = useState<string | null>("");
-    const [selectedFull, setSelectedFull] = useState<string | null>("")
-    const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>([""]);
+    const [filter, setFilter] = useState(false);
+    const [filterOn, setFilterOn] = useState(false);
+    const [selectedFilter, setSelectedFilter] = useState<string | null>("all");
+    const [selectedSecret, setSelectedSecret] = useState<string | null>("all");
+    const [selectedFull, setSelectedFull] = useState<string | null>("all")
+    const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>(["상관없음"]);
     const [guide1, setGuide1] = useState(false)
     const [guide2, setGuide2] = useState(false)
     const [guide3, setGuide3] = useState(false)
@@ -574,50 +579,49 @@ const GroupList = () => {
         setSelectedWeekdays(weekdays);
     };
 
-    // const filteredChallenges = selectedRender === "join" && user
-    //     ? challenges.filter(challenge => challenge.유저아이디.includes(user.uid))
-    //     : challenges;
+    useEffect(() => {
+        if (selectedFilter !== "all" || selectedSecret !== "all" || selectedFull !== "all" || !selectedWeekdays.includes("상관없음")) {
+            setFilterOn(true);
+        } else {
+            setFilterOn(false);
+        }
+    }, [selectedFilter, selectedSecret, selectedFull, selectedWeekdays]);
 
     const filteredChallenges = () => {
         let filtered = challenges;
         if (selectedRender === "join" && user) {
             filtered = filtered.filter(challenge => challenge.유저아이디.includes(user.uid));
-            if (selectedFilter === "ongoing") {
-                filtered = filtered.filter(challenge => !challenge.기간종료);
-            } else if (selectedFilter === "ended") {
-                filtered = filtered.filter(challenge => challenge.기간종료);
-            }
-            if (selectedSecret === "public") {
-                filtered = filtered.filter(challenge => !challenge.비밀방여부)
-            } else if (selectedSecret === "secret") {
-                filtered = filtered.filter(challenge => challenge.비밀방여부)
-            }
-            if(selectedFull === "empty"){
-                filtered = filtered.filter(challenge => Number(challenge.인원수) !== challenge.유저아이디.length)
-            }else if(selectedFull === "full"){
-                filtered = filtered.filter(challenge => Number(challenge.인원수) === challenge.유저아이디.length)
-            }
-        } else {
-            if (selectedFilter === "ongoing") {
-                filtered = filtered.filter(challenge => !challenge.기간종료);
-            } else if (selectedFilter === "ended") {
-                filtered = filtered.filter(challenge => challenge.기간종료);
-            }
-            if (selectedSecret === "public") {
-                filtered = filtered.filter(challenge => !challenge.비밀방여부)
-            } else if (selectedSecret === "secret") {
-                filtered = filtered.filter(challenge => challenge.비밀방여부)
-            }if(selectedFull === "empty"){
-                filtered = filtered.filter(challenge => Number(challenge.인원수) !== challenge.유저아이디.length)
-            }else if(selectedFull === "full"){
-                filtered = filtered.filter(challenge => Number(challenge.인원수) === challenge.유저아이디.length)
-            }
         }
+        if (selectedFilter === "ongoing") {
+            filtered = filtered.filter(challenge => !challenge.기간종료);
+        } else if (selectedFilter === "ended") {
+            filtered = filtered.filter(challenge => challenge.기간종료);
+        }
+        if (selectedSecret === "public") {
+            filtered = filtered.filter(challenge => !challenge.비밀방여부)
+        } else if (selectedSecret === "secret") {
+            filtered = filtered.filter(challenge => challenge.비밀방여부)
+        }
+        if (selectedFull === "empty") {
+            filtered = filtered.filter(challenge => Number(challenge.인원수) !== challenge.유저아이디.length)
+        } else if (selectedFull === "full") {
+            filtered = filtered.filter(challenge => Number(challenge.인원수) === challenge.유저아이디.length)
+        }
+        if (!selectedWeekdays.includes("상관없음") && selectedWeekdays.length > 0) {
+            filtered = filtered.filter(challenge => selectedWeekdays.some(day => challenge.요일선택.includes(day)));
+        }
+        console.log(selectedWeekdays)
+
         return filtered;
     }
 
     const filteredChallengesList = filteredChallenges();
 
+    const filterText = selectedFilter === "ongoing" ? "진행중, " : selectedFilter === "ended" ? "종료된" : null
+    const secretText = selectedSecret === "public" ? "공개방, " : selectedSecret === "secret" ? "비밀방" : null
+    const fullText = selectedFull === "empty" ? "자리있음, " : selectedFull === "full" ? "가득참" : null
+    const weekDaysText = !selectedWeekdays.includes("상관없음") ? selectedWeekdays : null
+ 
     return (
         <MoSlideModal onClose={() => navigate("/")}>
             <Wrapper>
@@ -633,11 +637,19 @@ const GroupList = () => {
                         <RenderOption value="total">전체</RenderOption>
                         <RenderOption value="join">가입된 그룹방</RenderOption>
                     </SelectRender>
-                    <RoomFilterWrapper onClick={() => setFilter(true)}>
+                    <RoomFilterWrapper filterOn={filterOn} onClick={() => setFilter(true)}>
                         <span>필터</span>
                         <CiFilter style={{ width: '18px', height: '18px', marginTop: '2px' }} />
                     </RoomFilterWrapper>
                 </div>
+                {filterOn && (
+                        <div style={{display:'flex', fontSize:'14px', justifyContent: 'flex-end', color:'gray', marginTop:'3px'}}>
+                            <span>{filterText}</span>
+                            <span>{secretText}</span>
+                            <span>{fullText}</span>
+                            <span>{weekDaysText}</span>
+                        </div>
+                    )}
                 <ListWrapper>
                     {filteredChallengesList.map((challenge) => {
                         const isExpired = challenge.기간종료;
@@ -754,7 +766,7 @@ const GroupList = () => {
                     </GuideBackground>
                 ) : null}
                 {filter && (
-                    <FilterComponent onClose={() => setFilter(false)} onFilterApply={handleFilterApply} />
+                    <FilterComponent initialFilter={selectedFilter} initialFull={selectedFull} initialSecret={selectedSecret} initialWeekdays={selectedWeekdays} onClose={() => setFilter(false)} onFilterApply={handleFilterApply} />
                 )}
             </Wrapper>
         </MoSlideModal>

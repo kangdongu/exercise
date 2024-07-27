@@ -3,7 +3,7 @@ import styled from "styled-components"
 import DateChoiceFuture from "../date-pick";
 import { auth, db, storage } from "../../firebase";
 import { addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
-import { format } from "date-fns";
+import { differenceInDays, format } from "date-fns";
 import { getDownloadURL, ref } from "firebase/storage";
 import { Challenge, useChallenges } from "./group-context";
 import PeopleModal from "./people-modal";
@@ -109,13 +109,16 @@ const DateChoiceWrapper = styled.div`
 
 `;
 const DateChoiceTitle = styled.h4`
-
+    span{
+        font-weight:500;
+        font-size:14px;
+    }
 `;
 const SecretWrapper = styled.div`
 
 `;
 const SecretTitle = styled.h4`
-
+    
 `;
 const SecretCheckWrapper = styled.div`
 
@@ -198,7 +201,9 @@ interface CreateProps {
 }
 const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
     const { setChallenges } = useChallenges();
-    const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(new Date());
+    const week1 = new Date();
+    week1.setDate(week1.getDate() + 7);
+    const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(week1);
     const [secretCheckToggle, setSecretCheckToggle] = useState(false)
     const [selectedDays, setSelectedDays] = useState<string[]>([]);
     const [manualSelectedWeek, setManualSelectedWeek] = useState("1일");
@@ -346,7 +351,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                 방장프로필: userProfileUrl,
                 방장닉네임: nickname,
                 인원수: peopleCount,
-                기간종료:false,
+                기간종료: false,
             };
 
             try {
@@ -355,7 +360,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                     ...prevChallenges,
                     { id: docRef.id, ...newChallenge } as Challenge,
                 ]);
-                setDocId(docRef.id); 
+                setDocId(docRef.id);
 
                 const achievementsRef = collection(db, 'achievements');
                 const q = query(achievementsRef);
@@ -410,9 +415,17 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
         navigate(`/group-challenge/${docId}`);
     };
 
+    const dDay = () => {
+        const now = new Date()
+        const endDate = selectedEndDate
+        if (!endDate) return '날짜가 선택되지 않았습니다.'
+        const diff = differenceInDays(endDate, now)
+        const diffSet = diff + 1
+        return `D-${diffSet}`;
+    }
+
     return (
         <Wrapper>
-
             <Back onClick={onBack}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                     <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
@@ -456,8 +469,13 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                 </WeekListWrapper>
             </WeekWrapper>
             <DateChoiceWrapper>
-                <DateChoiceTitle>종료기간설정 *</DateChoiceTitle>
-                <DateChoiceFuture onDateChange={EndDateChange} /> 까지
+                <DateChoiceTitle>
+                    종료기간설정 *<span> (일주일 후 부터 선택가능)</span>
+                </DateChoiceTitle>
+                <div style={{display:'flex',alignItems: 'center'}}>
+                    <DateChoiceFuture onDateChange={EndDateChange} initialDate={selectedEndDate} /> 까지
+                    <div style={{marginLeft:'auto', marginRight:'20px'}}>{dDay()}</div>
+                </div>
             </DateChoiceWrapper>
             <SecretWrapper>
                 <SecretTitle>비밀방 여부</SecretTitle>

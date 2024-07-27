@@ -20,6 +20,8 @@ const GlassesWrapper = styled.div`
     width:80vw;
     position:fixed;
     background-color:white;
+    overflow-y:scroll;
+    height:65vh;
     top:50%;
     left:50%;
     transform: translate(-50%,-60%);

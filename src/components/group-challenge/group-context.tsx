@@ -1,6 +1,7 @@
-import { collection, doc, onSnapshot, query, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc } from 'firebase/firestore';
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { db } from '../../firebase';
+import { differenceInDays } from 'date-fns';
 
 export interface Challenge {
     id: string;
@@ -40,7 +41,7 @@ export const ChallengeProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         const q = query(collection(db, "groupchallengeroom"));
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const unsubscribe = onSnapshot(q, async(querySnapshot) => {
             const challengesArray: Challenge[] = querySnapshot.docs.map((doc) => ({
                 id: doc.id,
                 방장아이디: doc.data().방장아이디,
@@ -68,9 +69,33 @@ export const ChallengeProvider = ({ children }: { children: ReactNode }) => {
                     updateDoc(doc(db, "groupchallengeroom", challenge.id), { 기간종료: true });
                     challenge.기간종료 = true;
                 }
+                if(challenge.기간종료){
+                    const diff = differenceInDays(today, 종료날짜)
+                    if(diff > 10){
+                        try{
+                            const deleteSubcollections = async (roomId:string) => {
+                                const subcollections = ["photos", "messages"];
+                                for (const subcollectionName of subcollections) {
+                                  const subcollectionRef = collection(db, `groupchallengeroom/${roomId}/${subcollectionName}`);
+                                  const subcollectionSnapshot = await getDocs(subcollectionRef);
+                                  subcollectionSnapshot.forEach(async (subDoc) => {
+                                    await deleteDoc(doc(db, `groupchallengeroom/${roomId}/${subcollectionName}`, subDoc.id));
+                                  });
+                                }
+                              };
+                        
+                              await deleteSubcollections(challenge.id);
+                        
+                              await deleteDoc(doc(db, "groupchallengeroom", challenge.id)); 
+                        }catch(error){
+                            console.log(error)
+                        }
+                    }
+                }
                 updatedChallenges.push(challenge);
             }
             setChallenges(updatedChallenges);
+
         })
         return () => unsubscribe();
     },[])

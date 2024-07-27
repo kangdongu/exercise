@@ -108,13 +108,17 @@ const WeekdayItem = styled.div<{ selected: boolean }>`
 interface FilterComponentProps {
     onClose: () => void;
     onFilterApply: (filter: string | null, secret: string | null, full:string | null,weekdays: string[]) => void;
+    initialFilter: string | null;
+    initialSecret: string | null;
+    initialFull: string | null;
+    initialWeekdays: string[]; 
 }
 
-const FilterComponent: React.FC<FilterComponentProps> = ({ onClose, onFilterApply }) => {
-    const [selectedFilter, setSelectedFilter] = useState<string | null>("all");
-    const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>(["상관없음"]);
-    const [selectedSecret, setSelectedSecret] = useState<string | null>("all");
-    const [selectedFull, setSelectedFull] = useState<string | null>("all")
+const FilterComponent: React.FC<FilterComponentProps> = ({ onClose, onFilterApply, initialFilter, initialSecret, initialFull, initialWeekdays }) => {
+    const [selectedFilter, setSelectedFilter] = useState<string | null>(initialFilter);
+    const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>(initialWeekdays);
+    const [selectedSecret, setSelectedSecret] = useState<string | null>(initialSecret);
+    const [selectedFull, setSelectedFull] = useState<string | null>(initialFull);
 
     const handleFilterApply = () => {
         onFilterApply(selectedFilter, selectedSecret, selectedFull, selectedWeekdays);
@@ -122,26 +126,22 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ onClose, onFilterAppl
     };
 
     const toggleWeekday = (day: string) => {
-        if (selectedWeekdays.includes("상관없음")) {
-            setSelectedWeekdays((prev) =>
-                prev.filter((d) => d !== "상관없음")
-            )
-        }
-        if (selectedWeekdays.includes("매일")) {
-            setSelectedWeekdays((prev) =>
-                prev.filter((d) => d !== "매일")
-            )
-        }
-        setSelectedWeekdays((prev) =>
-            prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
-        );
+        setSelectedWeekdays((prev) => {
+            let updatedDays = prev
+            if (prev.includes("상관없음")) {
+                updatedDays = [day];
+            } else {
+                updatedDays = prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day];
+            }
+            if (updatedDays.length === 0) {
+                everyDay("상관없음");
+                return ["상관없음"];
+            }
+            return updatedDays;
+        });
     };
+
     const everyDay = (day: string) => {
-        setSelectedWeekdays((prev) =>
-            prev.includes(day) ? prev.filter((d) => d === day) : [day]
-        )
-    }
-    const itsOkey = (day: string) => {
         setSelectedWeekdays((prev) =>
             prev.includes(day) ? prev.filter((d) => d === day) : [day]
         )
@@ -149,6 +149,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ onClose, onFilterAppl
 
     return (
         <Wrapper>
+                <div style={{width:'100vw', height:'100vh', position:'fixed'}} onClick={onClose}></div>
             <FilterWrapper>
                 <Close><span onClick={onClose}>X</span></Close>
                 <Section>
@@ -179,8 +180,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ onClose, onFilterAppl
                     <h4 style={{ marginTop: '0px' }}>요일 선택</h4>
 
                     <WeekdayBox>
-                        <WeekdayItem selected={selectedWeekdays.includes("상관없음")} onClick={() => itsOkey("상관없음")}>상관없음</WeekdayItem>
-                        <WeekdayItem selected={selectedWeekdays.includes("매일")} onClick={() => everyDay("매일")}>매일</WeekdayItem>
+                        <WeekdayItem selected={selectedWeekdays.includes("상관없음")} onClick={() => everyDay("상관없음")}>상관없음</WeekdayItem>
                         {['월', '화', '수', '목', '금', '토', '일'].map((day) => (
                             <WeekdayItem
                                 key={day}
