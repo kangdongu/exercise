@@ -116,8 +116,10 @@ interface LongProps {
     complet: () => void;
 }
 const LongGoal: React.FC<LongProps> = ({ complet }) => {
+    const week1 = new Date();
+    week1.setDate(week1.getDate() + 7);
+    const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(week1);
     const [selectedWeek, setSelectedWeek] = useState("1일")
-    const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(new Date());
     const [goals, setGoals] = useState<{ memo: string }[]>([{ memo: "" }]);
     const [title, setTitle] = useState("")
     const [showAchievements, setShowAchievements] = useState(false);
@@ -306,8 +308,8 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
             <h4 style={{ marginTop: "5px", marginBottom: "5px" }}>장기 챌린지 제목 *</h4>
             <Title onChange={TitleChange} type="text" value={title} name="title" placeholder="챌린지 제목을 적어주세요"></Title>
             <DateWrapper>
-                <DateTitle>종료날짜를 입력해주세요 <span style={{ fontSize: '12px' }}>(7주 후 까지 선택가능)</span></DateTitle>
-                <span style={{ border: "0.3px solid lightgray" }}><DateChoiceFuture onDateChange={EndDateChange} /></span> 까지
+                <DateTitle>종료날짜를 입력해주세요 <span style={{ fontSize: '12px' }}>(최소 7일 최대 7주)</span></DateTitle>
+                <span style={{ border: "0.3px solid lightgray" }}><DateChoiceFuture initialDate={selectedEndDate} onDateChange={EndDateChange} /></span> 까지
             </DateWrapper>
             <WeekWrapper>
                 <WeekTitle>주에 몇일 *</WeekTitle>
