@@ -246,6 +246,7 @@ const JoinedRoom: React.FC = () => {
     const [ourView, setOurView] = useState<Photo | null>(null);
     const [isCreating, setIsCreating] = useState(false);
     const [showCongratulations, setShowCongratulations] = useState(false)
+    const [showEndModal, setShowEndModal] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -300,6 +301,11 @@ const JoinedRoom: React.FC = () => {
             fetchPhotos();
         }
     }, [challengeId]);
+    useEffect(() => {
+        setTimeout(() => {
+            setShowEndModal(false);
+        }, 4000);
+    },[])
 
     const createChallengeButton = async () => {
         const currentUser = auth.currentUser;
@@ -308,24 +314,28 @@ const JoinedRoom: React.FC = () => {
 
         const week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
         const weekDate = week[new Date().getDay()];
-        if (challenge?.요일선택.includes(weekDate)) {
-            const today = format(new Date(), "yyyy-MM-dd");
-            const q = query(
-                collection(db, "groupchallengeroom", challengeId, "photos"),
-                where("날짜", "==", today),
-                where("유저아이디", "==", currentUser.uid),
-                where("챌린지아이디", "==", challengeId),
-            );
+        if (!challenge?.기간종료) {
+            if (challenge?.요일선택.includes(weekDate)) {
+                const today = format(new Date(), "yyyy-MM-dd");
+                const q = query(
+                    collection(db, "groupchallengeroom", challengeId, "photos"),
+                    where("날짜", "==", today),
+                    where("유저아이디", "==", currentUser.uid),
+                    where("챌린지아이디", "==", challengeId),
+                );
 
-            const querySnapshot = await getDocs(q);
+                const querySnapshot = await getDocs(q);
 
-            if (querySnapshot.empty) {
-                setCreateChallenge(true);
+                if (querySnapshot.empty) {
+                    setCreateChallenge(true);
+                } else {
+                    alert("오늘 이미 인증을 완료했습니다.");
+                }
             } else {
-                alert("오늘 이미 인증을 완료했습니다.");
+                alert("오늘은 인증날이 아닙니다.");
             }
         } else {
-            alert("오늘은 인증날이 아닙니다.");
+            alert('해당 그룹은 챌린지 기간이 지났습니다.')
         }
     };
 
@@ -432,6 +442,8 @@ const JoinedRoom: React.FC = () => {
         }
         return 10 - diff + "일 뒤에";
     };
+    const dDay = differenceInDays(parseISO(challenge.종료날짜), new Date());
+    const dDayText = dDay >= 0 ? `D-${dDay}` : `D+${Math.abs(dDay)}`;
 
     return (
         <Wrapper>
@@ -443,7 +455,7 @@ const JoinedRoom: React.FC = () => {
             <GroupViewWrapper>
                 <ViewContent>
                     <ViewDdayWrapper>
-                        <div>시작: {challenge.시작날짜}</div> <div style={{ marginLeft: "10px" }}>종료: {challenge.종료날짜}</div> <div style={{ marginLeft: "auto" }}>D-{differenceInDays(parseISO(challenge.종료날짜), new Date())}</div>
+                        <div>시작: {challenge.시작날짜}</div> <div style={{ marginLeft: "10px" }}>종료: {challenge.종료날짜}</div> <div style={{ marginLeft: "auto" }}>{dDayText}</div>
                     </ViewDdayWrapper>
                     <ViewWeekWrapper>
                         <div>주에 {challenge.주에몇일}일 챌린지 </div>
@@ -521,7 +533,7 @@ const JoinedRoom: React.FC = () => {
             {showCongratulations && (
                 <Congratulations title="인증완료" content="축하합니다. 그룹 인증을 완료하였습니다!" />
             )}
-            {challenge.기간종료 && (
+            {challenge.기간종료 && showEndModal && (
                 <EndWrapper>
                     <EndMessage>
                         <EndMessageTitle>챌린지가 종료되었습니다.</EndMessageTitle>

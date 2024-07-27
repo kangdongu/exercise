@@ -379,7 +379,12 @@ const GroupList = () => {
 
     const joinClick = async (challenge: Challenge) => {
         if (user && user.uid) {
+
             if (!challenge.유저아이디.includes(user.uid)) {
+                if (challenge.기간종료) {
+                    alert("해당 그룹방은 종료되어 가입할 수 없습니다.");
+                    return;
+                }
                 if (challenge.인원수 > challenge.유저아이디.length) {
                     if (!challenge.비밀방여부) {
                         try {
@@ -610,7 +615,6 @@ const GroupList = () => {
         if (!selectedWeekdays.includes("상관없음") && selectedWeekdays.length > 0) {
             filtered = filtered.filter(challenge => selectedWeekdays.some(day => challenge.요일선택.includes(day)));
         }
-        console.log(selectedWeekdays)
 
         return filtered;
     }

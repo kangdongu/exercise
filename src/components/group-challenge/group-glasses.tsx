@@ -142,6 +142,8 @@ interface GlassesProps {
     challenge: Challenge;
 }
 const GroupGlasses: React.FC<GlassesProps> = ({ onBack, challenge }) => {
+    const dDay = differenceInDays(parseISO(challenge.종료날짜), new Date());
+    const dDayText = dDay >= 0 ? `D-${dDay}` : `D+${Math.abs(dDay)}`;
 
     return (
         <Wrapper>
@@ -178,7 +180,7 @@ const GroupGlasses: React.FC<GlassesProps> = ({ onBack, challenge }) => {
                     <h4>챌린지 기간</h4>
                     <DateEnd>
                         <div>종료날짜: {challenge.종료날짜}</div>
-                        <div>D-{differenceInDays(parseISO(challenge.종료날짜), new Date())}</div>
+                        <div>{dDayText}</div>
                     </DateEnd>
                 </DateWrapper>
                 <WeekWrapper>
