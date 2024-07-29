@@ -6567,7 +6567,7 @@ display:none;
 `,gRe=_.div`
     margin-left:auto;
     height:25px;
-    border:1px solid ${({filterOn:t})=>t?"blue":"black"};
+    border:2px solid ${({filterOn:t})=>t?"blue":"black"};
     padding:0px 5px;
     display:flex;
     color: ${({filterOn:t})=>t?"blue":"black"};
