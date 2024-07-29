@@ -308,7 +308,7 @@ const ExpiredLabel = styled.span`
 const RoomFilterWrapper = styled.div<{ filterOn: boolean }>`
     margin-left:auto;
     height:25px;
-    border:1px solid ${({ filterOn }) => (filterOn ? "blue" : "black")};
+    border:2px solid ${({ filterOn }) => (filterOn ? "blue" : "black")};
     padding:0px 5px;
     display:flex;
     color: ${({ filterOn }) => (filterOn ? 'blue' : 'black')};
