@@ -4284,6 +4284,8 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 `,bbe=_.div`
   overflow: auto;                            
   -webkit-overflow-scrolling: touch;
+  position:relative;
+  z-index:999;
 `,_be=({children:t})=>{const{sheet:e,content:n,header:r}=xbe();return f.jsxs(wbe,{ref:e,children:[f.jsx(vbe,{ref:r}),f.jsx(bbe,{ref:n,children:t})]})},Sbe=kr`
   from {
     width:0px
