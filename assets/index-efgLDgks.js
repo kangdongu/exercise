@@ -4334,6 +4334,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   top:0;
   left:0;
   transform:translate(0px,0px);
+  z-index:105;
 }
   width: 50%;
   overflow-y:scroll;
@@ -4663,6 +4664,7 @@ z-index:98;
     @media screen and (max-width: 700px) {
         width: 95%;
         margin: 0 auto;
+        z-index: 5;
     }
 `,v_e=_.div`
     display:flex;
