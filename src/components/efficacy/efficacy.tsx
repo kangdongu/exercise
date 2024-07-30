@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { FaDumbbell } from "react-icons/fa6";
+import { CiDumbbell } from "react-icons/ci";
 
 const Wrapper = styled.div`
     border-radius:10px;
@@ -30,16 +30,16 @@ const EfficacyWrapper = styled.div`
     }
 `;
 interface efficacyProps {
-    efficacyClick:() => void
+    efficacyClick: () => void
 }
-const Efficacy:React.FC<efficacyProps> = ({efficacyClick}) => {
-    return(
+const Efficacy: React.FC<efficacyProps> = ({ efficacyClick }) => {
+    return (
         <Wrapper onClick={efficacyClick}>
-            <FaDumbbell style={{ position:"absolute" ,top:"20px", width: "100px",opacity:"0.8" , height: "100px",color:"#8E24AA" }} />
+            <CiDumbbell style={{ position: "absolute", top: "10px", width: "120px", opacity: "0.8", height: "120px", color: "#8E24AA" }} />
             <EfficacyWrapper>
-                <div style={{ fontSize: "20px",fontWeight:"600" ,textAlign:"center",marginTop:"25px" }} >운동별 정보</div>
+                <div style={{ fontSize: "20px", fontWeight: "600", textAlign: "center", marginTop: "25px" }} >운동별 정보</div>
                 <span>운동의 장, 단점<br /> 효능에 대해 알아보세요</span>
-           </EfficacyWrapper>
+            </EfficacyWrapper>
         </Wrapper>
     )
 }

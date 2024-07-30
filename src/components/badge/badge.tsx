@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { RiPoliceBadgeFill } from "react-icons/ri";
+import { RiPoliceBadgeLine } from "react-icons/ri";
 
 const Wrapper = styled.div`
     border-radius:10px;
@@ -34,7 +34,7 @@ interface badgeProps {
 const Badge: React.FC<badgeProps> = ({ badgeClick }) => {
     return (
         <Wrapper onClick={badgeClick}>
-            <RiPoliceBadgeFill style={{ position:"absolute" ,left:"-30px",top:"20px", width: "100px",opacity:"0.7" , height: "100px",color:"#FFEB3B" }} />
+            <RiPoliceBadgeLine style={{ position:"absolute" ,left:"-30px",top:"20px", width: "100px",opacity:"0.7" , height: "100px",color:"#FFEB3B" }} />
             
             <TimerWrapper>
                 <div style={{fontSize:"20px", fontWeight:"600", textAlign:"center",marginTop:"20px"}}>뱃지 현황</div>

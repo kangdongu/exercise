@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { HiMiniTrophy } from "react-icons/hi2";
+import { GoTrophy } from "react-icons/go";
 
 const Wrapper = styled.div`
     border-radius:10px;
@@ -36,7 +36,7 @@ interface achievmeentsProps {
 const Achievements:React.FC<achievmeentsProps> = ({achievmeentsClick}) => {
     return(
         <Wrapper onClick={achievmeentsClick}>
-              <HiMiniTrophy style={{ position:"absolute" ,top:"20px",fontSize:"18px", width: "100px",opacity:"0.8" , height: "100px",color:"#FFD700" }} />
+              <GoTrophy style={{ position:"absolute" ,top:"20px",fontSize:"18px", width: "100px",opacity:"0.8" , height: "100px",color:"#FFD700" }} />
            <AchievementsWrapper>
                 <div style={{ fontSize: "20px",fontWeight:"600" ,textAlign:"center",marginTop:"25px" }} >도전과제</div>
                 <span>습관과 도전과제를 함께 쌓아보세요</span>

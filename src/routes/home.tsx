@@ -15,6 +15,10 @@ import AchievementModal from "../components/achievement-alert";
 import BadgeModal from "../components/badge-modal";
 import LoadingScreen from "../components/loading-screen";
 import { format, isBefore, startOfToday } from "date-fns";
+import { GoBell } from "react-icons/go";
+import { IoIosMenu } from "react-icons/io";
+import MenuModal from "../components/menu";
+import BellModal from "../components/bell";
 
 const Wrapper = styled.div`
     width:100vw;
@@ -51,17 +55,28 @@ const ProfileImgWrapper = styled.div`
     height:80px;
     border:0.1px solid #f3f1f1;
 `;
+const HeaderContentWrapper = styled.div`
+    margin-left:auto;
+    display:flex;
+    gap:10px;
+    svg{
+        width:25px;
+        height:25px;
+    }
+`;
 
 export default function Home() {
     const navigate = useNavigate();
     const [userProfilePicUrl, setUserProfileUrl] = useState("");
-    const [nickname, setNickname] = useState("")
-    const [isLoading, setLoading] = useState(false)
+    const [nickname, setNickname] = useState("");
+    const [isLoading, setLoading] = useState(false);
     const [showAchievements, setShowAchievements] = useState(false);
-    const [achievementName, setAchievementName] = useState("")
-    const [badgeImg, setBadgeImg] = useState("")
-    const [badgeName, setBadgeName] = useState("")
-    const [showBadge, setShowBadge] = useState(false)
+    const [achievementName, setAchievementName] = useState("");
+    const [badgeImg, setBadgeImg] = useState("");
+    const [badgeName, setBadgeName] = useState("");
+    const [showBadge, setShowBadge] = useState(false);
+    const [menuOn, setMenuOn] = useState(false);
+    const [bellOn, setBellOn] = useState(false);
     const currentUser = auth.currentUser;
 
     const handleNavigation = (path: string) => {
@@ -130,7 +145,7 @@ export default function Home() {
 
         return () => clearTimeout(timer);
     }, [currentUser]);
-    
+
 
 
     useEffect(() => {
@@ -294,6 +309,20 @@ export default function Home() {
         );
     }
 
+    const menuClick = () => {
+        if(menuOn){
+            setMenuOn(false)
+        }else {
+            setMenuOn(true)
+        }
+    }
+    const bellClick = () => {
+        if(bellOn){
+            setBellOn(false)
+        }else {
+            setBellOn(true)
+        }
+    }
 
     return (
         <Wrapper>
@@ -308,6 +337,10 @@ export default function Home() {
                     </ProfileImgWrapper>
                 )}
                 <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{nickname}</span>
+                <HeaderContentWrapper>
+                    <GoBell onClick={bellClick} />
+                    <IoIosMenu onClick={menuClick} style={{ width: '32px', height: '32px', marginTop: '-5px' }} />
+                </HeaderContentWrapper>
             </ProfileWrapper>
             <GridWrapper>
                 <TimerWrapper timerClick={() => handleNavigation('/timer')} />
@@ -322,6 +355,12 @@ export default function Home() {
             )}
             {showBadge && (
                 <BadgeModal badgeImg={badgeImg} badgeName={badgeName} badgeModalConfirm={badgeModalConfirm} />
+            )}
+            {menuOn && (
+                <MenuModal onClose={menuClick} />
+            )}
+            {bellOn && (
+                <BellModal onClose={bellClick} />
             )}
         </Wrapper>
     )

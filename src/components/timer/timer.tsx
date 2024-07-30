@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { MdTimer } from "react-icons/md";
+import { GrAlarm } from "react-icons/gr";
 
 const Wrapper = styled.div`
     border-radius:10px;
@@ -36,7 +36,7 @@ interface TimerProps {
 const TimerWrapper: React.FC<TimerProps> = ({ timerClick }) => {
     return (
         <Wrapper onClick={timerClick}>
-            <MdTimer style={{ position:"absolute" ,left:"-30px",top:"20px", width: "100px",opacity:"0.7" , height: "100px",color:"#1565C0" }} />
+            <GrAlarm style={{ position:"absolute" ,left:"-30px",top:"20px", width: "100px",opacity:"0.7" , height: "100px",color:"#1565C0" }} />
             <Timer>
                 <div style={{ fontSize: "20px",fontWeight:"600" ,textAlign:"center",marginTop:"20px" }}>운동 타이머</div>
                 <span>운동할때 타이머를 이용해 보세요</span>
