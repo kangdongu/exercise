@@ -27,7 +27,7 @@ const Header = styled.div`
     width:100%;
     height:100px;
     background-color:#E72929;
-    z-index:999;
+    z-index:99999;
 `;
 const Menu = styled.div`
 @media screen and (max-width: 700px) {

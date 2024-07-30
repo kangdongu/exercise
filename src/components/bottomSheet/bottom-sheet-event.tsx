@@ -2,37 +2,36 @@ import { useRef, useEffect } from 'react';
 import { MIN_Y, MAX_Y } from './bottom-sheet-option';
 
 interface BottomSheetMetrics {
-  touchStart: {  
-    sheetY: number;    
-    touchY: number;    
+  touchStart: {
+    sheetY: number;
+    touchY: number;
   };
-  touchMove: {         
-    prevTouchY?: number; 
-    movingDirection: "none" | "down" | "up"; 
+  touchMove: {
+    prevTouchY?: number;
+    movingDirection: "none" | "down" | "up";
   };
-  isContentAreaTouched: boolean; 
+  isContentAreaTouched: boolean;
 }
 
 export default function useBottomSheet() {
-
   const sheet = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
   const header = useRef<HTMLDivElement>(null);
 
-  const metrics = useRef<BottomSheetMetrics>({   
-    touchStart: {                                
-      sheetY: 0,                                 
-      touchY: 0,                                 
+  const metrics = useRef<BottomSheetMetrics>({
+    touchStart: {
+      sheetY: 0,
+      touchY: 0,
     },
-    touchMove: {                             
-      prevTouchY: 0,              
-      movingDirection: "none",                   
+    touchMove: {
+      prevTouchY: 0,
+      movingDirection: "none",
     },
-    isContentAreaTouched: false           
+    isContentAreaTouched: false
   });
 
   useEffect(() => {
-    const canUserMoveBottomSheet = () => {     
+    const canUserMoveBottomSheet = () => {
       const { touchMove, isContentAreaTouched } = metrics.current;
 
       if (!isContentAreaTouched) {
@@ -47,7 +46,7 @@ export default function useBottomSheet() {
         return content.current!.scrollTop <= 0;
       }
       return false;
-    }
+    };
 
     const handleTouchStart = (e: TouchEvent) => {
       const { touchStart } = metrics.current;
@@ -122,18 +121,17 @@ export default function useBottomSheet() {
         },
         isContentAreaTouched: false
       };
-    }
+    };
 
     header.current!.addEventListener('touchstart', handleTouchStart);
     header.current!.addEventListener('touchmove', handleTouchMove);
     header.current!.addEventListener('touchend', handleTouchEnd);
-
   }, []);
 
   useEffect(() => {
     const handleTouchStart = () => {
-      metrics.current!.isContentAreaTouched = true;
-    }
+      metrics.current.isContentAreaTouched = true;
+    };
     content.current!.addEventListener('touchstart', handleTouchStart);
   }, []);
 

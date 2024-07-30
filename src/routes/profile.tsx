@@ -8,7 +8,10 @@ import WeekDates from "../components/week-records";
 import { format } from "date-fns";
 import { FaArrowUp } from "react-icons/fa";
 import LoadingScreen from "../components/loading-screen";
-
+import { GoBell } from "react-icons/go";
+import { IoIosMenu } from "react-icons/io";
+import MenuModal from "../components/menu";
+import BellModal from "../components/bell";
 
 const Wrapper = styled.div`
   width:100vw;
@@ -21,14 +24,14 @@ const ContentWrapper = styled.div`
   margin: 0 auto;
 `;
 const Header = styled.div`
-  width:100vw;
-  background-color:white;
-  border-bottom: 0.3px solid #333333;
-  box-sizing:border-box;
-  display:flex;
-  justify-content: space-between;
-  padding: 5px 5px;
-  margin-bottom:20px;
+   display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 const UserImgUpload = styled.label`
 width: 80px;
@@ -52,18 +55,11 @@ display: none;
 const UserImg = styled.img`
 width: 100%;
 `;
-const UserInfo = styled.div`
-    display: flex;
-    flex-direction: column;
+const UserInfo = styled.span`
     font-size:20px;
     font-weight:600;
-    gap:10px;
     box-sizing:border-box;
-    padding-top:10px;
-    margin-left:30px;
     float:left;
-    height:80px;
-    line-height:80px;
 `;
 const AvatarWrapper = styled.div`
   width:100%;
@@ -82,14 +78,7 @@ const AvatarMent = styled.div`
   width:150px;
   position:relative;
 `;
-const SignOutBtn = styled.div`
-  height:25px;
-  padding:5px;
-  color:white;
-  background-color:red;
-`;
 const UserPofileWrapper = styled.div`
-  width:200px;
 `;
 const Title = styled.h4`
   margin:0;
@@ -127,7 +116,7 @@ const InformationWrapper = styled.div`
 `;
 const Information = styled.div`
   width:100vw;
-  padding: 5px 5px;
+  padding: 20px;
   height:100vh;
 `;
 const InformationPhoto = styled.div`
@@ -176,6 +165,15 @@ const Character = styled.div`
     object-fit: cover;
   }
 `;
+const BellAndMenu = styled.div`
+ margin-left:auto;
+    display:flex;
+    gap:10px;
+    svg{
+        width:25px;
+        height:25px;
+    }
+`;
 
 
 interface Badges {
@@ -194,6 +192,8 @@ export default function Profile() {
   const [information, setInformation] = useState(false)
   const [character, setCharacter] = useState("");
   const [loading, setLoading] = useState(true);
+  const [menuOn, setMenuOn] = useState(false);
+  const [bellOn, setBellOn] = useState(false);
 
   const onUserImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
@@ -302,13 +302,7 @@ export default function Profile() {
     fetchGender();
   }, []);
 
-  const signOut = async () => {
-    try {
-      await auth.signOut();
-    } catch (error) {
-      console.error("로그아웃 에러:", error);
-    }
-  };
+ 
 
   useEffect(() => {
     const fetchBadges = async () => {
@@ -344,6 +338,21 @@ export default function Profile() {
     );
   }
 
+  const menuClick = () => {
+    if (menuOn) {
+      setMenuOn(false)
+    } else {
+      setMenuOn(true)
+    }
+  }
+  const bellClick = () => {
+    if (bellOn) {
+      setBellOn(false)
+    } else {
+      setBellOn(true)
+    }
+  }
+
   return (
     <Wrapper>
       <Header>
@@ -355,11 +364,14 @@ export default function Profile() {
             }
           </UserImgUpload>
           <UserImgInput onChange={onUserImg} id="user-img" type="file" accept="image/" />
-          <UserInfo>
-            {nickname ? <span>{nickname}</span> : <span>{user?.displayName}</span>}
-          </UserInfo>
         </UserPofileWrapper>
-        <SignOutBtn onClick={signOut}>로그아웃</SignOutBtn>
+        <UserInfo>
+          {nickname ? <span>{nickname}</span> : <span>{user?.displayName}</span>}
+        </UserInfo>
+        <BellAndMenu>
+          <GoBell onClick={bellClick} />
+          <IoIosMenu onClick={menuClick} style={{ width: '32px', height: '32px', marginTop: '-5px' }} />
+        </BellAndMenu>
       </Header>
       <ContentWrapper>
         <Title>캐릭터 및 보유뱃지</Title>
@@ -370,7 +382,7 @@ export default function Profile() {
             </Character>
             <AvatarMent>
               <img style={{ width: '100%', position: "absolute", top: '0', left: '0' }} src="./talk2.png" />
-              <div style={{ width: '100%', height: '55px', textAlign: 'center', fontSize: '15px', padding: "7px 5px", paddingLeft:'15px', position: "absolute", zIndex: '99' }}>
+              <div style={{ width: '100%', height: '55px', textAlign: 'center', fontSize: '15px', padding: "7px 5px", paddingLeft: '15px', position: "absolute", zIndex: '99' }}>
                 {ment}
               </div>
             </AvatarMent>
@@ -398,6 +410,16 @@ export default function Profile() {
           </Information>
         </InformationWrapper>
       ) : null}
+      {
+        menuOn && (
+          <MenuModal onClose={menuClick} />
+        )
+      }
+      {
+        bellOn && (
+          <BellModal onClose={bellClick} />
+        )
+      }
     </Wrapper>
   )
 }

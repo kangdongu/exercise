@@ -21,21 +21,11 @@ const Wrapper = styled.div`
     height:80vh;
     margin: 0 auto;
     overflow:hidden;
+    position:relative;
+    z-index:999;
     @media screen and (max-width: 700px) {
         width: 95%;
         margin: 0 auto;
-    }
-`;
-const Button = styled.div`
-    width:30px;
-    height:30px;
-    border-radius:50%;
-    font-size:40px;
-    text-align:center;
-    line-height:20px;
-    color:red;
-    @media screen and (max-width: 700px) {
-        font-size:30px;
     }
 `;
 const Btn = styled.div`
@@ -43,6 +33,12 @@ const Btn = styled.div`
     font-size:18px;
     cursor:pointer;
     float:right;
+    gap:5px;
+    span{
+        font-size:25px;
+        color:red;
+        font-weight:700;
+    }
     &:hover{
         color:red;
     }
@@ -50,6 +46,7 @@ const Btn = styled.div`
 const BtnWrapper = styled.div`
     width:100%;
     height:40px;
+    line-height:40px;
     font-size:24px;
     border-bottom: 1px solid gray;
     margin-bottom:10px;
@@ -451,7 +448,7 @@ const Calendar:React.FC<calenderProps> = ({headerOff}) => {
     return (
         <Wrapper>
             <BtnWrapper>
-                <Btn onClick={onClick}>운동기록하기<Button>+</Button></Btn>
+                <Btn onClick={onClick}><span>+</span>운동기록하기</Btn>
             </BtnWrapper>
             <FullCalendar
                 plugins={[dayGridPlugin]}
@@ -464,7 +461,7 @@ const Calendar:React.FC<calenderProps> = ({headerOff}) => {
                         end: 'prev,today,next'
                     }
                 }
-                height={`70vh`}
+                height={`65vh`}
                 locale={ko}
                 dayCellContent={renderDayCellContent}
                 eventClick={handleEventClick}

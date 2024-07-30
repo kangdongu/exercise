@@ -69,7 +69,7 @@ export default function Home() {
     const navigate = useNavigate();
     const [userProfilePicUrl, setUserProfileUrl] = useState("");
     const [nickname, setNickname] = useState("");
-    const [isLoading, setLoading] = useState(false);
+    const [isLoading, setLoading] = useState(true);
     const [showAchievements, setShowAchievements] = useState(false);
     const [achievementName, setAchievementName] = useState("");
     const [badgeImg, setBadgeImg] = useState("");
@@ -161,7 +161,7 @@ export default function Home() {
             } catch (error) {
                 console.error("유저 프로필을 찾지 못했습니다:", error);
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
         };
         fetchUserProfilePic();

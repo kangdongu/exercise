@@ -12,12 +12,16 @@ import { FaRegComment } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
+import MenuModal from "../components/menu";
+import BellModal from "../components/bell";
+import { GoBell } from "react-icons/go";
+import { IoIosMenu } from "react-icons/io";
 
 const Wrapper = styled.div`
 @media screen and (max-width: 700px) {
   width:100%;
   padding-top:0;
-  height:calc(100vh - 40px);
+  height:calc(100vh - 80px);
   overflow-y:scroll;
  }
   margin: 0 auto;
@@ -137,12 +141,38 @@ const UserProfilePhoto = styled.div`
 const UserNickname = styled.div`
 
 `;
+const Header = styled.div`
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+`;
+const HeaderContentWrapper = styled.div`
+    margin-left: auto;
+    display: flex;
+    gap: 15px;
+    svg {
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+`;
 
 interface Photo {
   id: string;
   사진: string;
-  프로필사진:string;
-  닉네임:string;
+  프로필사진: string;
+  닉네임: string;
   정렬날짜: string;
 }
 
@@ -158,6 +188,8 @@ export default function PublicPhotosPage() {
   const [userNickname, setNickname] = useState("");
   const [currentUserUID, setCurrentUserUID] = useState("");
   const [userProfilePicURL, setUserProfilePicURL] = useState<string | null>(null);
+  const [menuOn, setMenuOn] = useState(false);
+  const [bellOn, setBellOn] = useState(false);
   const user = auth.currentUser;
 
 
@@ -165,17 +197,17 @@ export default function PublicPhotosPage() {
   useEffect(() => {
     const fetchPublicPhotos = async () => {
       try {
-        const q = query(collection(db, "photo"), where("옵션", "==", "전체공개"), orderBy("정렬날짜","desc"));
+        const q = query(collection(db, "photo"), where("옵션", "==", "전체공개"), orderBy("정렬날짜", "desc"));
         const querySnapshot = await getDocs(q);
         const photos: Photo[] = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           사진: doc.data().사진,
           정렬날짜: doc.data().정렬날짜,
-          프로필사진:doc.data().프로필사진,
-          닉네임:doc.data().닉네임,
+          프로필사진: doc.data().프로필사진,
+          닉네임: doc.data().닉네임,
         }));
 
-       
+
 
         setPublicPhotos(photos);
       } catch (error) {
@@ -401,20 +433,41 @@ export default function PublicPhotosPage() {
     fetchUserProfilePic();
   }, [user]);
 
+  const menuClick = () => {
+    if (menuOn) {
+      setMenuOn(false)
+    } else {
+      setMenuOn(true)
+    }
+  }
+  const bellClick = () => {
+    if (bellOn) {
+      setBellOn(false)
+    } else {
+      setBellOn(true)
+    }
+  }
+
   return (
     <Wrapper>
+      <Header>
+        <HeaderContentWrapper>
+          <GoBell onClick={bellClick} />
+          <IoIosMenu onClick={menuClick} style={{ width: '32px', height: '32px', marginTop: '-5px' }} />
+        </HeaderContentWrapper>
+      </Header>
       <TextTitle>
-        <h4 style={{textAlign:"center", fontSize:"25px", color:"#939393"}}>사람들과 기록 공유하기</h4>
+        <h4 style={{ textAlign: "center", fontSize: "25px", color: "#939393" }}>사람들과 기록 공유하기</h4>
       </TextTitle>
       <PhotoWrapper>
-      {publicPhotos.map((photo) => (
-        <PhotoUpload
-          onClick={() => handlePhotoClick(photo.id)}
-          key={photo.id}
-          src={photo.사진}
-          alt="Public Photo"
-        />
-      ))}
+        {publicPhotos.map((photo) => (
+          <PhotoUpload
+            onClick={() => handlePhotoClick(photo.id)}
+            key={photo.id}
+            src={photo.사진}
+            alt="Public Photo"
+          />
+        ))}
       </PhotoWrapper>
       {viewDetails && window.innerWidth <= 700 ? (
         <ModalBackdrop>
@@ -424,30 +477,30 @@ export default function PublicPhotosPage() {
                 <UserDataWrapper>
                   <UserProfilePhoto>
                     {selectedPhotoDetails.프로필사진 !== "" ? (
-                       <img style={{width:"50px",height:'50px' , borderRadius:'50%'}} src={selectedPhotoDetails.프로필사진} />
-                    ):(
-                      <FaUserAlt style={{width:"35px", color:'gray', height:"35px", marginLeft:'7.5px',marginTop:'15px'}} />
+                      <img style={{ width: "50px", height: '50px', borderRadius: '50%' }} src={selectedPhotoDetails.프로필사진} />
+                    ) : (
+                      <FaUserAlt style={{ width: "35px", color: 'gray', height: "35px", marginLeft: '7.5px', marginTop: '15px' }} />
                     )}
-                   
+
                   </UserProfilePhoto>
                   <UserNickname>{selectedPhotoDetails.닉네임}</UserNickname>
                 </UserDataWrapper>
                 <ViewImg src={selectedPhotoDetails.사진} alt="Selected Photo" />
-                <div style={{paddingLeft:"5px"}}>
-                <p>{selectedPhotoDetails.날짜}</p>
-                <p>{selectedPhotoDetails.메모}</p>
-                <InteractionWrapper>
-                  <LikeBtn onClick={handleLikeClick}>
-                    {likedByUser ? (
-                      <FaHeart style={{ width: "25px", height: "25px", color: "red" }} />)
-                      : <FaRegHeart style={{ width: "25px", height: "25px" }} />}
-                    <LikeCount>{likeCount}</LikeCount>
-                  </LikeBtn>
-                  <OpenCommentWrapper>
-                    <FaRegComment onClick={() => { setCommentModal(true) }} style={{ width: "25px", height: "25px" }} />
-                    <span style={{ marginLeft: "10px" }}>{comments.length}</span>
-                  </OpenCommentWrapper>
-                </InteractionWrapper>
+                <div style={{ paddingLeft: "5px" }}>
+                  <p>{selectedPhotoDetails.날짜}</p>
+                  <p>{selectedPhotoDetails.메모}</p>
+                  <InteractionWrapper>
+                    <LikeBtn onClick={handleLikeClick}>
+                      {likedByUser ? (
+                        <FaHeart style={{ width: "25px", height: "25px", color: "red" }} />)
+                        : <FaRegHeart style={{ width: "25px", height: "25px" }} />}
+                      <LikeCount>{likeCount}</LikeCount>
+                    </LikeBtn>
+                    <OpenCommentWrapper>
+                      <FaRegComment onClick={() => { setCommentModal(true) }} style={{ width: "25px", height: "25px" }} />
+                      <span style={{ marginLeft: "10px" }}>{comments.length}</span>
+                    </OpenCommentWrapper>
+                  </InteractionWrapper>
                 </div>
               </ViewWrapper>
             </MoSlideLeft>
@@ -513,6 +566,12 @@ export default function PublicPhotosPage() {
           </ViewContent>
         </ModalBackdrop>
       ) : null}
+      {menuOn && (
+        <MenuModal onClose={menuClick} />
+      )}
+      {bellOn && (
+        <BellModal onClose={bellClick} />
+      )}
     </Wrapper>
   );
 }

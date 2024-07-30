@@ -36,9 +36,11 @@ const Wrapper = styled.div`
     overflow-y:scroll;
 `;
 const Menu = styled.div`
- display: flex;
+    display: flex;
     justify-content: center;
     margin-bottom: 20px;
+    position:relative;
+    z-index:10;
     @media screen and (max-width: 700px) {
         width: 100%;
     }

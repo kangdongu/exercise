@@ -38,17 +38,17 @@ const RecordsWrapper = styled.div`
   left:0;
   transform:translate(0px,0px);
 }
-width: 50%;
-height: 70vh;
-overflow-y:scroll;
-z-index: 99;
-position: fixed;
-background-color: white;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-padding:2%;
-box-sizing:border-box;
+  width: 50%;
+  overflow-y:scroll;
+  z-index: 99;
+  position: fixed;
+  background-color: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding:10px 10px;
+  box-sizing:border-box;
+  padding-bottom:70px;
 `;
 const Label = styled.label`
    display: block;

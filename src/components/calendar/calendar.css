@@ -21,6 +21,7 @@
 .fc-toolbar-title {
     @media screen and (max-width: 700px) {
         font-size: 1.50em;
+        margin-bottom:20px;
     }
 }
 
@@ -29,7 +30,9 @@
         font-size: 13px;
     }
 }
-
+.fc-header-toolbar{
+    height:30px;
+}
 .fc-daygrid-day {
     @media screen and (max-width: 700px) {
         height: 50px;
@@ -57,13 +60,14 @@
 }
 
 .fc-daygrid-day-frame {
-    padding: 5px; 
+    padding: 1px 5px;
 }
 
 .fc-toolbar-chunk .fc-button {
     color: white;
     border: none; 
     border-radius: 5px; 
+    height:30px;
     padding: 5px 10px; 
     font-size: 14px;
 }
@@ -71,4 +75,13 @@
 .fc-toolbar-title {
     text-align: center;
     width: 100%;
+}
+.fc .fc-toolbar-title{
+    font-size:25px;
+}
+.fc .fc-toolbar.fc-header-toolbar{
+    margin-bottom:20px;
+}
+.fc-daygrid-block-event .fc-event-time, .fc-daygrid-block-event .fc-event-title{
+    padding:0.5px;
 }

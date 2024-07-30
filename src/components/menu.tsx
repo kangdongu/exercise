@@ -1,6 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import { FiX } from "react-icons/fi";
 import { useState } from "react";
+import { auth } from "../firebase";
 
 const slideIn = keyframes`
   from {
@@ -27,7 +28,7 @@ const Wrapper = styled.div<{isClosing: boolean}>`
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 9900;
     animation: ${({ isClosing }) => isClosing ? slideOut : slideIn} 0.3s ease-out;
     display: flex;
     flex-direction: column;
@@ -43,6 +44,12 @@ const Header = styled.div`
         height:30px;
     }
 `;
+const ContentWrapper = styled.div`
+
+`;
+const LogOut = styled.div`
+
+`;
 
 interface menuProps {
     onClose: () => void
@@ -56,12 +63,23 @@ const MenuModal: React.FC<menuProps> = ({ onClose }) => {
             onClose();
         }, 300);
     };
+    
+    const signOut = async () => {
+      try {
+        await auth.signOut();
+      } catch (error) {
+        console.error("로그아웃 에러:", error);
+      }
+    };
 
     return (
         <Wrapper isClosing={isClosing}>
             <Header>
                 <FiX onClick={handleClose} />
             </Header>
+            <ContentWrapper>
+              <LogOut onClick={signOut}>로그아웃</LogOut>
+            </ContentWrapper>
         </Wrapper>
     );
 }
