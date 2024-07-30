@@ -4267,13 +4267,11 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 `,vbe=b.forwardRef((t,e)=>f.jsx(mbe,{ref:e,...t,children:f.jsx(ybe,{})}));function xbe(){const t=b.useRef(null),e=b.useRef(null),n=b.useRef(null),r=b.useRef({touchStart:{sheetY:0,touchY:0},touchMove:{prevTouchY:0,movingDirection:"none"},isContentAreaTouched:!1});return b.useEffect(()=>{const i=()=>{const{touchMove:l,isContentAreaTouched:c}=r.current;return!c||t.current.getBoundingClientRect().y!==ol?!0:l.movingDirection==="down"?e.current.scrollTop<=0:!1},s=l=>{const{touchStart:c}=r.current;c.sheetY=t.current.getBoundingClientRect().y,c.touchY=l.touches[0].clientY},o=l=>{const{touchStart:c,touchMove:u}=r.current,d=l.touches[0];if(u.prevTouchY===void 0&&(u.prevTouchY=c.touchY),u.prevTouchY===0&&(u.prevTouchY=c.touchY),u.prevTouchY<d.clientY&&(u.movingDirection="down"),u.prevTouchY>d.clientY&&(u.movingDirection="up"),i()){l.preventDefault();const h=d.clientY-c.touchY;let p=c.sheetY+h;p<=ol&&(p=ol),p>=cm&&(p=cm),t.current.style.setProperty("transform",`translateY(${p-cm}px)`)}else document.body.style.overflowY="hidden"},a=()=>{document.body.style.overflowY="auto";const{touchMove:l}=r.current;t.current.getBoundingClientRect().y!==ol&&(l.movingDirection==="down"&&t.current.style.setProperty("transform","translateY(0)"),l.movingDirection==="up"&&t.current.style.setProperty("transform",`translateY(${ol-cm}px)`)),r.current={touchStart:{sheetY:0,touchY:0},touchMove:{prevTouchY:0,movingDirection:"none"},isContentAreaTouched:!1}};n.current.addEventListener("touchstart",s),n.current.addEventListener("touchmove",o),n.current.addEventListener("touchend",a)},[]),b.useEffect(()=>{const i=()=>{r.current.isContentAreaTouched=!0};e.current.addEventListener("touchstart",i)},[]),{sheet:t,content:e,header:n}}const wbe=_(pbe.div)`
   display: flex;
   flex-direction: column;
-  
   position: fixed;
-  z-index: 99;
+  z-index: 999;
   top: calc(100% - 90px);
   left: 0;
   right: 0;
-
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
@@ -4864,7 +4862,7 @@ color:white;
     height:calc(100vh - 40px);
     overflow-y:scroll;
 `,P_e=_.div`
- display: flex;
+    display: flex;
     justify-content: center;
     margin-bottom: 20px;
     @media screen and (max-width: 700px) {
