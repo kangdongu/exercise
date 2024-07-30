@@ -4632,6 +4632,8 @@ z-index:98;
     height:80vh;
     margin: 0 auto;
     overflow:hidden;
+    position:relative;
+    z-index:999;
     @media screen and (max-width: 700px) {
         width: 95%;
         margin: 0 auto;
