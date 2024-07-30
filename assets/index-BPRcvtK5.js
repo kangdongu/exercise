@@ -4863,6 +4863,8 @@ color:white;
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+    position:relative;
+    z-index:10;
     @media screen and (max-width: 700px) {
         width: 100%;
     }
