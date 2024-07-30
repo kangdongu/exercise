@@ -157,6 +157,7 @@ const HeaderContentWrapper = styled.div`
     margin-left: auto;
     display: flex;
     gap: 15px;
+    position:relative;
     svg {
         width: 25px;
         height: 25px;
@@ -190,6 +191,7 @@ export default function PublicPhotosPage() {
   const [userProfilePicURL, setUserProfilePicURL] = useState<string | null>(null);
   const [menuOn, setMenuOn] = useState(false);
   const [bellOn, setBellOn] = useState(false);
+  const [bellAlerm, setBellAlerm] = useState(false);
   const user = auth.currentUser;
 
 
@@ -447,11 +449,17 @@ export default function PublicPhotosPage() {
       setBellOn(true)
     }
   }
+  useEffect(() => {
+    setBellAlerm(true)
+  },[])
 
   return (
     <Wrapper>
       <Header>
         <HeaderContentWrapper>
+          {bellAlerm && (
+            <div style={{ position: 'absolute', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'red', left: '20px' }} />
+          )}
           <GoBell onClick={bellClick} />
           <IoIosMenu onClick={menuClick} style={{ width: '32px', height: '32px', marginTop: '-5px' }} />
         </HeaderContentWrapper>

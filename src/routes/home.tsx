@@ -59,6 +59,7 @@ const HeaderContentWrapper = styled.div`
     margin-left:auto;
     display:flex;
     gap:10px;
+    position:relative;
     svg{
         width:25px;
         height:25px;
@@ -77,6 +78,7 @@ export default function Home() {
     const [showBadge, setShowBadge] = useState(false);
     const [menuOn, setMenuOn] = useState(false);
     const [bellOn, setBellOn] = useState(false);
+    const [bellAlerm, setBellAlerm] = useState(false);
     const currentUser = auth.currentUser;
 
     const handleNavigation = (path: string) => {
@@ -323,6 +325,9 @@ export default function Home() {
             setBellOn(true)
         }
     }
+    useEffect(() => {
+        setBellAlerm(true)
+      },[])
 
     return (
         <Wrapper>
@@ -338,6 +343,9 @@ export default function Home() {
                 )}
                 <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{nickname}</span>
                 <HeaderContentWrapper>
+                    {bellAlerm && (
+                        <div style={{position:'absolute',width:'6px',height:'6px', borderRadius:'50%', backgroundColor:'red',left:'20px'}} />
+                    )}
                     <GoBell onClick={bellClick} />
                     <IoIosMenu onClick={menuClick} style={{ width: '32px', height: '32px', marginTop: '-5px' }} />
                 </HeaderContentWrapper>

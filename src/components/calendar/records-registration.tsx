@@ -28,7 +28,7 @@ const Wrapper = styled.div`
   position:fixed;
   top:0px;
   left:0;
-  z-index:98;
+  z-index:102;
 `;
 const RecordsWrapper = styled.div`
 @media screen and (max-width: 700px) {
@@ -40,7 +40,7 @@ const RecordsWrapper = styled.div`
 }
   width: 50%;
   overflow-y:scroll;
-  z-index: 99;
+  z-index: 105;
   position: fixed;
   background-color: white;
   top: 50%;
@@ -141,9 +141,11 @@ const ExerciseDataBtn = styled.div`
   }
 `;
 const ExerciseChoiceModal = styled.div`
- padding: 20px;
+  padding: 20px;
   background-color: #f9f9f9;
   height: 100vh;
+  position:relative;
+  z-index:103;
   overflow-y: scroll;
 `;
 const TypeWrapper = styled.ul`

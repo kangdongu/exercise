@@ -169,6 +169,7 @@ const BellAndMenu = styled.div`
  margin-left:auto;
     display:flex;
     gap:10px;
+    position:relative;
     svg{
         width:25px;
         height:25px;
@@ -194,6 +195,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [menuOn, setMenuOn] = useState(false);
   const [bellOn, setBellOn] = useState(false);
+  const [bellAlerm, setBellAlerm] = useState(false);
 
   const onUserImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
@@ -302,7 +304,9 @@ export default function Profile() {
     fetchGender();
   }, []);
 
- 
+useEffect(() => {
+  setBellAlerm(true)
+},[])
 
   useEffect(() => {
     const fetchBadges = async () => {
@@ -369,6 +373,9 @@ export default function Profile() {
           {nickname ? <span>{nickname}</span> : <span>{user?.displayName}</span>}
         </UserInfo>
         <BellAndMenu>
+          {bellAlerm && (
+            <div style={{ position: 'absolute', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'red', left: '20px' }} />
+          )}
           <GoBell onClick={bellClick} />
           <IoIosMenu onClick={menuClick} style={{ width: '32px', height: '32px', marginTop: '-5px' }} />
         </BellAndMenu>

@@ -22,7 +22,7 @@ const Wrapper = styled.div`
     margin: 0 auto;
     overflow:hidden;
     position:relative;
-    z-index:999;
+    z-index:101;
     @media screen and (max-width: 700px) {
         width: 95%;
         margin: 0 auto;

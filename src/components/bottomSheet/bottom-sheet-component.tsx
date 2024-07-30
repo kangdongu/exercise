@@ -9,7 +9,7 @@ const Wrapper = styled(motion.div)`
   display: flex;
   flex-direction: column;
   position: fixed;
-  z-index: 9999;
+  z-index: 101;
   top: calc(100% - 90px);
   left: 0;
   right: 0;
@@ -28,7 +28,7 @@ const BottomSheetContentWrapper = styled.div`
   overflow: auto;                            
   -webkit-overflow-scrolling: touch;
   position:relative;
-  z-index:999;
+  z-index:101;
 `;
 
 interface BottomSheetProps {

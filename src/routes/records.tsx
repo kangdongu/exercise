@@ -1,7 +1,7 @@
 import styled, { css, keyframes } from "styled-components";
 import Calendar from "../components/calendar/calendar";
 import PhotoRecords from "../components/sns_photo/photo-records";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Inbody from "../components/inbody";
 import { GoBell } from "react-icons/go";
 import { IoIosMenu } from "react-icons/io";
@@ -72,6 +72,7 @@ const HeaderContentWrapper = styled.div`
     margin-left: auto;
     display: flex;
     gap: 15px;
+    position:relative;
     svg {
         width: 25px;
         height: 25px;
@@ -88,6 +89,7 @@ export default function Records() {
     const [header, setHeader] = useState(true);
     const [menuOn, setMenuOn] = useState(false);
     const [bellOn, setBellOn] = useState(false);
+    const [bellAlerm, setBellAlerm] = useState(false);
 
     const menuClick = () => {
         if (menuOn) {
@@ -112,12 +114,18 @@ export default function Records() {
             setHeader(true)
         }
     };
+    useEffect(() => {
+        setBellAlerm(true)
+      },[])
 
     return (
         <Wrapper>
             {header && (
                 <Header isVisible={header}>
                     <HeaderContentWrapper>
+                        {bellAlerm && (
+                            <div style={{ position: 'absolute', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'red', left: '20px' }} />
+                        )}
                         <GoBell onClick={bellClick} />
                         <IoIosMenu onClick={menuClick} style={{ width: '32px', height: '32px', marginTop: '-5px' }} />
                     </HeaderContentWrapper>
