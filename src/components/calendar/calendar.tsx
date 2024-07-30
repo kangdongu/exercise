@@ -22,7 +22,7 @@ const Wrapper = styled.div`
     margin: 0 auto;
     overflow:hidden;
     @media screen and (max-width: 700px) {
-        width: 100%;
+        width: 95%;
         margin: 0 auto;
     }
 `;
@@ -62,7 +62,10 @@ interface ExerciseData {
     날짜: string;
 }
 
-export default function Calendar() {
+interface calenderProps {
+    headerOff:() => void;
+}
+const Calendar:React.FC<calenderProps> = ({headerOff}) => {
     const [calendarClick, setCalendarClick] = useState(false);
     const [clickDate, setClickDate] = useState<string>("");
     const [modal, setModal] = useState(false)
@@ -78,7 +81,9 @@ export default function Calendar() {
     const [showCongratulations, setShowCongratulations] = useState(false)
     const user = auth.currentUser;
 
-    const onClick = () => setModal(true);
+    const onClick = () => {
+        setModal(true);
+    };
     const closeModal = () => setModal(false);
 
     useEffect(() => {
@@ -442,6 +447,7 @@ export default function Calendar() {
 
 
 
+
     return (
         <Wrapper>
             <BtnWrapper>
@@ -463,7 +469,7 @@ export default function Calendar() {
                 dayCellContent={renderDayCellContent}
                 eventClick={handleEventClick}
             />
-            {modal ? <ExerciseRegistration closeModal={closeModal} congratulations={congratulations} /> : null}
+            {modal ? <ExerciseRegistration headerOff={() => headerOff()} closeModal={closeModal} congratulations={congratulations} /> : null}
             {calendarClick && window.innerWidth <= 700 ? (
                 <MoCalendarWrapper onClose={() => setCalendarClick(false)}>
                     <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} />;
@@ -489,3 +495,4 @@ export default function Calendar() {
         </Wrapper>
     )
 }
+export default Calendar;
