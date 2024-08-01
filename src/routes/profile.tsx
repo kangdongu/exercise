@@ -197,6 +197,10 @@ export default function Profile() {
   const [bellOn, setBellOn] = useState(false);
   const [bellAlerm, setBellAlerm] = useState(false);
 
+  useEffect(() => {
+    setBellAlerm(true)
+  },[])
+
   const onUserImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (!user) return;
@@ -304,9 +308,7 @@ export default function Profile() {
     fetchGender();
   }, []);
 
-useEffect(() => {
-  setBellAlerm(true)
-},[])
+
 
   useEffect(() => {
     const fetchBadges = async () => {

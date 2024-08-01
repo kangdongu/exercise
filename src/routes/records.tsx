@@ -34,13 +34,14 @@ const Wrapper = styled.div`
     width:100vw;
     height:calc(100vh - 40px);
     overflow-y:scroll;
+     position: relative;
 `;
 const Menu = styled.div`
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
     position:relative;
-    z-index:10;
+    z-index: 0;
     @media screen and (max-width: 700px) {
         width: 100%;
     }
@@ -91,6 +92,10 @@ export default function Records() {
     const [bellOn, setBellOn] = useState(false);
     const [bellAlerm, setBellAlerm] = useState(false);
 
+    useEffect(() => {
+        setBellAlerm(true)
+    }, [])
+
     const menuClick = () => {
         if (menuOn) {
             setMenuOn(false)
@@ -114,9 +119,7 @@ export default function Records() {
             setHeader(true)
         }
     };
-    useEffect(() => {
-        setBellAlerm(true)
-      },[])
+
 
     return (
         <Wrapper>
@@ -136,9 +139,11 @@ export default function Records() {
                 <MenuItem selected={selectedMenu === 'photo'} onClick={() => setSelectedMenu('photo')}>사진</MenuItem>
                 <MenuItem selected={selectedMenu === 'inbody'} onClick={() => setSelectedMenu('inbody')}>인바디</MenuItem>
             </Menu>
-            {selectedMenu === 'calendar' && <Calendar headerOff={handleHeaderOff} />}
-            {selectedMenu === 'photo' && <PhotoRecords />}
-            {selectedMenu === 'inbody' && <Inbody />}
+            <div style={{ position: 'relative', zIndex: '1' }}>
+                {selectedMenu === 'calendar' && <Calendar headerOff={handleHeaderOff} />}
+                {selectedMenu === 'photo' && <PhotoRecords />}
+                {selectedMenu === 'inbody' && <Inbody />}
+            </div>
             {menuOn && (
                 <MenuModal onClose={menuClick} />
             )}

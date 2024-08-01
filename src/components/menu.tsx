@@ -33,7 +33,7 @@ const Wrapper = styled.div<{isClosing: boolean}>`
   display: flex;
   flex-direction: column;
   padding: 10px 10px;
-  overflow-y:scroll;
+  overflow-y: scroll;
 `;
 
 const Header = styled.div`
@@ -54,6 +54,17 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+`;
+
+const MenuGroup = styled.div`
+  margin-bottom: 20px;
+`;
+
+const GroupTitle = styled.h4`
+  margin: 10px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #555;
 `;
 
 const MenuItem = styled.div`
@@ -105,26 +116,50 @@ const MenuModal: React.FC<menuProps> = ({ onClose }) => {
         <FiX onClick={handleClose} />
       </Header>
       <ContentWrapper>
-        <MenuItem>프로필 보기</MenuItem>
-        <MenuItem>프로필 수정</MenuItem>
-        <MenuItem>오늘의 운동</MenuItem>
-        <MenuItem>주간 운동 기록</MenuItem>
-        <MenuItem>월간 운동 기록</MenuItem>
-        <MenuItem>개인 도전 과제</MenuItem>
-        <MenuItem>그룹 도전 과제</MenuItem>
-        <MenuItem>도전 과제 달성 내역</MenuItem>
-        <MenuItem>장기 목표 설정</MenuItem>
-        <MenuItem>단기 목표 설정</MenuItem>
-        <MenuItem>알림 설정</MenuItem>
-        <MenuItem>알림 내역</MenuItem>
-        <MenuItem>보유 배지</MenuItem>
-        <MenuItem>업적 내역</MenuItem>
-        <MenuItem>앱 설정</MenuItem>
-        <MenuItem>언어 설정</MenuItem>
-        <MenuItem>테마 설정</MenuItem>
-        <MenuItem>고객 지원</MenuItem>
-        <MenuItem>피드백 보내기</MenuItem>
-        <MenuItem>앱 정보</MenuItem>
+        <MenuGroup>
+          <GroupTitle>프로필</GroupTitle>
+          <MenuItem>프로필 보기</MenuItem>
+          <MenuItem>프로필 수정</MenuItem>
+        </MenuGroup>
+        
+        <MenuGroup>
+          <GroupTitle>운동 기록</GroupTitle>
+          <MenuItem>오늘의 운동</MenuItem>
+          <MenuItem>주간 운동 기록</MenuItem>
+          <MenuItem>월간 운동 기록</MenuItem>
+        </MenuGroup>
+
+        <MenuGroup>
+          <GroupTitle>도전 과제</GroupTitle>
+          <MenuItem>개인 도전 과제</MenuItem>
+          <MenuItem>그룹 도전 과제</MenuItem>
+          <MenuItem>도전 과제 달성 내역</MenuItem>
+        </MenuGroup>
+        
+        <MenuGroup>
+          <GroupTitle>목표 설정</GroupTitle>
+          <MenuItem>장기 목표 설정</MenuItem>
+          <MenuItem>단기 목표 설정</MenuItem>
+        </MenuGroup>
+
+        <MenuGroup>
+          <GroupTitle>알림</GroupTitle>
+          <MenuItem>알림 설정</MenuItem>
+          <MenuItem>알림 내역</MenuItem>
+        </MenuGroup>
+
+        <MenuGroup>
+          <GroupTitle>기타</GroupTitle>
+          <MenuItem>보유 배지</MenuItem>
+          <MenuItem>업적 내역</MenuItem>
+          <MenuItem>앱 설정</MenuItem>
+          <MenuItem>언어 설정</MenuItem>
+          <MenuItem>테마 설정</MenuItem>
+          <MenuItem>고객 지원</MenuItem>
+          <MenuItem>피드백 보내기</MenuItem>
+          <MenuItem>앱 정보</MenuItem>
+        </MenuGroup>
+
         <LogOut onClick={signOut}>로그아웃</LogOut>
       </ContentWrapper>
     </Wrapper>

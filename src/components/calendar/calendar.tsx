@@ -22,10 +22,11 @@ const Wrapper = styled.div`
     margin: 0 auto;
     overflow:hidden;
     position:relative;
-    z-index:101;
+    z-index: 5;
     @media screen and (max-width: 700px) {
         width: 95%;
         margin: 0 auto;
+        z-index: 5;
     }
 `;
 const Btn = styled.div`
@@ -60,9 +61,9 @@ interface ExerciseData {
 }
 
 interface calenderProps {
-    headerOff:() => void;
+    headerOff: () => void;
 }
-const Calendar:React.FC<calenderProps> = ({headerOff}) => {
+const Calendar: React.FC<calenderProps> = ({ headerOff }) => {
     const [calendarClick, setCalendarClick] = useState(false);
     const [clickDate, setClickDate] = useState<string>("");
     const [modal, setModal] = useState(false)
@@ -466,7 +467,9 @@ const Calendar:React.FC<calenderProps> = ({headerOff}) => {
                 dayCellContent={renderDayCellContent}
                 eventClick={handleEventClick}
             />
-            {modal ? <ExerciseRegistration headerOff={() => headerOff()} closeModal={closeModal} congratulations={congratulations} /> : null}
+            <div style={{ position: 'relative', zIndex: '99' }}>
+                {modal ? <ExerciseRegistration headerOff={() => headerOff()} closeModal={closeModal} congratulations={congratulations} /> : null}
+            </div>
             {calendarClick && window.innerWidth <= 700 ? (
                 <MoCalendarWrapper onClose={() => setCalendarClick(false)}>
                     <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} />;

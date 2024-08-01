@@ -37,6 +37,7 @@ const RecordsWrapper = styled.div`
   top:0;
   left:0;
   transform:translate(0px,0px);
+  z-index:105;
 }
   width: 50%;
   overflow-y:scroll;

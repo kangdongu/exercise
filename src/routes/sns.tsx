@@ -194,7 +194,9 @@ export default function PublicPhotosPage() {
   const [bellAlerm, setBellAlerm] = useState(false);
   const user = auth.currentUser;
 
-
+  useEffect(() => {
+    setBellAlerm(true)
+  },[])
 
   useEffect(() => {
     const fetchPublicPhotos = async () => {
@@ -449,9 +451,7 @@ export default function PublicPhotosPage() {
       setBellOn(true)
     }
   }
-  useEffect(() => {
-    setBellAlerm(true)
-  },[])
+ 
 
   return (
     <Wrapper>

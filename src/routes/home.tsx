@@ -84,6 +84,9 @@ export default function Home() {
     const handleNavigation = (path: string) => {
         navigate(path);
     };
+    useEffect(() => {
+        setBellAlerm(true)
+      },[])
 
     useEffect(() => {
         const todayExerciseReset = async () => {
@@ -325,9 +328,7 @@ export default function Home() {
             setBellOn(true)
         }
     }
-    useEffect(() => {
-        setBellAlerm(true)
-      },[])
+  
 
     return (
         <Wrapper>
