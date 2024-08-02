@@ -1,7 +1,8 @@
 import styled, { keyframes } from "styled-components";
 import { FiX } from "react-icons/fi";
 import { useState } from "react";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
+import ProfileEdit from "./profile-edit";
 
 const slideIn = keyframes`
   from {
@@ -93,6 +94,7 @@ interface menuProps {
 
 const MenuModal: React.FC<menuProps> = ({ onClose }) => {
   const [isClosing, setIsClosing] = useState(false);
+  const [profileEdit, setProfileEdit] = useState(false)
 
   const handleClose = () => {
     setIsClosing(true);
@@ -110,6 +112,7 @@ const MenuModal: React.FC<menuProps> = ({ onClose }) => {
     }
   };
 
+
   return (
     <Wrapper isClosing={isClosing}>
       <Header>
@@ -119,7 +122,7 @@ const MenuModal: React.FC<menuProps> = ({ onClose }) => {
         <MenuGroup>
           <GroupTitle>프로필</GroupTitle>
           <MenuItem>프로필 보기</MenuItem>
-          <MenuItem>프로필 수정</MenuItem>
+          <MenuItem onClick={() => setProfileEdit(true)}>프로필 수정</MenuItem>
         </MenuGroup>
         
         <MenuGroup>
@@ -162,6 +165,9 @@ const MenuModal: React.FC<menuProps> = ({ onClose }) => {
 
         <LogOut onClick={signOut}>로그아웃</LogOut>
       </ContentWrapper>
+      {profileEdit && (
+        <ProfileEdit onClose={() => setProfileEdit(false)} />
+      )}
     </Wrapper>
   );
 }

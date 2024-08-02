@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Inbody from "../components/inbody";
 import { GoBell } from "react-icons/go";
 import { IoIosMenu } from "react-icons/io";
-import MenuModal from "../components/menu";
+import MenuModal from "../components/menu/menu";
 import BellModal from "../components/bell";
 
 const fadeOut = keyframes`

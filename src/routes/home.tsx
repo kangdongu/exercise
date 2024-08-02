@@ -17,7 +17,7 @@ import LoadingScreen from "../components/loading-screen";
 import { format, isBefore, startOfToday } from "date-fns";
 import { GoBell } from "react-icons/go";
 import { IoIosMenu } from "react-icons/io";
-import MenuModal from "../components/menu";
+import MenuModal from "../components/menu/menu";
 import BellModal from "../components/bell";
 
 const Wrapper = styled.div`

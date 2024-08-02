@@ -12,7 +12,7 @@ import { FaRegComment } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
-import MenuModal from "../components/menu";
+import MenuModal from "../components/menu/menu";
 import BellModal from "../components/bell";
 import { GoBell } from "react-icons/go";
 import { IoIosMenu } from "react-icons/io";
