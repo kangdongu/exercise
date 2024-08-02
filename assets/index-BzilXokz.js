@@ -3908,7 +3908,7 @@ font-weight:800;
   margin-right: 10px;
   border-radius: 5px;
   border: 1px solid #ccc;
-  font-size: 14px;
+  font-size: 16px;
   text-align: center;
 `,Cse=_.button`
   padding: 10px;
@@ -3962,7 +3962,7 @@ font-weight:800;
     border-radius: 10px;
     font-size: 18px;
     cursor: pointer;
-`,Ase=({onClose:t})=>{const[e,n]=b.useState(!0),[r,i]=b.useState(""),[s,o]=b.useState(""),[a,l]=b.useState(null),[c,u]=b.useState(""),[d,h]=b.useState(!1),[p,g]=b.useState(!1),m=be.currentUser,y=S=>{u(S.target.value)};if(b.useEffect(()=>{(async()=>{try{const E=Z(W,"user"),k=se(E,de("유저아이디","==",m==null?void 0:m.uid)),C=await te(k);if(!C.empty){const T=C.docs[0],D=T.data().닉네임,P=T.data().프로필사진;i(D),o(P)}}catch(E){console.log(E)}finally{n(!1)}})()},[]),e)return f.jsx(Cd,{});const v=()=>{g(!0)},x=async()=>{h(!0);const S=Z(W,"user"),E=se(S,de("닉네임","==",c)),k=await te(E);l(k.empty),h(!1)},w=()=>{a&&(g(!1),l(null))};return f.jsxs(gse,{children:[f.jsxs(mse,{children:[f.jsx(yse,{children:s===""?f.jsx(ro,{style:{width:"70px",height:"70px",marginTop:"30px",marginLeft:"15px",color:"gray"}}):f.jsx("img",{src:s,style:{width:"100px",height:"100px",borderRadius:"50%"}})}),f.jsx(vse,{children:"프로필사진 변경"})]}),f.jsx(xse,{children:f.jsxs(Ese,{children:[r," ",f.jsx(kne,{style:{width:"20px",height:"20px"},onClick:v})]})}),f.jsxs(kse,{children:[f.jsx(Dse,{onClick:t,children:"취소"}),f.jsx(Tse,{children:"확인"})]}),p&&f.jsx(wse,{children:f.jsxs(_se,{children:[f.jsx("h4",{style:{textAlign:"center",fontSize:"20px"},children:"닉네임변경"}),f.jsx(Sse,{type:"text",value:c,onChange:y,placeholder:"새 닉네임 입력"}),f.jsx(Cse,{onClick:x,children:d?"확인 중...":"중복 확인"}),f.jsx("div",{style:{marginTop:"10px",color:a===null?"black":a?"green":"red",fontWeight:"700",fontSize:"14px"},children:a===null?"변경할 닉네임을 작성해주세요.":a?"사용가능한 닉네임 입니다.":"해당 닉네임은 사용 중입니다."}),f.jsxs(bse,{children:[f.jsx(tP,{onClick:()=>{g(!1),u(""),l(null)},children:"취소"}),f.jsx(tP,{style:{backgroundColor:"#4caf50"},onClick:w,children:"확인"})]})]})})]})},Rse=Tr`
+`,Ase=({onClose:t})=>{const[e,n]=b.useState(!0),[r,i]=b.useState(""),[s,o]=b.useState(""),[a,l]=b.useState(null),[c,u]=b.useState(""),[d,h]=b.useState(!1),[p,g]=b.useState(!1),m=be.currentUser,y=S=>{u(S.target.value)};if(b.useEffect(()=>{(async()=>{try{const E=Z(W,"user"),k=se(E,de("유저아이디","==",m==null?void 0:m.uid)),C=await te(k);if(!C.empty){const T=C.docs[0],D=T.data().닉네임,P=T.data().프로필사진;i(D),o(P)}}catch(E){console.log(E)}finally{n(!1)}})()},[]),e)return f.jsx(Cd,{});const v=()=>{g(!0)},x=async()=>{h(!0);const S=Z(W,"user"),E=se(S,de("닉네임","==",c)),k=await te(E);l(k.empty),h(!1)},w=()=>{a&&(g(!1),l(null))};return f.jsxs(gse,{children:[f.jsxs(mse,{children:[f.jsx(yse,{children:s===""?f.jsx(ro,{style:{width:"70px",height:"70px",marginTop:"30px",marginLeft:"15px",color:"gray"}}):f.jsx("img",{src:s,style:{width:"100px",height:"100px",borderRadius:"50%"}})}),f.jsx(vse,{children:"프로필사진 변경"})]}),f.jsx(xse,{children:f.jsxs(Ese,{children:[r," ",f.jsx(kne,{style:{width:"20px",height:"20px"},onClick:v})]})}),f.jsxs(kse,{children:[f.jsx(Dse,{onClick:t,children:"취소"}),f.jsx(Tse,{children:"확인"})]}),p&&f.jsx(wse,{children:f.jsxs(_se,{children:[f.jsx("h4",{style:{textAlign:"center",fontSize:"20px"},children:"닉네임변경"}),f.jsx(Sse,{type:"text",value:c,onChange:y,placeholder:"새 닉네임 입력",maxLength:10,minLength:2}),f.jsx(Cse,{onClick:x,children:d?"확인 중...":"중복 확인"}),f.jsx("div",{style:{marginTop:"10px",color:a===null?"black":a?"green":"red",fontWeight:"700",fontSize:"14px"},children:a===null?"변경할 닉네임을 작성해주세요.":a?"사용가능한 닉네임 입니다.":"해당 닉네임은 사용 중입니다."}),f.jsxs(bse,{children:[f.jsx(tP,{onClick:()=>{g(!1),u(""),l(null)},children:"취소"}),f.jsx(tP,{style:{backgroundColor:"#4caf50"},onClick:w,children:"확인"})]})]})})]})},Rse=Tr`
   from {
     left: 100vw;
   }
@@ -5015,8 +5015,6 @@ color:white;
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
-    position:relative;
-    z-index: 0;
     @media screen and (max-width: 700px) {
         width: 100%;
     }
