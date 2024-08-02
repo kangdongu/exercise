@@ -200,7 +200,7 @@ const ProfileEdit: React.FC<profileEditProps> = ({ onClose }) => {
     const nickNameEditClick = () => {
         setNicknameEdit(true);
     }
-    
+
     const nicknameCheck = async () => {
         setDoubleCheck(true)
         const userRef = collection(db, "user");
@@ -210,6 +210,13 @@ const ProfileEdit: React.FC<profileEditProps> = ({ onClose }) => {
         setIsNicknameAvailable(querySnapshot.empty);
         setDoubleCheck(false)
     };
+    
+    const nicknameChange = () => {
+        if(isNicknameAvailable){
+            setNicknameEdit(false)
+            setIsNicknameAvailable(null)
+        }
+    }
 
     return (
         <Wrapper>
@@ -243,12 +250,12 @@ const ProfileEdit: React.FC<profileEditProps> = ({ onClose }) => {
                         <CheckButton onClick={nicknameCheck}>
                             {doubleCheck ? "확인 중..." : "중복 확인"}
                         </CheckButton>
-                        <div style={{ marginTop: '10px', color: isNicknameAvailable === null ? "black" : isNicknameAvailable ? "green" : "red", fontWeight:'700', fontSize:'15px' }}>
+                        <div style={{ marginTop: '10px', color: isNicknameAvailable === null ? "black" : isNicknameAvailable ? "green" : "red", fontWeight:'700', fontSize:'14px' }}>
                             {isNicknameAvailable === null ? "변경할 닉네임을 작성해주세요." : isNicknameAvailable ? "사용가능한 닉네임 입니다." : "해당 닉네임은 사용 중입니다."}
                         </div>
                         <NicknameButtonWrapper>
-                            <NicknameButton onClick={() => setNicknameEdit(false)}>취소</NicknameButton>
-                            <NicknameButton style={{ backgroundColor: '#4caf50' }}>확인</NicknameButton>
+                            <NicknameButton onClick={() => {setNicknameEdit(false); setNewNickname(""); setIsNicknameAvailable(null)}}>취소</NicknameButton>
+                            <NicknameButton style={{ backgroundColor: '#4caf50' }} onClick={nicknameChange}>확인</NicknameButton>
                         </NicknameButtonWrapper>
                     </NicknameInputWrapper>
                 </NicknameEditWrapper>
