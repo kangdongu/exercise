@@ -40,8 +40,6 @@ const Menu = styled.div`
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
-    position:relative;
-    z-index: 0;
     @media screen and (max-width: 700px) {
         width: 100%;
     }

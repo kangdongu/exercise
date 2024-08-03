@@ -29,7 +29,7 @@ const Wrapper = styled.div<{isClosing: boolean}>`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9900;
+  z-index: 1000;
   animation: ${({ isClosing }) => isClosing ? slideOut : slideIn} 0.3s ease-out;
   display: flex;
   flex-direction: column;
