@@ -5,4 +5,7 @@ import react from '@vitejs/plugin-react-swc'
 export default defineConfig({
   plugins: [react()],
   base:'/exercise/',
+  server: {
+    port: 3001, // 원하는 포트 번호로 변경
+  },
 });

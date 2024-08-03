@@ -87,7 +87,7 @@ export default function Naming() {
       <Form onSubmit={onSubmit}>
         <Input
           onChange={onChange}
-          maxLength={8}
+          maxLength={10}
           type="text"
           name="nickname"
           value={nickname}

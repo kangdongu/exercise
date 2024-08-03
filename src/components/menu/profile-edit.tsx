@@ -290,36 +290,38 @@ const ProfileEdit: React.FC<profileEditProps> = ({ onClose }) => {
 
     const editComplete = async () => {
         if (!currentUser) return;
-        if (img.newImg !== null || newNickname !== "") {
+            if (img.newImg !== null || newNickname !== "") {
 
-            const usersRef = collection(db, "user");
-            const docSnapshot = await getDocs(query(usersRef, where("유저아이디", "==", currentUser.uid)));
+                const usersRef = collection(db, "user");
+                const docSnapshot = await getDocs(query(usersRef, where("유저아이디", "==", currentUser.uid)));
 
-            if (img.newImg !== null && img.imgFile !== null) {
-                const locationRef = ref(storage, `avatars/${currentUser?.uid}`);
-                const result = await uploadBytes(locationRef, img.imgFile);
-                const userImgUrl = await getDownloadURL(result.ref);
+                if (img.newImg !== null && img.imgFile !== null) {
+                    const locationRef = ref(storage, `avatars/${currentUser?.uid}`);
+                    const result = await uploadBytes(locationRef, img.imgFile);
+                    const userImgUrl = await getDownloadURL(result.ref);
 
-                await updateProfile(currentUser, {
-                    photoURL: userImgUrl,
-                });
+                    await updateProfile(currentUser, {
+                        photoURL: userImgUrl,
+                    });
 
-                if (!docSnapshot.empty) {
-                    const userDoc = docSnapshot.docs[0];
-                    await updateDoc(userDoc.ref, { 프로필사진: userImgUrl });
+                    if (!docSnapshot.empty) {
+                        const userDoc = docSnapshot.docs[0];
+                        await updateDoc(userDoc.ref, { 프로필사진: userImgUrl });
+                    }
                 }
-            }
-            if (newNickname !== "") {
-                if (!docSnapshot.empty) {
-                    const userDoc = docSnapshot.docs[0];
-                    await updateDoc(userDoc.ref, { 닉네임: newNickname });
+                if (newNickname !== "") {
+                    if (!docSnapshot.empty) {
+                        const userDoc = docSnapshot.docs[0];
+                        await updateDoc(userDoc.ref, { 닉네임: newNickname });
+                    }
                 }
+            } else {
+                alert("변경 사항이 없습니다.")
             }
-        } else {
-            alert("변경 사항이 없습니다.")
-        }
+        onClose()
+
     }
-    
+
     const revertImage = () => {
         setImg({
             newImg: null,
