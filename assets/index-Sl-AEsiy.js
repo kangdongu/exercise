@@ -4624,6 +4624,8 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 `,u_e=_.div`
   width:100%;
   height:50px;
+  position:relative;
+  z-index:101;
   margin-top:20px;
 `,d_e=_.div`
   width:80%;
@@ -5034,6 +5036,7 @@ color:white;
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+    position:relative;
     @media screen and (max-width: 700px) {
         width: 100%;
     }
@@ -5054,7 +5057,7 @@ color:white;
     padding: 10px 20px;
     background-color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: sticky;
+    position: fixed;
     top: 0;
     z-index: 100;
     animation: ${t=>t.isVisible?kf`${J_e} 0.5s forwards`:kf`${Z_e} 0.5s forwards`};
@@ -5072,7 +5075,7 @@ color:white;
             transform: scale(1.1);
         }
     }
-`;function iSe(){const[t,e]=b.useState("calendar"),[n,r]=b.useState(!0),[i,s]=b.useState(!1),[o,a]=b.useState(!1),[l,c]=b.useState(!1);b.useEffect(()=>{c(!0)},[]);const u=()=>{s(!i)},d=()=>{a(!o)},h=()=>{n?setTimeout(()=>{r(!1)},280):r(!0)};return f.jsxs(eSe,{children:[n&&f.jsx(nSe,{isVisible:n,children:f.jsxs(rSe,{children:[l&&f.jsx("div",{style:{position:"absolute",width:"6px",height:"6px",borderRadius:"50%",backgroundColor:"red",left:"20px"}}),f.jsx(w1,{onClick:d}),f.jsx(S1,{onClick:u,style:{width:"32px",height:"32px",marginTop:"-5px"}})]})}),f.jsxs(tSe,{children:[f.jsx(cb,{selected:t==="calendar",onClick:()=>e("calendar"),children:"캘린더"}),f.jsx(cb,{selected:t==="photo",onClick:()=>e("photo"),children:"사진"}),f.jsx(cb,{selected:t==="inbody",onClick:()=>e("inbody"),children:"인바디"})]}),f.jsxs("div",{style:{position:"relative",zIndex:"1"},children:[t==="calendar"&&f.jsx(U_e,{headerOff:h}),t==="photo"&&f.jsx(Q_e,{}),t==="inbody"&&f.jsx(X_e,{})]}),i&&f.jsx(C1,{onClose:u}),o&&f.jsx(E1,{onClose:d})]})}const sSe=_.div`
+`;function iSe(){const[t,e]=b.useState("calendar"),[n,r]=b.useState(!0),[i,s]=b.useState(!1),[o,a]=b.useState(!1),[l,c]=b.useState(!1);b.useEffect(()=>{c(!0)},[]);const u=()=>{s(!i)},d=()=>{a(!o)},h=()=>{n?setTimeout(()=>{r(!1)},280):r(!0)};return f.jsxs(eSe,{children:[n&&f.jsx(nSe,{isVisible:n,children:f.jsxs(rSe,{children:[l&&f.jsx("div",{style:{position:"absolute",width:"6px",height:"6px",borderRadius:"50%",backgroundColor:"red",left:"20px"}}),f.jsx(w1,{onClick:d}),f.jsx(S1,{onClick:u,style:{width:"32px",height:"32px",marginTop:"-5px"}})]})}),f.jsxs(tSe,{children:[f.jsx(cb,{selected:t==="calendar",onClick:()=>e("calendar"),children:"캘린더"}),f.jsx(cb,{selected:t==="photo",onClick:()=>e("photo"),children:"사진"}),f.jsx(cb,{selected:t==="inbody",onClick:()=>e("inbody"),children:"인바디"})]}),f.jsxs("div",{style:{position:"relative",zIndex:"101"},children:[t==="calendar"&&f.jsx(U_e,{headerOff:h}),t==="photo"&&f.jsx(Q_e,{}),t==="inbody"&&f.jsx(X_e,{})]}),i&&f.jsx(C1,{onClose:u}),o&&f.jsx(E1,{onClose:d})]})}const sSe=_.div`
     width:100vw;
     height:100vh;
 `,T5=_.div`
@@ -5229,6 +5232,7 @@ height: calc(100vh - 150px);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   display:flex;
+  z-index:105;
   position :relative;
 `,D5=_.div`
   font-size: 18px;
@@ -5251,6 +5255,7 @@ height: calc(100vh - 150px);
 `,I5=_.div`
  @media screen and (max-width: 700px){
   background-color:white;
+    z-index:1000;
  }
   position: fixed;
   top: 0;
@@ -5261,6 +5266,7 @@ height: calc(100vh - 150px);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index:1000;
 `,P5=_.div`
 @media screen and (max-width: 700px) {
           width: 100vw;
