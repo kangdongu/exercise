@@ -4804,8 +4804,6 @@ z-index:98;
     @media screen and (max-width: 700px) {
         width: 95%;
         margin: 0 auto;
-        z-index: 1000;
-        position:relative;
     }
 `,B_e=_.div`
     display:flex;
