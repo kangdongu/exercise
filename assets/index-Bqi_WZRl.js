@@ -4802,7 +4802,7 @@ z-index:98;
     margin-bottom: 20px;
 `,Z8=({title:t,content:e})=>f.jsx(N_e,{children:f.jsxs(L_e,{children:[f.jsx(F_e,{children:f.jsx(fF,{style:{color:"#FFA726",width:"50px",height:"50px"}})}),f.jsx(j_e,{children:t}),f.jsx(V_e,{children:e})]})}),$_e=_.div`
     width: 80%;
-    height:80vh;
+    height:calc(100vh - 117px);
     margin: 0 auto;
     overflow:hidden;
     position:relative;
