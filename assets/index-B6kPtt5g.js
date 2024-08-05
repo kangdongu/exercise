@@ -4802,7 +4802,7 @@ z-index:98;
     width: 80%;
     height:calc(100vh - 117px);
     margin: 0 auto;
-    overflow:hidden;
+    overflow-y:scroll;
     @media screen and (max-width: 700px) {
         width: 95%;
         margin: 0 auto;
