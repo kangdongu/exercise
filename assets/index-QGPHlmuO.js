@@ -4437,7 +4437,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   flex-direction: column;
   position: fixed;
   z-index: 101;
-  top: calc(100% - 90px);
+  top: calc(100% - 85px);
   left: 0;
   right: 0;
   border-top-left-radius: 20px;
@@ -4626,8 +4626,6 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 `,d_e=_.div`
   width:100%;
   height:50px;
-  position:relative;
-  z-index:101;
   margin-top:20px;
 `,h_e=_.div`
   width:80%;
@@ -4805,12 +4803,11 @@ z-index:98;
     height:calc(100vh - 117px);
     margin: 0 auto;
     overflow:hidden;
-    position:relative;
-    z-index: 5;
     @media screen and (max-width: 700px) {
         width: 95%;
         margin: 0 auto;
-        z-index: 5;
+        z-index: 1000;
+        position:relative;
     }
 `,B_e=_.div`
     display:flex;
