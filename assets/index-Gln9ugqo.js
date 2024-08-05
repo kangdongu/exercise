@@ -5027,7 +5027,6 @@ color:white;
     width:100vw;
     height:calc(100vh - 40px);
     overflow-y:scroll;
-     position: relative;
 `,eSe=_.div`
     display: flex;
     justify-content: center;
