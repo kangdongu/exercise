@@ -14,8 +14,6 @@ import { FaRegHeart } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
 import MenuModal from "../components/menu/menu";
 import BellModal from "../components/bell";
-import { GoBell } from "react-icons/go";
-import { IoIosMenu } from "react-icons/io";
 
 const Wrapper = styled.div`
 @media screen and (max-width: 700px) {
@@ -44,6 +42,7 @@ const ViewContent = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   display:flex;
+  z-index:105;
   position :relative;
 `;
 
@@ -75,6 +74,7 @@ const OpenCommentWrapper = styled.div`
 const ModalBackdrop = styled.div`
  @media screen and (max-width: 700px){
   background-color:white;
+    z-index:1000;
  }
   position: fixed;
   top: 0;
@@ -85,6 +85,7 @@ const ModalBackdrop = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index:1000;
 `;
 const CommentWrapper = styled.div`
 @media screen and (max-width: 700px) {
@@ -141,33 +142,6 @@ const UserProfilePhoto = styled.div`
 const UserNickname = styled.div`
 
 `;
-const Header = styled.div`
-    width: 100%;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-`;
-const HeaderContentWrapper = styled.div`
-    margin-left: auto;
-    display: flex;
-    gap: 15px;
-    position:relative;
-    svg {
-        width: 25px;
-        height: 25px;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-        &:hover {
-            transform: scale(1.1);
-        }
-    }
-`;
 
 interface Photo {
   id: string;
@@ -191,12 +165,7 @@ export default function PublicPhotosPage() {
   const [userProfilePicURL, setUserProfilePicURL] = useState<string | null>(null);
   const [menuOn, setMenuOn] = useState(false);
   const [bellOn, setBellOn] = useState(false);
-  const [bellAlerm, setBellAlerm] = useState(false);
   const user = auth.currentUser;
-
-  useEffect(() => {
-    setBellAlerm(true)
-  },[])
 
   useEffect(() => {
     const fetchPublicPhotos = async () => {
@@ -455,15 +424,6 @@ export default function PublicPhotosPage() {
 
   return (
     <Wrapper>
-      <Header>
-        <HeaderContentWrapper>
-          {bellAlerm && (
-            <div style={{ position: 'absolute', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'red', left: '20px' }} />
-          )}
-          <GoBell onClick={bellClick} />
-          <IoIosMenu onClick={menuClick} style={{ width: '32px', height: '32px', marginTop: '-5px' }} />
-        </HeaderContentWrapper>
-      </Header>
       <TextTitle>
         <h4 style={{ textAlign: "center", fontSize: "25px", color: "#939393" }}>사람들과 기록 공유하기</h4>
       </TextTitle>

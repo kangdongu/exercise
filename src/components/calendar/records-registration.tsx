@@ -236,10 +236,9 @@ interface Exercise {
 interface ExerciseRegistrationProps {
   closeModal: () => void;
   congratulations: () => void;
-  headerOff: () => void; 
 }
 
-export default function ExerciseRegistration({ closeModal, congratulations, headerOff }: ExerciseRegistrationProps) {
+export default function ExerciseRegistration({ closeModal, congratulations }: ExerciseRegistrationProps) {
   const user = auth.currentUser;
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [exerciseType, setExerciseType] = useState("");
@@ -347,8 +346,7 @@ export default function ExerciseRegistration({ closeModal, congratulations, head
   };
 
   const ExerciseChoice = () => {
-    setExerciseModal(true)
-    headerOff()
+    setExerciseModal(true);
   }
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -411,7 +409,7 @@ export default function ExerciseRegistration({ closeModal, congratulations, head
         </RecordsWrapper>
       </BottomSheet>
 
-      {exerciseModal ? <MoSlideModal onClose={() => { setExerciseModal(false); headerOff()}}>
+      {exerciseModal ? <MoSlideModal onClose={() => { setExerciseModal(false);}}>
         <ExerciseChoiceModal>
           {searchBox ? (
             <SearchWrapper>

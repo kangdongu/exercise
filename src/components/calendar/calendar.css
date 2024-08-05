@@ -1,49 +1,14 @@
+/* 기본 스타일 */
+.fc {
+    font-size: 12px; /* 기본 폰트 크기 */
+}
 
 .fc-day-sun a {
     color: red;
 }
+
 .fc-day-sat a {
     color: blue;
-}
-.fc-prev-button, .fc-next-button {
-    @media screen and (max-width: 700px) {
-        width: 37px;
-        height: 37px;
-    }
-}
-
-.fc-button-group {
-    @media screen and (max-width: 700px) {
-        height: 38px;
-    }
-}
-
-.fc-toolbar-title {
-    @media screen and (max-width: 700px) {
-        font-size: 1.50em;
-        margin-bottom:20px;
-    }
-}
-
-.fc-daygrid-day-number {
-    @media screen and (max-width: 700px) {
-        font-size: 13px;
-    }
-}
-.fc-header-toolbar{
-    height:30px;
-}
-.fc-daygrid-day {
-    @media screen and (max-width: 700px) {
-        height: 50px;
-    }
-}
-
-.fc-daygrid-event {
-    @media screen and (max-width: 700px) {
-        font-size: 10px;
-        padding: 2px;
-    }
 }
 
 .fc-event {
@@ -63,25 +28,60 @@
     padding: 1px 5px;
 }
 
-.fc-toolbar-chunk .fc-button {
-    color: white;
-    border: none; 
-    border-radius: 5px; 
-    height:30px;
-    padding: 5px 10px; 
-    font-size: 14px;
+/* 모바일 화면 스타일 */
+@media screen and (max-width: 700px) {
+    .fc-prev-button, .fc-next-button {
+        width: 25px;
+        height: 25px;
+        font-size: 10px;
+    }
+    
+    .fc-button-group {
+        height: 30px;
+    }
+    
+    .fc-toolbar-title {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+    
+    .fc-daygrid-day-number {
+        font-size: 10px;
+    }
+    
+    .fc-daygrid-day {
+        height: 30px;
+    }
+    
+    .fc-daygrid-event {
+        font-size: 8px;
+        padding: 1px;
+    }
+
+    .fc-toolbar-chunk .fc-button {
+        color: white;
+        border: none; 
+        border-radius: 5px; 
+        height: 25px;
+        padding: 3px 7px; 
+        font-size: 10px;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 20px;
+    }
+    
+    .fc .fc-toolbar.fc-header-toolbar {
+        margin-bottom: 10px;
+        height: 25px;
+    }
+
+    .fc-daygrid-day-frame {
+        padding: 1px;
+    }
 }
 
-.fc-toolbar-title {
-    text-align: center;
-    width: 100%;
-}
-.fc .fc-toolbar-title{
-    font-size:25px;
-}
-.fc .fc-toolbar.fc-header-toolbar{
-    margin-bottom:20px;
-}
-.fc-daygrid-block-event .fc-event-time, .fc-daygrid-block-event .fc-event-title{
-    padding:0.5px;
+/* 추가 일반 스타일 */
+.fc-header-toolbar {
+    height: 30px;
 }

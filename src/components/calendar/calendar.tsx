@@ -18,15 +18,12 @@ import Congratulations from '../congratulations';
 
 const Wrapper = styled.div`
     width: 80%;
-    height:80vh;
+    height:calc(100vh - 117px);
     margin: 0 auto;
     overflow:hidden;
-    position:relative;
-    z-index: 5;
     @media screen and (max-width: 700px) {
         width: 95%;
         margin: 0 auto;
-        z-index: 5;
     }
 `;
 const Btn = styled.div`
@@ -60,10 +57,8 @@ interface ExerciseData {
     날짜: string;
 }
 
-interface calenderProps {
-    headerOff: () => void;
-}
-const Calendar: React.FC<calenderProps> = ({ headerOff }) => {
+
+const Calendar = () => {
     const [calendarClick, setCalendarClick] = useState(false);
     const [clickDate, setClickDate] = useState<string>("");
     const [modal, setModal] = useState(false)
@@ -462,14 +457,14 @@ const Calendar: React.FC<calenderProps> = ({ headerOff }) => {
                         end: 'prev,today,next'
                     }
                 }
-                height={`65vh`}
+                height={`60vh`}
                 locale={ko}
                 dayCellContent={renderDayCellContent}
                 eventClick={handleEventClick}
             />
-            <div style={{ position: 'relative', zIndex: '99' }}>
-                {modal ? <ExerciseRegistration headerOff={() => headerOff()} closeModal={closeModal} congratulations={congratulations} /> : null}
-            </div>
+            {modal ? 
+            <ExerciseRegistration closeModal={closeModal} congratulations={congratulations} />
+             : null}
             {calendarClick && window.innerWidth <= 700 ? (
                 <MoCalendarWrapper onClose={() => setCalendarClick(false)}>
                     <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} />;

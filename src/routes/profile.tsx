@@ -34,7 +34,7 @@ const Header = styled.div`
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 const UserImgUpload = styled.label`
-width: 80px;
+  width: 80px;
   overflow: hidden;
   height: 80px;
   border-radius: 50%;
@@ -53,7 +53,9 @@ const UserImgInput = styled.input`
 display: none;
 `;
 const UserImg = styled.img`
-width: 100%;
+  width: 80px;
+  height:80px;
+  border-radius:50%;
 `;
 const UserInfo = styled.span`
     font-size:20px;
@@ -79,6 +81,7 @@ const AvatarMent = styled.div`
   position:relative;
 `;
 const UserPofileWrapper = styled.div`
+
 `;
 const Title = styled.h4`
   margin:0;

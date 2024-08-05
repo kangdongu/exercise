@@ -17,12 +17,13 @@ const Wrapper = styled.div`
 const LineWrapper = styled.div`
   width:100%;
   height:300px;
-  gap:10%;
+  display: flex;
+  justify-content: center;
   background-color:white;
   border-radius:10px;
   margin-bottom:20px;
 `;
-const NowWeekWrapper =styled.div`
+const NowWeekWrapper = styled.div`
   width:100%;
   height:150px;
   background-color:white;
@@ -35,7 +36,7 @@ const WeekDates = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [exerciseCount, setExerciseCount] = useState(0);
-  const [exerciseCountsByWeek, setExerciseCountsByWeek] = useState<number[]>([]); 
+  const [exerciseCountsByWeek, setExerciseCountsByWeek] = useState<number[]>([]);
   const currentUserUID = auth.currentUser?.uid;
   const [chartWidth, setChartWidth] = useState(window.innerWidth >= 700 ? 600 : 350);
   const [chartHeight, setChartHeight] = useState(window.innerWidth >= 700 ? 400 : 300)
@@ -47,8 +48,8 @@ const WeekDates = () => {
 
   useEffect(() => {
     const today = new Date();
-    const monday = startOfWeek(today, { weekStartsOn: 1 }); 
-    const sunday = endOfWeek(today, { weekStartsOn: 1 }); 
+    const monday = startOfWeek(today, { weekStartsOn: 1 });
+    const sunday = endOfWeek(today, { weekStartsOn: 1 });
     setStartDate(monday);
     setEndDate(sunday);
 
@@ -97,10 +98,10 @@ const WeekDates = () => {
     try {
       if (currentUserUID) {
         const currentDate = new Date();
-        const weeksAgo = [4, 3, 2, 1]; 
+        const weeksAgo = [4, 3, 2, 1];
         const countsByWeek = await Promise.all(weeksAgo.map(async (week) => {
-          const weekStartDate = startOfWeek(subWeeks(currentDate, week), { weekStartsOn: 1 }); 
-          const weekEndDate = endOfWeek(subWeeks(currentDate, week), { weekStartsOn: 1 }); 
+          const weekStartDate = startOfWeek(subWeeks(currentDate, week), { weekStartsOn: 1 });
+          const weekEndDate = endOfWeek(subWeeks(currentDate, week), { weekStartsOn: 1 });
           const startStr = format(weekStartDate, 'yyyy-MM-dd');
           const endStr = format(weekEndDate, 'yyyy-MM-dd');
           const recordsCollectionRef = collection(db, 'records');
@@ -156,10 +157,11 @@ const WeekDates = () => {
               {
                 label: '주별 운동 횟수',
                 data: [...exerciseCountsByWeek, exerciseCount],
-                fill: false,
+                fill: true,
                 type: "line",
-                borderColor: '#973131',
-                tension: 0.1
+                tension: 0,
+                borderColor:'#FF595E',
+                backgroundColor:'rgba(255,89,94,0.3)'
               }
             ]
           }}
@@ -167,6 +169,8 @@ const WeekDates = () => {
             responsive: false,
             scales: {
               y: {
+                min: 0,
+                max: 7,
                 ticks: {
                   stepSize: 1,
                 }
@@ -175,7 +179,7 @@ const WeekDates = () => {
           }}
         />
       </LineWrapper>
-      <h4 style={{fontSize:"18px", margin:"0px"}}>이번주 운동</h4>
+      <h4 style={{ fontSize: "18px", margin: "0px" }}>이번주 운동</h4>
       <NowWeekWrapper>
         <p>월요일: {format(startDate, 'yyyy-MM-dd')}</p>
         <p>일요일: {format(endDate, 'yyyy-MM-dd')}</p>

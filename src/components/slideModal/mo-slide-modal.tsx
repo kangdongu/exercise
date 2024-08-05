@@ -17,7 +17,7 @@ const Wrapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 105;
+  z-index: 106;
   animation: ${slideUp} 0.3s ease-out;
   display: flex;
   flex-direction: column;

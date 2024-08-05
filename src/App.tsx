@@ -22,6 +22,7 @@ import AchievementsContent from './components/achievements/achievements-content'
 import EfficacyContent from './components/efficacy/efficacy-content';
 import { ChallengeProvider } from './components/group-challenge/group-context';
 import JoinedRoom from './components/group-challenge/joined-room';
+import InbodyDetails from './components/inbody-details';
 
 const Wrapper = styled.div`
 `;
@@ -80,6 +81,7 @@ function App() {
                   <JoinedRoom />
                 </ChallengeProvider>
               } />
+            <Route path='/inbody-details' element={<InbodyDetails />} />
             <Route path="/start-page" element={<StartPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/create-account" element={<CreateAccount />} />
