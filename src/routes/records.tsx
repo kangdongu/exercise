@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import Calendar from "../components/calendar/calendar";
 import PhotoRecords from "../components/sns_photo/photo-records";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Inbody from "../components/inbody";
+import { useLocation } from "react-router-dom";
 
 
 const Wrapper = styled.div`
@@ -30,7 +31,14 @@ const MenuItem = styled.span<{ selected: boolean }>`
 `;
 
 export default function Records() {
+    const location = useLocation();
     const [selectedMenu, setSelectedMenu] = useState('calendar');
+
+    useEffect(() => {
+        if (location.state && location.state.menu) {
+            setSelectedMenu(location.state.menu);
+        }
+    }, [location.state]);
 
     return (
         <Wrapper>

@@ -38,12 +38,10 @@ const WeekDates = () => {
   const [exerciseCount, setExerciseCount] = useState(0);
   const [exerciseCountsByWeek, setExerciseCountsByWeek] = useState<number[]>([]);
   const currentUserUID = auth.currentUser?.uid;
-  const [chartWidth, setChartWidth] = useState(window.innerWidth >= 700 ? 600 : 350);
-  const [chartHeight, setChartHeight] = useState(window.innerWidth >= 700 ? 400 : 300)
+  const [chartHeight, setChartHeight] = useState(window.innerWidth >= 700 ? 400 : 250)
 
   const updateChartSize = useCallback(() => {
-    setChartWidth(window.innerWidth >= 700 ? 600 : 350);
-    setChartHeight(window.innerWidth >= 700 ? 400 : 300);
+    setChartHeight(window.innerWidth >= 700 ? 400 : 250);
   }, []);
 
   useEffect(() => {
@@ -150,7 +148,6 @@ const WeekDates = () => {
     <Wrapper>
       <LineWrapper>
         <Line height={chartHeight}
-          width={chartWidth}
           data={{
             labels: ['4주 전', '3주 전', '2주 전', '1주 전', '이번주'],
             datasets: [
@@ -166,7 +163,7 @@ const WeekDates = () => {
             ]
           }}
           options={{
-            responsive: false,
+            responsive: true,
             scales: {
               y: {
                 min: 0,

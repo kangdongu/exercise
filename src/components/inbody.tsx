@@ -128,7 +128,8 @@ export default function Inbody() {
             const docRef = await addDoc(collection(db, 'inbody'), {
                 유저아이디: auth.currentUser?.uid,
                 날짜: getCurrentDate(),
-                weight
+                weight,
+                종류:'weight'
             });
             const achievementsRef = collection(db, 'achievements');
             const q = query(achievementsRef);
@@ -164,7 +165,8 @@ export default function Inbody() {
             const docRef = await addDoc(collection(db, 'inbody'), {
                 유저아이디: auth.currentUser?.uid,
                 날짜: getCurrentDate(),
-                muscle
+                muscle,
+                종류:'muscle'
             });
             const achievementsRef = collection(db, 'achievements');
             const q = query(achievementsRef);
@@ -200,7 +202,8 @@ export default function Inbody() {
             const docRef = await addDoc(collection(db, 'inbody'), {
                 유저아이디: auth.currentUser?.uid,
                 날짜: getCurrentDate(),
-                fat
+                fat,
+                종류:'fat'
             });
             const achievementsRef = collection(db, 'achievements');
             const q = query(achievementsRef);
