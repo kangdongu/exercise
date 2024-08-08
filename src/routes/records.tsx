@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Calendar from "../components/calendar/calendar";
 import PhotoRecords from "../components/sns_photo/photo-records";
 import { useEffect, useState } from "react";
-import Inbody from "../components/inbody";
+import Inbody from "../components/inbody/inbody";
 import { useLocation } from "react-router-dom";
 
 

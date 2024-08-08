@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components"
-import { auth, db } from "../firebase";
+import { auth, db } from "../../firebase";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
@@ -64,10 +64,9 @@ const RecordValue = styled.div`
         font-size:18px;
     }
 `;
-const GrowthValue = styled.div<{ growth: number }>`
-    font-size: 18px;
+const GrowthValue = styled.div`
+    font-size: 20px;
     margin-left:auto;
-    color: ${props => (props.growth >= 0 ? "green" : "red")};
     margin-top: 5px;
 `;
 const NowData = styled.div`
@@ -114,8 +113,7 @@ const LineWrapper = styled.div`
     border-radius:10px;
     background-color:white;
 `;
-const NowGrowth = styled.div<{ growth: number }>`
-    background-color: ${props => props.growth >= 0 ? 'green' : 'red'};
+const NowGrowth = styled.div`
     color:white;
     width: 85%;
     margin: 0 auto;
@@ -150,7 +148,7 @@ const BarGoal = styled.div`
     height:15px;
     position:relative;
 `;
-const Bar = styled.div<{width: number}>`
+const Bar = styled.div<{ width: number }>`
     position:absolute;
     top:0;
     left:0;
@@ -161,14 +159,18 @@ const Bar = styled.div<{width: number}>`
 
 const InbodyDetails = () => {
     const [selectedMenu, setSelectedMenu] = useState<string | null>(null);
-    const [inbodyData, setInbodyData] = useState<any[]>([])
-    const [weightData, setWeightData] = useState<any[]>([])
-    const [muscleData, setMuscleData] = useState<any[]>([])
-    const [fatData, setFatData] = useState<any[]>([])
+    const [inbodyData, setInbodyData] = useState<any[]>([]);
+    const [weightData, setWeightData] = useState<any[]>([]);
+    const [muscleData, setMuscleData] = useState<any[]>([]);
+    const [fatData, setFatData] = useState<any[]>([]);
     const location = useLocation();
     const navigate = useNavigate();
-    const [barWidth, setBarWidth] = useState<number>(0)
-    const [percent, setPercent] = useState<number>(0)
+    const [weightWidth, setWeightWidth] = useState<number>(0)
+    const [weightPercent, setWeightPercent] = useState<number>(0)
+    const [muscleWidth, setMuscleWidth] = useState<number>(0)
+    const [musclePercent, setMusclePercent] = useState<number>(0)
+    const [fatWidth, setFatWidth] = useState<number>(0)
+    const [fatPercent, setFatPercent] = useState<number>(0)
     const BarGoalRef = useRef<HTMLDivElement>(null);
     const currentUser = auth.currentUser;
 
@@ -205,6 +207,33 @@ const InbodyDetails = () => {
         fetchInbody();
     }, [])
 
+    useEffect(() => {
+        if (BarGoalRef.current) {
+            const barGoalWidth = BarGoalRef.current.offsetWidth;
+            const calculatedWidth = (barGoalWidth / 80) * Number(weightData[weightData.length - 1].weight);
+            const percent = 100 / 80 * Number(weightData[weightData.length - 1].weight);
+            const Fpercent = Number(percent.toFixed(2))
+            setWeightWidth(calculatedWidth);
+            setWeightPercent(Fpercent)
+        }
+        if (BarGoalRef.current) {
+            const barGoalWidth = BarGoalRef.current.offsetWidth;
+            const calculatedWidth = (barGoalWidth / 41) * Number(muscleData[muscleData.length - 1].muscle);
+            const percent = 100 / 41 * Number(weightData[muscleData.length - 1].muscle);
+            const Fpercent = Number(percent.toFixed(2))
+            setMuscleWidth(calculatedWidth);
+            setMusclePercent(Fpercent)
+        }
+        if (BarGoalRef.current) {
+            const barGoalWidth = BarGoalRef.current.offsetWidth;
+            const calculatedWidth = (barGoalWidth / 15) * Number(fatData[fatData.length - 1].fat);
+            const percent = 100 / 15 * Number(fatData[fatData.length - 1].fat);
+            const Fpercent = Number(percent.toFixed(2))
+            setFatWidth(calculatedWidth);
+            setFatPercent(Fpercent)
+        }
+    }, [weightData]);
+
     const calculateGrowth = (currentValue: number, previousValue: number) => {
         return currentValue - previousValue;
     };
@@ -235,16 +264,6 @@ const InbodyDetails = () => {
     const Growth = (typeData: any[], type: string) => {
         return Number(typeData[typeData.length - 1][type]) - Number(typeData[0][type])
     }
-
-    useEffect(() => {
-        if (BarGoalRef.current) {
-            const barGoalWidth = BarGoalRef.current.offsetWidth;
-            const calculatedWidth = (barGoalWidth / 80) * Number(weightData[weightData.length - 1].weight);
-            const percent = 100 / 80 * Number(weightData[weightData.length - 1].weight);
-            setBarWidth(calculatedWidth);
-            setPercent(percent)
-        }
-    }, [weightData]);
 
 
     return (
@@ -322,7 +341,7 @@ const InbodyDetails = () => {
                                     {selectedMenu === "weight" && (
                                         <InbodyGrowthWrapper>
                                             <RecordValue>몸무게: <span>{item.weight}</span> kg</RecordValue>
-                                            <GrowthValue growth={weightGrowth}>
+                                            <GrowthValue>
                                                 {weightGrowth >= 0 ? `+${weightGrowth}` : `${weightGrowth}`} kg
                                             </GrowthValue>
                                         </InbodyGrowthWrapper>
@@ -330,7 +349,7 @@ const InbodyDetails = () => {
                                     {selectedMenu === "muscle" && (
                                         <InbodyGrowthWrapper>
                                             <RecordValue>골격근량: <span>{item.muscle}</span> %</RecordValue>
-                                            <GrowthValue growth={muscleGrowth}>
+                                            <GrowthValue>
                                                 {muscleGrowth >= 0 ? `+${muscleGrowth}` : `${muscleGrowth}`} %
                                             </GrowthValue>
                                         </InbodyGrowthWrapper>
@@ -338,7 +357,7 @@ const InbodyDetails = () => {
                                     {selectedMenu === "fat" && (
                                         <InbodyGrowthWrapper>
                                             <RecordValue>체지방: <span>{item.fat}</span> %</RecordValue>
-                                            <GrowthValue growth={fatGrowth}>
+                                            <GrowthValue>
                                                 {fatGrowth >= 0 ? `+${fatGrowth}` : `${fatGrowth}`} %
                                             </GrowthValue>
                                         </InbodyGrowthWrapper>
@@ -355,15 +374,21 @@ const InbodyDetails = () => {
                             <TotalNowDataWrapper>
                                 <TotalNowData>
                                     <h5>현재 몸무게</h5> <span>{weightData[weightData.length - 1].weight}</span>kg
-                                    <NowGrowth growth={Growth(weightData, "weight")}>{Growth(weightData, "weight") >= 0 ? `+${Growth(weightData, "weight")}` : `${Growth(weightData, "weight")}`} kg</NowGrowth>
+                                    <NowGrowth style={{ backgroundColor: Growth(weightData, "weight") >= 0 ? "green" : "green" }}>
+                                        {Growth(weightData, "weight") >= 0 ? `+${Growth(weightData, "weight")}` : `-${Growth(weightData, "weight")}`} kg
+                                    </NowGrowth>
                                 </TotalNowData>
                                 <TotalNowData>
                                     <h5>현재 골격근량</h5> <span>{muscleData[muscleData.length - 1].muscle}</span>%
-                                    <NowGrowth growth={Growth(weightData, "weight")}>{Growth(muscleData, "muscle") >= 0 ? `+${Growth(muscleData, "muscle")}` : `${Growth(muscleData, "muscle")}`} %</NowGrowth>
+                                    <NowGrowth style={{ backgroundColor: Growth(muscleData, "muscle") >= 0 ? "green" : "red" }}>
+                                        {Growth(muscleData, "muscle") >= 0 ? `+${Growth(muscleData, "muscle")}` : `-${Growth(muscleData, "muscle")}`} %
+                                    </NowGrowth>
                                 </TotalNowData>
                                 <TotalNowData>
                                     <h5>현재 체지방</h5> <span>{fatData[fatData.length - 1].fat}</span>%
-                                    <NowGrowth growth={Growth(weightData, "weight")}>{Growth(fatData, "fat") >= 0 ? `+${Growth(fatData, "fat")}` : `${Growth(fatData, "fat")}`} %</NowGrowth>
+                                    <NowGrowth style={{ backgroundColor: Growth(fatData, "fat") <= 0 ? "green" : "red" }}>
+                                        {Growth(fatData, "fat") >= 0 ? `+${Growth(fatData, "fat")}` : `-${Growth(fatData, "fat")}`} %
+                                    </NowGrowth>
                                 </TotalNowData>
                             </TotalNowDataWrapper>
                         </Content>
@@ -372,9 +397,9 @@ const InbodyDetails = () => {
                             <h4 style={{ marginBottom: '10px' }}>목표 달성 그래프</h4>
                             <GoalWrapper>
                                 <BarWrapper>
-                                    <span style={{textAlign:'left'}}>체중</span>
+                                    <span style={{ textAlign: 'left' }}>체중</span>
                                     <BarGoal ref={BarGoalRef}>
-                                        <Bar width={barWidth} /><div style={{color:'white', position:'absolute',left:'50%', transform:"translate(-50%, 0)"}}>{percent} %</div>
+                                        <Bar width={weightWidth} /><div style={{ color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{weightPercent} %</div>
                                     </BarGoal>
                                 </BarWrapper>
                                 <GoalValueWrapper>
@@ -383,9 +408,9 @@ const InbodyDetails = () => {
                             </GoalWrapper>
                             <GoalWrapper>
                                 <BarWrapper>
-                                    <span style={{textAlign:'left'}}>골격근량</span>
+                                    <span style={{ textAlign: 'left' }}>골격근량</span>
                                     <BarGoal ref={BarGoalRef}>
-                                        <Bar width={barWidth} /><div style={{color:'white', position:'absolute',left:'50%', transform:"translate(-50%, 0)"}}>{percent} %</div>
+                                        <Bar width={muscleWidth} /><div style={{ color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{musclePercent} %</div>
                                     </BarGoal>
                                 </BarWrapper>
                                 <GoalValueWrapper>
@@ -394,9 +419,9 @@ const InbodyDetails = () => {
                             </GoalWrapper>
                             <GoalWrapper>
                                 <BarWrapper>
-                                    <span style={{textAlign:'left'}}>체지방</span>
+                                    <span style={{ textAlign: 'left' }}>체지방</span>
                                     <BarGoal ref={BarGoalRef}>
-                                        <Bar width={barWidth} /><div style={{color:'white', position:'absolute',left:'50%', transform:"translate(-50%, 0)"}}>{percent} %</div>
+                                        <Bar width={fatWidth} /><div style={{ color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{fatPercent} %</div>
                                     </BarGoal>
                                 </BarWrapper>
                                 <GoalValueWrapper>
