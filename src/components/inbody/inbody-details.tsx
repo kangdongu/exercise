@@ -124,38 +124,46 @@ const GoalWrapper = styled.div`
     display:flex;
     align-items: center;
     text-align:center;
-    height:80px;
-    padding: 0px 10px;
-    gap:10px;
-    margin-bottom:5px;
-`;
-const GoalValueWrapper = styled.div`
-    width:40px;
-    div{
-        font-size:20px;
-    }
+    height:100px;
+    padding: 10px;
+    gap:5px;
+    margin-bottom:10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
 `;
 const BarWrapper = styled.div`
-    height:80px;
     display: flex;
-    width:calc(100% - 40px);
     flex-direction: column;
     justify-content: center;
+    width:100%;
+    height:100%;
 `;
 const BarGoal = styled.div`
     width:100%;
     background-color:lightgray;
-    height:15px;
+    height:25px;
     position:relative;
+    border-radius: 12px;
+    overflow:hidden;
 `;
 const Bar = styled.div<{ width: number }>`
     position:absolute;
     top:0;
     left:0;
-    height:15px;
+    height:100%;
     background-color:red;
+    border-radius: 12px;
     width: ${props => props.width}px;
 `;
+const ValueWrapper = styled.div`
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 14px;
+    margin-bottom: 5px;
+`;
+
 
 const InbodyDetails = () => {
     const [selectedMenu, setSelectedMenu] = useState<string | null>(null);
@@ -171,6 +179,12 @@ const InbodyDetails = () => {
     const [musclePercent, setMusclePercent] = useState<number>(0)
     const [fatWidth, setFatWidth] = useState<number>(0)
     const [fatPercent, setFatPercent] = useState<number>(0)
+    const [beforeWeight, setBeforeWeight] = useState("")
+    const [beforeMuscle, setBeforeMuscle] = useState("")
+    const [beforeFat, setBeforeFat] = useState("")
+    const [afterWeight, setAfterWeight] = useState("")
+    const [afterMuscle, setAfterMuscle] = useState("")
+    const [afterFat, setAfterFat] = useState("")
     const BarGoalRef = useRef<HTMLDivElement>(null);
     const currentUser = auth.currentUser;
 
@@ -206,33 +220,66 @@ const InbodyDetails = () => {
 
         fetchInbody();
     }, [])
+    useEffect(() => {
+        const fetchInbodyGoals = async () => {
+            try {
+                const goalsRefs = collection(db, "inbody-goals");
+                const querySnapshot = await getDocs(
+                    query(goalsRefs, where("유저아이디", "==", currentUser?.uid))
+                )
+                if (!querySnapshot.empty) {
+                    const goalsRef = querySnapshot.docs[0]
+                    setBeforeWeight(goalsRef.data().현재몸무게)
+                    setBeforeMuscle(goalsRef.data().현재골격근량)
+                    setBeforeFat(goalsRef.data().현재체지방)
+                    setAfterWeight(goalsRef.data().목표몸무게)
+                    setAfterMuscle(goalsRef.data().목표골격근량)
+                    setAfterFat(goalsRef.data().목표체지방)
+                }
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchInbodyGoals()
+    }, [])
 
     useEffect(() => {
         if (BarGoalRef.current) {
             const barGoalWidth = BarGoalRef.current.offsetWidth;
-            const calculatedWidth = (barGoalWidth / 80) * Number(weightData[weightData.length - 1].weight);
-            const percent = 100 / 80 * Number(weightData[weightData.length - 1].weight);
-            const Fpercent = Number(percent.toFixed(2))
-            setWeightWidth(calculatedWidth);
-            setWeightPercent(Fpercent)
+
+            if (beforeWeight && afterWeight && weightData.length > 0) {
+                const currentWeight = weightData[weightData.length - 1].weight;
+                const weightDiff = Number(afterWeight) - Number(beforeWeight);
+                const weightProgress = currentWeight - Number(beforeWeight);
+                const weightWidthCalc = barGoalWidth * (weightProgress / weightDiff);
+                const weightPercentCalc = (weightProgress / weightDiff) * 100;
+                setWeightWidth(weightWidthCalc > barGoalWidth ? barGoalWidth : weightWidthCalc);
+                setWeightPercent(weightPercentCalc > 100 ? 100 : weightPercentCalc);
+            }
+
+            if (beforeMuscle && afterMuscle && muscleData.length > 0) {
+                const currentMuscle = muscleData[muscleData.length - 1].muscle;
+                const muscleDiff = Number(afterMuscle) - Number(beforeMuscle);
+                const muscleProgress = currentMuscle - Number(beforeMuscle);
+                const muscleWidthCalc = barGoalWidth * (muscleProgress / muscleDiff);
+                const musclePercentCalc = (muscleProgress / muscleDiff) * 100;
+                setMuscleWidth(muscleWidthCalc > barGoalWidth ? barGoalWidth : muscleWidthCalc);
+                setMusclePercent(musclePercentCalc > 100 ? 100 : musclePercentCalc);
+            }
+
+            if (beforeFat && afterFat && fatData.length > 0) {
+                const currentFat = fatData[fatData.length - 1].fat;
+                const fatDiff = Number(beforeFat) - Number(afterFat);
+                const fatProgress = Number(beforeFat) - currentFat;
+                const fatWidthCalc = barGoalWidth * (fatProgress / fatDiff);
+                const fatPercentCalc = (fatProgress / fatDiff) * 100;
+                setFatWidth(fatWidthCalc > barGoalWidth ? barGoalWidth : fatWidthCalc);
+                setFatPercent(fatPercentCalc > 100 ? 100 : fatPercentCalc);
+            }
+            console.log(barGoalWidth, fatWidth)
         }
-        if (BarGoalRef.current) {
-            const barGoalWidth = BarGoalRef.current.offsetWidth;
-            const calculatedWidth = (barGoalWidth / 41) * Number(muscleData[muscleData.length - 1].muscle);
-            const percent = 100 / 41 * Number(weightData[muscleData.length - 1].muscle);
-            const Fpercent = Number(percent.toFixed(2))
-            setMuscleWidth(calculatedWidth);
-            setMusclePercent(Fpercent)
-        }
-        if (BarGoalRef.current) {
-            const barGoalWidth = BarGoalRef.current.offsetWidth;
-            const calculatedWidth = (barGoalWidth / 15) * Number(fatData[fatData.length - 1].fat);
-            const percent = 100 / 15 * Number(fatData[fatData.length - 1].fat);
-            const Fpercent = Number(percent.toFixed(2))
-            setFatWidth(calculatedWidth);
-            setFatPercent(Fpercent)
-        }
-    }, [weightData]);
+    }, [beforeWeight, afterWeight, weightData, beforeMuscle, afterMuscle, muscleData, beforeFat, afterFat, fatData]);
 
     const calculateGrowth = (currentValue: number, previousValue: number) => {
         return currentValue - previousValue;
@@ -396,37 +443,44 @@ const InbodyDetails = () => {
                         <Content>
                             <h4 style={{ marginBottom: '10px' }}>목표 달성 그래프</h4>
                             <GoalWrapper>
+                                <ValueWrapper>
+                                    <span>이전: {beforeWeight} kg</span>
+                                    <span>현재: {weightData[weightData.length - 1]?.weight} %</span>
+                                    <span>목표: {afterWeight} %</span>
+                                </ValueWrapper>
                                 <BarWrapper>
                                     <span style={{ textAlign: 'left' }}>체중</span>
                                     <BarGoal ref={BarGoalRef}>
-                                        <Bar width={weightWidth} /><div style={{ color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{weightPercent} %</div>
+                                        <Bar width={weightWidth} /><div style={{ height:'25px', lineHeight:'25px',color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{weightPercent} %</div>
                                     </BarGoal>
                                 </BarWrapper>
-                                <GoalValueWrapper>
-                                    목표 <div>80</div>
-                                </GoalValueWrapper>
                             </GoalWrapper>
                             <GoalWrapper>
+                                <ValueWrapper>
+                                    <span>이전: {beforeMuscle} %</span>
+                                    <span>현재: {muscleData[muscleData.length - 1]?.muscle} %</span>
+                                    <span>목표: {afterMuscle} %</span>
+                                </ValueWrapper>
+
                                 <BarWrapper>
                                     <span style={{ textAlign: 'left' }}>골격근량</span>
                                     <BarGoal ref={BarGoalRef}>
-                                        <Bar width={muscleWidth} /><div style={{ color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{musclePercent} %</div>
+                                        <Bar width={muscleWidth} /><div style={{ height:'25px', lineHeight:'25px',color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{musclePercent} %</div>
                                     </BarGoal>
                                 </BarWrapper>
-                                <GoalValueWrapper>
-                                    목표 <div>41</div>
-                                </GoalValueWrapper>
                             </GoalWrapper>
                             <GoalWrapper>
+                                <ValueWrapper>
+                                    <span>이전: {beforeFat} %</span>
+                                    <span>현재: {fatData[fatData.length - 1]?.fat} %</span>
+                                    <span>목표: {afterFat} %</span>
+                                </ValueWrapper>
                                 <BarWrapper>
                                     <span style={{ textAlign: 'left' }}>체지방</span>
                                     <BarGoal ref={BarGoalRef}>
-                                        <Bar width={fatWidth} /><div style={{ color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{fatPercent} %</div>
+                                        <Bar width={fatWidth} /><div style={{ height:'25px', lineHeight:'25px',color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{fatPercent} %</div>
                                     </BarGoal>
                                 </BarWrapper>
-                                <GoalValueWrapper>
-                                    목표 <div>15</div>
-                                </GoalValueWrapper>
                             </GoalWrapper>
                         </Content>
                     </>

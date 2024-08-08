@@ -330,7 +330,7 @@ export default function Inbody() {
             </Header>
             <InbodyRecordWrapper>
                 <LineWrapper>
-                    <Line height={400}
+                    <Line height={300}
                         data={{
                             labels: weightData.map(data => data.x),
                             datasets: [
@@ -358,7 +358,7 @@ export default function Inbody() {
             </InbodyRecordWrapper>
             <InbodyRecordWrapper>
                 <LineWrapper>
-                    <Line height={400}
+                    <Line height={300}
                         data={{
                             labels: muscleData.map(data => data.x),
                             datasets: [
@@ -387,7 +387,7 @@ export default function Inbody() {
             </InbodyRecordWrapper>
             <InbodyRecordWrapper>
                 <LineWrapper>
-                    <Line height={400}
+                    <Line height={300}
                         data={{
                             labels: fatData.map(data => data.x),
                             datasets: [

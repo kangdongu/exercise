@@ -1,5 +1,5 @@
 import { QueryDocumentSnapshot, collection, getDocs, query, where, DocumentData } from 'firebase/firestore';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { auth, db } from '../firebase';
 import { startOfWeek, endOfWeek, format, subWeeks } from 'date-fns';
 import { Line } from 'react-chartjs-2';
@@ -15,13 +15,11 @@ const Wrapper = styled.div`
   display:flex;
 `;
 const LineWrapper = styled.div`
-  width:100%;
-  height:300px;
-  display: flex;
-  justify-content: center;
-  background-color:white;
+  width:95%;
+  height:250px;
   border-radius:10px;
-  margin-bottom:20px;
+  margin: 0 auto;
+  margin-top:25px;
 `;
 const NowWeekWrapper = styled.div`
   width:100%;
@@ -38,11 +36,6 @@ const WeekDates = () => {
   const [exerciseCount, setExerciseCount] = useState(0);
   const [exerciseCountsByWeek, setExerciseCountsByWeek] = useState<number[]>([]);
   const currentUserUID = auth.currentUser?.uid;
-  const [chartHeight, setChartHeight] = useState(window.innerWidth >= 700 ? 400 : 250)
-
-  const updateChartSize = useCallback(() => {
-    setChartHeight(window.innerWidth >= 700 ? 400 : 250);
-  }, []);
 
   useEffect(() => {
     const today = new Date();
@@ -131,51 +124,41 @@ const WeekDates = () => {
     }
   };
 
-  useEffect(() => {
-    const handleResize = () => {
-      updateChartSize();
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    updateChartSize();
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   Chart.register(...registerables);
 
   return (
     <Wrapper>
-      <LineWrapper>
-        <Line height={chartHeight}
-          data={{
-            labels: ['4주 전', '3주 전', '2주 전', '1주 전', '이번주'],
-            datasets: [
-              {
-                label: '주별 운동 횟수',
-                data: [...exerciseCountsByWeek, exerciseCount],
-                fill: true,
-                type: "line",
-                tension: 0,
-                borderColor:'#FF595E',
-                backgroundColor:'rgba(255,89,94,0.3)'
-              }
-            ]
-          }}
-          options={{
-            responsive: true,
-            scales: {
-              y: {
-                min: 0,
-                max: 7,
-                ticks: {
-                  stepSize: 1,
+      <div style={{width:'100%', height:'300px', backgroundColor:'white', marginBottom:'20px'}}>
+        <LineWrapper>
+          <Line
+            data={{
+              labels: ['4주 전', '3주 전', '2주 전', '1주 전', '이번주'],
+              datasets: [
+                {
+                  label: '주별 운동 횟수',
+                  data: [...exerciseCountsByWeek, exerciseCount],
+                  fill: true,
+                  type: "line",
+                  tension: 0,
+                  borderColor: '#FF595E',
+                  backgroundColor: 'rgba(255,89,94,0.3)'
+                }
+              ]
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  ticks: {
+                    stepSize: 1,
+                  }
                 }
               }
-            }
-          }}
-        />
-      </LineWrapper>
+            }}
+          />
+        </LineWrapper>
+      </div>
       <h4 style={{ fontSize: "18px", margin: "0px" }}>이번주 운동</h4>
       <NowWeekWrapper>
         <p>월요일: {format(startDate, 'yyyy-MM-dd')}</p>
