@@ -13,11 +13,14 @@ const Wrapper = styled.div`
     width:100%;
     margin: 0 auto;
     height:calc(100vh - 100px);
+    background-color:#f8f8f8;
 `;
 const Header = styled.div`
     display:flex;
-    padding: 0px 15px;
+    height:50px;
+    padding: 0px 20px;
     align-items:center;
+    background-color:white;
 `;
 const Title = styled.h3`
     margin:0;

@@ -358,13 +358,6 @@ const InbodyDetails = () => {
                                         legend: {
                                             display: false
                                         },
-                                        tooltip: {
-                                            callbacks: {
-                                                label: function (context) {
-                                                    return `${context.raw} ${selectedMenu === "weight" ? "kg" : "%"}`;
-                                                }
-                                            }
-                                        }
                                     },
                                 }}
                             />
@@ -422,19 +415,19 @@ const InbodyDetails = () => {
                                 <TotalNowData>
                                     <h5>현재 몸무게</h5> <span>{weightData[weightData.length - 1].weight}</span>kg
                                     <NowGrowth style={{ backgroundColor: Growth(weightData, "weight") >= 0 ? "green" : "green" }}>
-                                        {Growth(weightData, "weight") >= 0 ? `+${Growth(weightData, "weight")}` : `-${Growth(weightData, "weight")}`} kg
+                                        {Growth(weightData, "weight") >= 0 ? `+${Growth(weightData, "weight")}` : `${Growth(weightData, "weight")}`} kg
                                     </NowGrowth>
                                 </TotalNowData>
                                 <TotalNowData>
                                     <h5>현재 골격근량</h5> <span>{muscleData[muscleData.length - 1].muscle}</span>%
                                     <NowGrowth style={{ backgroundColor: Growth(muscleData, "muscle") >= 0 ? "green" : "red" }}>
-                                        {Growth(muscleData, "muscle") >= 0 ? `+${Growth(muscleData, "muscle")}` : `-${Growth(muscleData, "muscle")}`} %
+                                        {Growth(muscleData, "muscle") >= 0 ? `+${Growth(muscleData, "muscle")}` : `${Growth(muscleData, "muscle")}`} %
                                     </NowGrowth>
                                 </TotalNowData>
                                 <TotalNowData>
                                     <h5>현재 체지방</h5> <span>{fatData[fatData.length - 1].fat}</span>%
                                     <NowGrowth style={{ backgroundColor: Growth(fatData, "fat") <= 0 ? "green" : "red" }}>
-                                        {Growth(fatData, "fat") >= 0 ? `+${Growth(fatData, "fat")}` : `-${Growth(fatData, "fat")}`} %
+                                        {Growth(fatData, "fat") >= 0 ? `+${Growth(fatData, "fat")}` : `${Growth(fatData, "fat")}`} %
                                     </NowGrowth>
                                 </TotalNowData>
                             </TotalNowDataWrapper>
@@ -445,8 +438,12 @@ const InbodyDetails = () => {
                             <GoalWrapper>
                                 <ValueWrapper>
                                     <span>이전: {beforeWeight} kg</span>
-                                    <span>현재: {weightData[weightData.length - 1]?.weight} %</span>
-                                    <span>목표: {afterWeight} %</span>
+                                    <span>현재: {weightData[weightData.length - 1]?.weight} kg</span>
+                                    {afterWeight === "" ? (
+                                        "미설정"
+                                    ): (
+                                        <span>목표: {afterWeight} kg</span>
+                                    )}
                                 </ValueWrapper>
                                 <BarWrapper>
                                     <span style={{ textAlign: 'left' }}>체중</span>
@@ -459,7 +456,11 @@ const InbodyDetails = () => {
                                 <ValueWrapper>
                                     <span>이전: {beforeMuscle} %</span>
                                     <span>현재: {muscleData[muscleData.length - 1]?.muscle} %</span>
-                                    <span>목표: {afterMuscle} %</span>
+                                    {afterMuscle === "" ? (
+                                        "미설정"   
+                                    ): (
+                                        <span>목표: {afterMuscle} %</span>
+                                    )}
                                 </ValueWrapper>
 
                                 <BarWrapper>
@@ -473,7 +474,11 @@ const InbodyDetails = () => {
                                 <ValueWrapper>
                                     <span>이전: {beforeFat} %</span>
                                     <span>현재: {fatData[fatData.length - 1]?.fat} %</span>
-                                    <span>목표: {afterFat} %</span>
+                                    {afterFat === "" ? (
+                                        "미설정"
+                                    ): (
+                                        <span>목표: {afterFat} %</span>
+                                    )}
                                 </ValueWrapper>
                                 <BarWrapper>
                                     <span style={{ textAlign: 'left' }}>체지방</span>

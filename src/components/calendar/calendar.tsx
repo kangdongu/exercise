@@ -34,23 +34,22 @@ const Title = styled.h3`
 const Btn = styled.button`
  display: flex;
     align-items: center;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
-    padding: 0 10px;
-    height:30px;
+    padding: 0 15px;
+    height:35px;
     margin-left: auto;
     background-color: #FF6384;
     color: white;
-    gap: 10px;
+    gap: 7px;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     transition: background-color 0.3s, transform 0.2s;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-weight:600;
     span {
         font-size: 20px;
         color: #fff;
-        font-weight: 800;
+        font-weight: 700;
     }
 
     &:hover {
@@ -63,11 +62,12 @@ const Btn = styled.button`
 `;
 const BtnWrapper = styled.div`
     width:100vw;
-    line-height:40px;
+    line-height:45px;
     font-size:24px;
-    padding:0px 10px;
-    border-bottom: 1px solid gray;
-    margin-bottom:15px;
+    padding:0px 15px;
+    padding-bottom:10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom:12px;
     background-color:white;
     display:flex;
     align-items: center;

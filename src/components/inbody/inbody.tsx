@@ -24,7 +24,6 @@ const Header = styled.div`
     align-items: center;
     padding: 10px 20px;
     border-bottom: 1px solid #ddd;
-    background-color: #f8f8f8;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     h3 {
@@ -67,7 +66,6 @@ const DetailsButton = styled.button`
     cursor: pointer;
     margin-left:auto;
     transition: background-color 0.3s;
-
     &:hover {
         background-color: #5a6268;
     }
@@ -89,7 +87,7 @@ const Form = styled.form`
     width:100vw;
     align-items: center;
     background-color:#f8f8f8;
-    padding:5px 20px;
+    padding:7px 15px;
     margin-left:-20px;
 `;
 const Input = styled.input`
