@@ -20,34 +20,57 @@ const Wrapper = styled.div`
     width: 80%;
     height:calc(100vh - 117px);
     margin: 0 auto;
+    background-color: #f8f8f8;
     overflow:hidden;
     @media screen and (max-width: 700px) {
-        width: 95%;
+        width: 100%;
         margin: 0 auto;
     }
 `;
-const Btn = styled.div`
-    display:flex;
-    font-size:18px;
-    cursor:pointer;
-    float:right;
-    gap:5px;
-    span{
-        font-size:25px;
-        color:red;
-        font-weight:700;
+const Title = styled.h3`
+    margin:0;
+    font-size:24px;
+`;
+const Btn = styled.button`
+ display: flex;
+    align-items: center;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0 10px;
+    height:30px;
+    margin-left: auto;
+    background-color: #FF6384;
+    color: white;
+    gap: 10px;
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight:600;
+    span {
+        font-size: 20px;
+        color: #fff;
+        font-weight: 800;
     }
-    &:hover{
-        color:red;
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+
+    &:active {
+        transform: translateY(0);
     }
 `;
 const BtnWrapper = styled.div`
-    width:100%;
-    height:40px;
+    width:100vw;
     line-height:40px;
     font-size:24px;
+    padding:0px 10px;
     border-bottom: 1px solid gray;
-    margin-bottom:10px;
+    margin-bottom:15px;
+    background-color:white;
+    display:flex;
+    align-items: center;
 `;
 
 interface ExerciseData {
@@ -444,27 +467,30 @@ const Calendar = () => {
     return (
         <Wrapper>
             <BtnWrapper>
-                <Btn onClick={onClick}><span>+</span>운동기록하기</Btn>
+                <Title>Calendar</Title>
+                <Btn onClick={onClick}><span>+</span>운동기록</Btn>
             </BtnWrapper>
-            <FullCalendar
-                plugins={[dayGridPlugin]}
-                initialView="dayGridMonth"
-                events={createRecords}
-                headerToolbar={
-                    {
-                        start: "dayGridMonth",
-                        center: 'title',
-                        end: 'prev,today,next'
+            <div style={{ width: '95%', margin: '0 auto', padding: '10px', backgroundColor: 'white', borderRadius:'5px' }}>
+                <FullCalendar
+                    plugins={[dayGridPlugin]}
+                    initialView="dayGridMonth"
+                    events={createRecords}
+                    headerToolbar={
+                        {
+                            start: "dayGridMonth",
+                            center: 'title',
+                            end: 'prev,today,next'
+                        }
                     }
-                }
-                height={`60vh`}
-                locale={ko}
-                dayCellContent={renderDayCellContent}
-                eventClick={handleEventClick}
-            />
-            {modal ? 
-            <ExerciseRegistration closeModal={closeModal} congratulations={congratulations} />
-             : null}
+                    height={`60vh`}
+                    locale={ko}
+                    dayCellContent={renderDayCellContent}
+                    eventClick={handleEventClick}
+                />
+            </div>
+            {modal ?
+                <ExerciseRegistration closeModal={closeModal} congratulations={congratulations} />
+                : null}
             {calendarClick && window.innerWidth <= 700 ? (
                 <MoCalendarWrapper onClose={() => setCalendarClick(false)}>
                     <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} />;

@@ -10,32 +10,41 @@ import MoSlideModal from "../slideModal/mo-slide-modal";
 
 
 const Wrapper = styled.div`
-width:100%;
-margin: 0 auto;
-height:calc(100vh - 100px);
+    width:100%;
+    margin: 0 auto;
+    height:calc(100vh - 100px);
+`;
+const Header = styled.div`
+    display:flex;
+    padding: 0px 15px;
+    align-items:center;
+`;
+const Title = styled.h3`
+    margin:0;
+    font-size:24px;
 `;
 const Form = styled.form`
-@media screen and (max-width: 700px) {
-    flex-direction: column;
-    width:100%;
+    @media screen and (max-width: 700px) {
+        flex-direction: column;
+        width:100%;
    }
-display:flex;
+    display:flex;
 `;
 const AttachFileButton = styled.label`
-padding: 10px 0px;
-  color: #990033;
-  text-align: center;
-  border-radius: 20px;
-  border: 1px solid #990033;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
+    padding: 10px 0px;
+    color: #990033;
+    text-align: center;
+    border-radius: 20px;
+    border: 1px solid #990033;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
 `;
 const AttachFileInput = styled.input`
-display:none;
+    display:none;
 `;
 const SubmitBtn = styled.input`
-background-color: #990033;
+    background-color: #990033;
     color:white;
     border:none;
     padding:10px 0px;
@@ -57,39 +66,37 @@ const ReadyImg = styled.img`
     height:350px;
 `;
 const PhotoWrapper = styled.div`
-@media screen and (max-width: 700px) {
-    gap:0; 
-   }
-display: flex;
-gap:1%;
-flex-wrap: wrap;
-margin: 0 auto;
-width:100%;
+    @media screen and (max-width: 700px) {
+        gap:0; 
+    }
+    display: flex;
+    gap:1%;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    width:100%;
 `;
 const Memo = styled.textarea`
-width:100%;
-border-radius:5px;
+    width:100%;
+    border-radius:5px;
 `;
 const Plus = styled.div`
-    width:30px;
-    height:30px;
     color:red;
     border-radius:50%;
     cursor:pointer;
     font-size: 35px;
     font-weight:600;
     text-align:center;
-    line-height:60%;
+    margin-left:auto;
     float:right;
     margin-bottom:10px;
 `;
 
 const ModalBackdrop = styled.div`
-@media screen and (max-width: 700px) {
-    background-color:white;
-    position:relative;
-    padding:0;
-}
+    @media screen and (max-width: 700px) {
+        background-color:white;
+        position:relative;
+        padding:0;
+    }
     position: fixed;
     top: 0;
     left: 0;
@@ -429,7 +436,10 @@ export default function PhotoRecords() {
 
     return (
         <Wrapper>
-            <Plus onClick={openModal}>+</Plus>
+            <Header>
+                <Title>Photos</Title>
+                <Plus onClick={openModal}>+</Plus>
+            </Header>
             {isModalOpen && window.innerWidth <= 700 ? (
                 <MoSlideModal onClose={() => setIsModalOpen(false)}>
                     <ModalBackdrop>
@@ -444,13 +454,13 @@ export default function PhotoRecords() {
                                 <AttachFileButton htmlFor="file">{file ? "다른사진 선택" : "+ 사진 선택"}</AttachFileButton>
                                 <AttachFileInput onChange={onFileChange} type="file" id="file" accept="image" />
                                 {previewUrl && (
-                                <ReadyFile>
-                                    <ReadyImg src={previewUrl} alt="Selected" />
-                                </ReadyFile>
-                            )}
+                                    <ReadyFile>
+                                        <ReadyImg src={previewUrl} alt="Selected" />
+                                    </ReadyFile>
+                                )}
                                 <SubmitBtn type="submit" value={isLoading ? "등록중.." : "완료"} />
                             </Form>
-                            
+
                         </ModalContent>
                     </ModalBackdrop>
                 </MoSlideModal>
@@ -499,7 +509,7 @@ export default function PhotoRecords() {
                                     <p>{selectedPhotoDetails.날짜}</p>
                                     {editView ? <Memo rows={5} maxLength={180} onChange={onChange} value={memo} placeholder={selectedPhotoDetails.메모} /> : <p>{selectedPhotoDetails.메모}</p>}
                                     <DeleteBtn onClick={deleteClick}>삭제</DeleteBtn>
-                                    {editView ? null :<EditPost onClick={editPost}>수정</EditPost>}
+                                    {editView ? null : <EditPost onClick={editPost}>수정</EditPost>}
                                     {editView ? <EditComplete onClick={editCompleteEvent}>수정완료</EditComplete> : null}
                                 </ViewWrapper>
                             )}

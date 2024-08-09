@@ -86,7 +86,7 @@ export default function Home() {
     };
     useEffect(() => {
         setBellAlerm(true)
-      },[])
+    }, [])
 
     useEffect(() => {
         const todayExerciseReset = async () => {
@@ -315,20 +315,19 @@ export default function Home() {
     }
 
     const menuClick = () => {
-        if(menuOn){
+        if (menuOn) {
             setMenuOn(false)
-        }else {
+        } else {
             setMenuOn(true)
         }
     }
     const bellClick = () => {
-        if(bellOn){
+        if (bellOn) {
             setBellOn(false)
-        }else {
+        } else {
             setBellOn(true)
         }
     }
-  
 
     return (
         <Wrapper>
@@ -345,9 +344,9 @@ export default function Home() {
                 <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{nickname}</span>
                 <HeaderContentWrapper>
                     {bellAlerm && (
-                        <div style={{position:'absolute',width:'6px',height:'6px', borderRadius:'50%', backgroundColor:'red',left:'20px'}} />
+                        <div style={{ position: 'absolute', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'red', left: '20px' }} />
                     )}
-                    <GoBell onClick={bellClick} />
+                    <GoBell onClick={() => { bellClick; alert("업데이트 예정입니다") }} />
                     <IoIosMenu onClick={menuClick} style={{ width: '32px', height: '32px', marginTop: '-5px' }} />
                 </HeaderContentWrapper>
             </ProfileWrapper>

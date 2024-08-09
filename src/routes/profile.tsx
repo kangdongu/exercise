@@ -381,7 +381,7 @@ export default function Profile() {
           {bellAlerm && (
             <div style={{ position: 'absolute', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'red', left: '20px' }} />
           )}
-          <GoBell onClick={bellClick} />
+          <GoBell onClick={() => {bellClick; alert("업데이트 예정입니다.")}} />
           <IoIosMenu onClick={menuClick} style={{ width: '32px', height: '32px', marginTop: '-5px' }} />
         </BellAndMenu>
       </Header>

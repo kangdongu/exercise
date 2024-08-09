@@ -18,67 +18,89 @@ interface CalendarClickModalProps {
 
 
 const Wrapper = styled.div`
-@media screen and (max-width: 700px) {
-    position:relative;
-   }
-    width:80%;
-    height:80vh;
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    background-color:white;
-    z-index:99;
-    padding-left:3%;
-    box-sizing:border-box;
+  @media screen and (max-width: 700px) {
+    width: 95%;
+  }
+  width: 80%;
+  height: 80vh;
+  overflow-y:scroll;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  z-index: 99;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 `;
-const ContentWrapper = styled.div`
-    width:90vw;
-    margin: 0 auto;
-    display:flex;
-    flex-direction: column;
-`;
-const Button = styled.button`
-@media screen and (max-width: 700px) {
-    display:none;
-   }
-    margin-bottom:20px;
-    margin-left:-3%;
-`;
-const ExerciseList = styled.div`
-    width:100%;
-`;
-const ExerciseItem = styled.div`
 
+const ContentWrapper = styled.div`
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 `;
+
+const Button = styled.button`
+  padding: 10px 15px;
+  background-color: #ff6384;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+    margin-left:auto;
+  &:hover {
+    background-color: #e55770;
+  }
+`;
+
+const ExerciseList = styled.div`
+  width: 100%;
+  margin-top: 20px;
+`;
+
+const ExerciseItem = styled.div`
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+`;
+
 const Title = styled.span`
-@media screen and (max-width: 700px) {
-    font-size:18px;
-   }
-    color:blue;
-    font-size:20px;
-    font-weight:600;
-    margin-top:10px;
+  display: block;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
 `;
+
 const Transparency = styled.div`
-@media screen and (max-width: 700px) {
-    position:relative;
-    background-color:white;
-   }
-width:100%;
-height:100vh;
-background-color:rgba(0, 0, 0, 0.5);
-position:fixed;
-top:0;
-left:0;
-z-index:98;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 98;
 `;
+
 const AreaList = styled.div`
-    width:100%;
-    height:200px;
+  width: 100%;
+  margin-bottom: 20px;
 `;
+
 const DayArea = styled.span`
-    font-size:25px;
+  display: inline-block;
+  font-size: 18px;
+  color: #555;
+  margin-right: 10px;
+  padding: 5px 10px;
+  background-color: #e0f7fa;
+  border-radius: 5px;
+  margin-bottom: 10px;
 `;
 
 const CalendarClickModal: React.FC<CalendarClickModalProps> = ({ setCalendarClick, clickDate }) => {
@@ -128,12 +150,14 @@ const CalendarClickModal: React.FC<CalendarClickModalProps> = ({ setCalendarClic
     return (
         <Transparency>
         <Wrapper>
+            <div style={{display:'flex'}}>
             <Button onClick={() => setCalendarClick(false)}>닫기</Button>
+            </div>
             <ContentWrapper>
             <AreaList>
             <h1>운동 부위</h1>
                     {exerciseAreas.map((area, index) => (
-                        <DayArea key={index}>{area} </DayArea>
+                        <DayArea key={index}>{area}</DayArea>
                     ))}
             </AreaList>
             <ExerciseList>

@@ -66,7 +66,6 @@ const DetailsButton = styled.button`
     padding: 10px 10px;
     cursor: pointer;
     margin-left:auto;
-
     transition: background-color 0.3s;
 
     &:hover {
