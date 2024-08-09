@@ -14,19 +14,27 @@ const FilterWrapper = styled.div`
     left: 0px;
     position: fixed;
     bottom: 40px;
-    background-color: lightgray;
+    padding: 5px 10px;
+    background-color: #f8f8f8;
 `;
 const Close = styled.div`
     background-color:white;
-    padding:10px 10px;
+    padding:10px;
     font-size:18px;
-    border-bottom:1px solid #939393;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    span{
+        margin-left:auto;
+    }
 `;
 const Section = styled.div`
     background-color: white;
-    padding: 10px 10px;
+    padding: 10px;
     margin-bottom: 5px;
     width: 100%;
+    border-radius:10px;
 `;
 const PeriodBox = styled.div`
     display: flex;
@@ -102,7 +110,7 @@ const WeekdayItem = styled.div<{ selected: boolean }>`
     cursor: pointer;
     font-size: 16px;
     width:31.3333%;
-    margin-bottom:3px;
+    margin-bottom:7px;
 `;
 
 interface FilterComponentProps {

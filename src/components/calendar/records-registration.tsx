@@ -82,8 +82,8 @@ const Button = styled.button`
 `;
 const CloseBtn = styled.div`
   margin-bottom: 10px;
-  width:20px;
-  height:20px;
+  font-size:18px;
+  margin-left:auto;
   cursor:pointer;
 `;
 const ListSetButtonWrapper = styled.div`
@@ -363,7 +363,10 @@ export default function ExerciseRegistration({ closeModal, congratulations }: Ex
     <Wrapper>
       <BottomSheet open={bottomSheetOpen} onClose={closeModal}>
         <RecordsWrapper>
-          <CloseBtn onClick={back}>X</CloseBtn>
+          <div style={{display:'flex', alignItems:'center', padding:'10px 0px'}}>
+            <h3 style={{fontSize:'18px', margin:'0'}}>운동기록</h3>
+            <CloseBtn onClick={back}>X</CloseBtn>
+          </div>
           <DateChoiceWrapper>
             <DateChoice onDateChange={handleDateChange} />
           </DateChoiceWrapper>
@@ -409,7 +412,7 @@ export default function ExerciseRegistration({ closeModal, congratulations }: Ex
         </RecordsWrapper>
       </BottomSheet>
 
-      {exerciseModal ? <MoSlideModal onClose={() => { setExerciseModal(false);}}>
+      {exerciseModal ? <MoSlideModal onClose={() => { setExerciseModal(false); }}>
         <ExerciseChoiceModal>
           {searchBox ? (
             <SearchWrapper>

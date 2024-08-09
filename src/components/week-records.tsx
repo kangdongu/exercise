@@ -159,7 +159,7 @@ const WeekDates = () => {
           />
         </LineWrapper>
       </div>
-      <h4 style={{ fontSize: "18px", margin: "0px" }}>이번주 운동</h4>
+      <h4 style={{ margin: "10px 0px" }}>이번주 운동</h4>
       <NowWeekWrapper>
         <p>월요일: {format(startDate, 'yyyy-MM-dd')}</p>
         <p>일요일: {format(endDate, 'yyyy-MM-dd')}</p>

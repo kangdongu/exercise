@@ -26,6 +26,8 @@ const ContentWrapper = styled.div`
 const Header = styled.div`
    display: flex;
     align-items: center;
+    width:95vw;
+    margin: 0 auto;
     margin-bottom: 20px;
     gap: 20px;
     background-color: white;
@@ -84,8 +86,7 @@ const UserPofileWrapper = styled.div`
 
 `;
 const Title = styled.h4`
-  margin:0;
-  font-size:18px;
+  margin:10px 0px;
 `;
 const BadgeWrapper = styled.div`
   width:105px;

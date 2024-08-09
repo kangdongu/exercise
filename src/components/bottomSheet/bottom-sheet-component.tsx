@@ -15,11 +15,10 @@ const Wrapper = styled(motion.div)`
   right: 0;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
+  box-shadow: 0px -2px 10px -3px rgba(0, 0, 0, 0.3);
   height: ${BOTTOM_SHEET_HEIGHT}px;
   transform: translateY(calc(250px - 100vh));
   background: white;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-top: 0.5px solid lightgray;
   transition: transform 650ms ease-out;
 `;

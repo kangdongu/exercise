@@ -19,20 +19,24 @@ import FilterComponent from "./filter";
 const Wrapper = styled.div`
     width:100%;
     height:calc(100vh - 80px);
-    padding:15px;
+    padding:10px;
+    padding-top:0px;
     box-sizing:border-box;
     overflow-y:scroll;
-`;
-const CreateButtonWrapper = styled.div`
-    width:100%;
-    display: flex;
-    justify-content: flex-end;
+    background-color:#f8f8f8;
 `;
 const CreateChallengeButton = styled.div`
-    font-size:16px;
+    font-size:14px;
     align-items: center;
+    height:35px;
+    display:flex;
+    gap:5px;
+    border-radius:5px;
+    margin-left:auto;
+    padding: 0px 15px;
+    background-color:#FF6384;
+    color:white;
     span{
-        color:#ff0000;
         font-size:25px;
         font-weight:700;
     }
@@ -308,7 +312,7 @@ const ExpiredLabel = styled.span`
 const RoomFilterWrapper = styled.div<{ filterOn: boolean }>`
     margin-left:auto;
     height:25px;
-    border:2px solid ${({ filterOn }) => (filterOn ? "blue" : "black")};
+    border:1.3px solid ${({ filterOn }) => (filterOn ? "blue" : "black")};
     padding:0px 5px;
     display:flex;
     color: ${({ filterOn }) => (filterOn ? 'blue' : 'black')};
@@ -625,60 +629,63 @@ const GroupList = () => {
     const secretText = selectedSecret === "public" ? "공개방, " : selectedSecret === "secret" ? "비밀방" : null
     const fullText = selectedFull === "empty" ? "자리있음, " : selectedFull === "full" ? "가득참" : null
     const weekDaysText = !selectedWeekdays.includes("상관없음") ? selectedWeekdays : null
- 
+
     return (
         <MoSlideModal onClose={() => navigate("/")}>
             <Wrapper>
-                <h4>챌린지를 통해 사람들과 목표를 달성해보세요</h4>
-                <CreateButtonWrapper>
+                <div style={{ width: '100vw', display: 'flex', alignItems: 'center', height: '50px', padding: '10px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', backgroundColor: 'white', marginLeft: '-10px' }}>
+                    <h4 style={{ fontSize: '24px', margin: "0px" }}>그룹 챌린지</h4>
                     <CreateChallengeButton onClick={createClick}>
-                        챌린지 생성 <span>+</span>
+                        <span>+</span> 챌린지 생성
                     </CreateChallengeButton>
-                </CreateButtonWrapper>
-                {create && <GroupCreate onBack={() => setCreate(false)} />}
-                <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid gray', padding: '7px 0', marginTop: '10px' }}>
-                    <SelectRender value={selectedRender} onChange={renderChange}>
-                        <RenderOption value="total">전체</RenderOption>
-                        <RenderOption value="join">가입된 그룹방</RenderOption>
-                    </SelectRender>
-                    <RoomFilterWrapper filterOn={filterOn} onClick={() => setFilter(true)}>
-                        <span>필터</span>
-                        <CiFilter style={{ width: '18px', height: '18px', marginTop: '2px' }} />
-                    </RoomFilterWrapper>
                 </div>
+                {create && <GroupCreate onBack={() => setCreate(false)} />}
+
                 {filterOn && (
-                        <div style={{display:'flex', fontSize:'14px', justifyContent: 'flex-end', color:'gray', marginTop:'3px'}}>
-                            <span>{filterText}</span>
-                            <span>{secretText}</span>
-                            <span>{fullText}</span>
-                            <span>{weekDaysText}</span>
+                    <div style={{ display: 'flex', fontSize: '14px', justifyContent: 'flex-end', color: 'gray', marginTop: '3px' }}>
+                        <span>{filterText}</span>
+                        <span>{secretText}</span>
+                        <span>{fullText}</span>
+                        <span>{weekDaysText}</span>
+                    </div>
+                )}
+                <div style={{ width: '100%', margin: '0 auto', backgroundColor: 'white' }}>
+                    <ListWrapper>
+                        <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid lightgray', padding: '10px 10px', marginTop: '10px', backgroundColor: 'white' }}>
+                            <SelectRender value={selectedRender} onChange={renderChange}>
+                                <RenderOption value="total">전체</RenderOption>
+                                <RenderOption value="join">가입된 그룹방</RenderOption>
+                            </SelectRender>
+                            <RoomFilterWrapper filterOn={filterOn} onClick={() => setFilter(true)}>
+                                <span>필터</span>
+                                <CiFilter style={{ width: '18px', height: '18px', marginTop: '2px' }} />
+                            </RoomFilterWrapper>
                         </div>
-                    )}
-                <ListWrapper>
-                    {filteredChallengesList.map((challenge) => {
-                        const isExpired = challenge.기간종료;
-                        return (
-                            <List key={challenge.id} as={isExpired ? ExpiredList : List}>
-                                {challenge.비밀방여부 && (
-                                    <Secret>
-                                        <CiLock style={{ width: "20px", height: "20px" }} />
-                                    </Secret>
-                                )}
-                                <ListTitle>{challenge.그룹챌린지제목}</ListTitle>
-                                {isExpired && <ExpiredLabel>종료됨</ExpiredLabel>}
-                                <span style={{ marginLeft: "5px" }} onClick={() => glassesClick(challenge)}>
-                                    <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px" }} />
-                                </span>
-                                <PeopleJoinWrapper>
-                                    <PeopleWrapper>{challenge.유저아이디.length}/{challenge.인원수}</PeopleWrapper>
-                                    <JoinButton onClick={() => joinClick(challenge)} disabled={isExpired}>
-                                        {challenge.유저아이디.includes(user?.uid ?? '') ? "인증" : "가입"}
-                                    </JoinButton>
-                                </PeopleJoinWrapper>
-                            </List>
-                        )
-                    })}
-                </ListWrapper>
+                        {filteredChallengesList.map((challenge) => {
+                            const isExpired = challenge.기간종료;
+                            return (
+                                <List key={challenge.id} as={isExpired ? ExpiredList : List}>
+                                    {challenge.비밀방여부 && (
+                                        <Secret>
+                                            <CiLock style={{ width: "20px", height: "20px" }} />
+                                        </Secret>
+                                    )}
+                                    <ListTitle>{challenge.그룹챌린지제목}</ListTitle>
+                                    {isExpired && <ExpiredLabel>종료됨</ExpiredLabel>}
+                                    <span style={{ marginLeft: "5px" }} onClick={() => glassesClick(challenge)}>
+                                        <IoSearch style={{ width: "25px", height: "25px", marginTop: "5px" }} />
+                                    </span>
+                                    <PeopleJoinWrapper>
+                                        <PeopleWrapper>{challenge.유저아이디.length}/{challenge.인원수}</PeopleWrapper>
+                                        <JoinButton onClick={() => joinClick(challenge)} disabled={isExpired}>
+                                            {challenge.유저아이디.includes(user?.uid ?? '') ? "인증" : "가입"}
+                                        </JoinButton>
+                                    </PeopleJoinWrapper>
+                                </List>
+                            )
+                        })}
+                    </ListWrapper>
+                </div>
                 {join && selectedChallenge && <JoinedRoom />}
                 {glasses && selectedChallenge && <GroupGlasses onBack={() => setGlasses(false)} challenge={selectedChallenge} />}
                 {joinPasswordModal && (
