@@ -3563,7 +3563,7 @@ color: tomato;
 width: 100%;
 text-align: center;
 font-size: 65px;
-color: #ff0000;
+color: #ff5c73;
 font-weight:800;
 `,Ane=_.div`
     width: 200px;
@@ -3582,7 +3582,7 @@ font-weight:800;
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-     background: linear-gradient(to bottom, #FF6F61, #D32F2F);
+     background: linear-gradient(to bottom, #FFA3B1, #FF6384);
 `,jne=_.div`
     width:70%;
     display: flex;
@@ -3607,7 +3607,7 @@ font-weight:800;
     background-color: #FF6F61;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(to bottom, #FF6F61, #D32F2F);
+    background: linear-gradient(to bottom, #a7b0e7, #0079ff);
 `,Fne=_.div`
     width: 70%;
     display: flex;
@@ -3632,7 +3632,7 @@ font-weight:800;
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-     background: linear-gradient(to bottom, #FF6F61, #D32F2F);
+     background: linear-gradient(to bottom, #FFA6B1, #FF4D6D);
 `,Une=_.div`
    width:70%;
     display: flex;
@@ -3657,7 +3657,7 @@ font-weight:800;
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-     background: linear-gradient(to bottom, #FF6F61, #D32F2F);
+     background: linear-gradient(to bottom, #BEE3F8, #6DAEDB);
 `,Gne=_.div`
     width:70%;
     display: flex;
@@ -3673,7 +3673,7 @@ font-weight:800;
         color:#F8F8FF;
     }
 `,Qne=({badgeClick:t})=>h.jsxs(qne,{onClick:t,children:[h.jsx(Yne,{style:{position:"absolute",left:"-30px",top:"20px",width:"100px",opacity:"0.7",height:"100px",color:"#FFEB3B"}}),h.jsxs(Gne,{children:[h.jsx("div",{style:{fontSize:"20px",fontWeight:"600",textAlign:"center",marginTop:"20px"},children:"뱃지 현황"}),h.jsx("span",{children:"운동 습관을 완료하고 뱃지를 획득해보세요"})]})]});function jF(t){return Ve({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"path",attr:{d:"M12 1c3.681 0 7 2.565 7 6v4.539c0 .642.189 1.269.545 1.803l2.2 3.298A1.517 1.517 0 0 1 20.482 19H15.5a3.5 3.5 0 1 1-7 0H3.519a1.518 1.518 0 0 1-1.265-2.359l2.2-3.299A3.25 3.25 0 0 0 5 11.539V7c0-3.435 3.318-6 7-6ZM6.5 7v4.539a4.75 4.75 0 0 1-.797 2.635l-2.2 3.298-.003.01.001.007.004.006.006.004.007.001h16.964l.007-.001.006-.004.004-.006.001-.006a.017.017 0 0 0-.003-.01l-2.199-3.299a4.753 4.753 0 0 1-.798-2.635V7c0-2.364-2.383-4.5-5.5-4.5S6.5 4.636 6.5 7ZM14 19h-4a2 2 0 1 0 4 0Z"},child:[]}]})(t)}function Kne(t){return Ve({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"path",attr:{d:"M17.263 2.177a1.75 1.75 0 0 1 2.474 0l2.586 2.586a1.75 1.75 0 0 1 0 2.474L19.53 10.03l-.012.013L8.69 20.378a1.753 1.753 0 0 1-.699.409l-5.523 1.68a.748.748 0 0 1-.747-.188.748.748 0 0 1-.188-.747l1.673-5.5a1.75 1.75 0 0 1 .466-.756L14.476 4.963ZM4.708 16.361a.26.26 0 0 0-.067.108l-1.264 4.154 4.177-1.271a.253.253 0 0 0 .1-.059l10.273-9.806-2.94-2.939-10.279 9.813ZM19 8.44l2.263-2.262a.25.25 0 0 0 0-.354l-2.586-2.586a.25.25 0 0 0-.354 0L16.061 5.5Z"},child:[]}]})(t)}function Xne(t){return Ve({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"path",attr:{d:"M5.09 10.121A5.251 5.251 0 0 1 1 5V3.75C1 2.784 1.784 2 2.75 2h2.364c.236-.586.81-1 1.48-1h10.812c.67 0 1.244.414 1.48 1h2.489c.966 0 1.75.784 1.75 1.75V5a5.252 5.252 0 0 1-4.219 5.149 7.01 7.01 0 0 1-4.644 5.478l.231 3.003a.5.5 0 0 0 .034.031c.079.065.303.203.836.282.838.124 1.637.81 1.637 1.807v.75h2.25a.75.75 0 0 1 0 1.5H4.75a.75.75 0 0 1 0-1.5H7v-.75c0-.996.8-1.683 1.637-1.807.533-.08.757-.217.836-.282a.5.5 0 0 0 .034-.031l.231-3.003A7.012 7.012 0 0 1 5.09 10.12ZM6.5 2.594V9a5.5 5.5 0 1 0 11 0V2.594a.094.094 0 0 0-.094-.094H6.594a.094.094 0 0 0-.094.094Zm4.717 13.363-.215 2.793-.001.021-.003.043a1.212 1.212 0 0 1-.022.147c-.05.237-.194.567-.553.86-.348.286-.853.5-1.566.605a.478.478 0 0 0-.274.136.264.264 0 0 0-.083.188v.75h7v-.75a.264.264 0 0 0-.083-.188.478.478 0 0 0-.274-.136c-.713-.105-1.218-.32-1.567-.604-.358-.294-.502-.624-.552-.86a1.22 1.22 0 0 1-.025-.19l-.001-.022-.215-2.793a7.069 7.069 0 0 1-1.566 0ZM19 8.578A3.751 3.751 0 0 0 21.625 5V3.75a.25.25 0 0 0-.25-.25H19ZM5 3.5H2.75a.25.25 0 0 0-.25.25V5A3.752 3.752 0 0 0 5 8.537Z"},child:[]}]})(t)}const Zne=_.div`
-    border-radius:10px;
+     border-radius:10px;
     padding: 5px 5px;
     display: flex;
     gap: 5px;
@@ -3682,24 +3682,23 @@ font-weight:800;
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-    grid-column:1/3;
-     background: linear-gradient(to bottom, #FF6F61, #D32F2F);
+     background: linear-gradient(to bottom, #FFA3B1, #FF6384);
 `,Jne=_.div`
-    width:90%;
+    width:70%;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-left:auto;
     z-index:10;
-    gap:20px;
+    gap:15px;
     color:white;
     span{
         font-size:14px;
         text-align:center;
         color:#F8F8FF;
     }
-`,ere=({achievmeentsClick:t})=>h.jsxs(Zne,{onClick:t,children:[h.jsx(Xne,{style:{position:"absolute",top:"20px",fontSize:"18px",width:"100px",opacity:"0.8",height:"100px",color:"#FFD700"}}),h.jsxs(Jne,{children:[h.jsx("div",{style:{fontSize:"20px",fontWeight:"600",textAlign:"center",marginTop:"25px"},children:"도전과제"}),h.jsx("span",{children:"습관과 도전과제를 함께 쌓아보세요"})]})]});function tre(t){return Ve({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"g",attr:{id:"Dumbbell"},child:[{tag:"path",attr:{d:"M21.435,11.5h-.38V8.12a1.626,1.626,0,0,0-1.62-1.62h-.63V6.12a1.625,1.625,0,0,0-3.25,0V11.5H8.445V6.12a1.625,1.625,0,0,0-3.25,0V6.5h-.63a1.62,1.62,0,0,0-1.62,1.62V11.5h-.38a.5.5,0,1,0,0,1h.38v3.37a1.622,1.622,0,0,0,1.62,1.63H5.2v.37a1.625,1.625,0,1,0,3.25,0V12.5h7.11v5.37a1.625,1.625,0,1,0,3.25,0V17.5h.63a1.628,1.628,0,0,0,1.62-1.63V12.5h.38a.5.5,0,1,0,0-1ZM5.2,16.5h-.63a.625.625,0,0,1-.62-.63V8.12a.623.623,0,0,1,.62-.62H5.2Zm2.25,1.37a.634.634,0,0,1-.63.63.625.625,0,0,1-.62-.63V6.12a.623.623,0,0,1,.62-.62.632.632,0,0,1,.63.62Zm10.36,0a.625.625,0,1,1-1.25,0V6.12a.625.625,0,0,1,1.25,0Zm2.25-2a.625.625,0,0,1-.62.63h-.63v-9h.63a.623.623,0,0,1,.62.62Z"},child:[]}]}]})(t)}function nre(t){return Ve({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"g",attr:{id:"Filter"},child:[{tag:"path",attr:{d:"M14.037,20.937a1.015,1.015,0,0,1-.518-.145l-3.334-2a2.551,2.551,0,0,1-1.233-2.176V12.091a1.526,1.526,0,0,0-.284-.891L4.013,4.658a1.01,1.01,0,0,1,.822-1.6h14.33a1.009,1.009,0,0,1,.822,1.6h0L15.332,11.2a1.527,1.527,0,0,0-.285.891v7.834a1.013,1.013,0,0,1-1.01,1.012ZM4.835,4.063,9.482,10.62a2.515,2.515,0,0,1,.47,1.471v4.524a1.543,1.543,0,0,0,.747,1.318l3.334,2,.014-7.843a2.516,2.516,0,0,1,.471-1.471l4.654-6.542,0,0Z"},child:[]}]}]})(t)}function LF(t){return Ve({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"g",attr:{id:"Lock"},child:[{tag:"g",attr:{},child:[{tag:"path",attr:{d:"M17.44,9.33h-1.1V6.4a4.34,4.34,0,0,0-8.68,0V9.33H6.56a2.5,2.5,0,0,0-2.5,2.5v7.61a2.507,2.507,0,0,0,2.5,2.5H17.44a2.507,2.507,0,0,0,2.5-2.5V11.83A2.5,2.5,0,0,0,17.44,9.33ZM8.66,6.4a3.34,3.34,0,0,1,6.68,0V9.33H8.66ZM18.94,19.44a1.511,1.511,0,0,1-1.5,1.5H6.56a1.511,1.511,0,0,1-1.5-1.5V11.83a1.5,1.5,0,0,1,1.5-1.5H17.44a1.5,1.5,0,0,1,1.5,1.5Z"},child:[]},{tag:"path",attr:{d:"M13,14.95a.984.984,0,0,1-.5.86v1.5a.5.5,0,0,1-1,0v-1.5a.984.984,0,0,1-.5-.86,1,1,0,0,1,2,0Z"},child:[]}]}]}]})(t)}const rre=_.div`
-    border-radius:10px;
+`,ere=({achievmeentsClick:t})=>h.jsxs(Zne,{onClick:t,children:[h.jsx(Xne,{style:{position:"absolute",left:"-30px",top:"20px",width:"100px",opacity:"0.7",height:"100px",color:"#FFD700"}}),h.jsxs(Jne,{children:[h.jsx("div",{style:{fontSize:"20px",fontWeight:"600",textAlign:"center",marginTop:"20px"},children:"도전과제"}),h.jsx("span",{children:"습관과 도전과제를 함께 쌓아보세요"})]})]});function tre(t){return Ve({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"g",attr:{id:"Dumbbell"},child:[{tag:"path",attr:{d:"M21.435,11.5h-.38V8.12a1.626,1.626,0,0,0-1.62-1.62h-.63V6.12a1.625,1.625,0,0,0-3.25,0V11.5H8.445V6.12a1.625,1.625,0,0,0-3.25,0V6.5h-.63a1.62,1.62,0,0,0-1.62,1.62V11.5h-.38a.5.5,0,1,0,0,1h.38v3.37a1.622,1.622,0,0,0,1.62,1.63H5.2v.37a1.625,1.625,0,1,0,3.25,0V12.5h7.11v5.37a1.625,1.625,0,1,0,3.25,0V17.5h.63a1.628,1.628,0,0,0,1.62-1.63V12.5h.38a.5.5,0,1,0,0-1ZM5.2,16.5h-.63a.625.625,0,0,1-.62-.63V8.12a.623.623,0,0,1,.62-.62H5.2Zm2.25,1.37a.634.634,0,0,1-.63.63.625.625,0,0,1-.62-.63V6.12a.623.623,0,0,1,.62-.62.632.632,0,0,1,.63.62Zm10.36,0a.625.625,0,1,1-1.25,0V6.12a.625.625,0,0,1,1.25,0Zm2.25-2a.625.625,0,0,1-.62.63h-.63v-9h.63a.623.623,0,0,1,.62.62Z"},child:[]}]}]})(t)}function nre(t){return Ve({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"g",attr:{id:"Filter"},child:[{tag:"path",attr:{d:"M14.037,20.937a1.015,1.015,0,0,1-.518-.145l-3.334-2a2.551,2.551,0,0,1-1.233-2.176V12.091a1.526,1.526,0,0,0-.284-.891L4.013,4.658a1.01,1.01,0,0,1,.822-1.6h14.33a1.009,1.009,0,0,1,.822,1.6h0L15.332,11.2a1.527,1.527,0,0,0-.285.891v7.834a1.013,1.013,0,0,1-1.01,1.012ZM4.835,4.063,9.482,10.62a2.515,2.515,0,0,1,.47,1.471v4.524a1.543,1.543,0,0,0,.747,1.318l3.334,2,.014-7.843a2.516,2.516,0,0,1,.471-1.471l4.654-6.542,0,0Z"},child:[]}]}]})(t)}function LF(t){return Ve({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"g",attr:{id:"Lock"},child:[{tag:"g",attr:{},child:[{tag:"path",attr:{d:"M17.44,9.33h-1.1V6.4a4.34,4.34,0,0,0-8.68,0V9.33H6.56a2.5,2.5,0,0,0-2.5,2.5v7.61a2.507,2.507,0,0,0,2.5,2.5H17.44a2.507,2.507,0,0,0,2.5-2.5V11.83A2.5,2.5,0,0,0,17.44,9.33ZM8.66,6.4a3.34,3.34,0,0,1,6.68,0V9.33H8.66ZM18.94,19.44a1.511,1.511,0,0,1-1.5,1.5H6.56a1.511,1.511,0,0,1-1.5-1.5V11.83a1.5,1.5,0,0,1,1.5-1.5H17.44a1.5,1.5,0,0,1,1.5,1.5Z"},child:[]},{tag:"path",attr:{d:"M13,14.95a.984.984,0,0,1-.5.86v1.5a.5.5,0,0,1-1,0v-1.5a.984.984,0,0,1-.5-.86,1,1,0,0,1,2,0Z"},child:[]}]}]}]})(t)}const rre=_.div`
+   border-radius:10px;
     padding: 5px 5px;
     display: flex;
     gap: 5px;
@@ -3708,23 +3707,22 @@ font-weight:800;
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-    grid-column:1/3;
-     background: linear-gradient(to bottom, #FF6F61, #D32F2F);
+     background: linear-gradient(to bottom, #BEE3F8, #6DAEDB);
 `,ire=_.div`
-    width:90%;
+     width:70%;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-left:auto;
     z-index:10;
-    gap:20px;
+    gap:15px;
     color:white;
     span{
         font-size:14px;
         text-align:center;
         color:#F8F8FF;
     }
-`,sre=({efficacyClick:t})=>h.jsxs(rre,{onClick:t,children:[h.jsx(tre,{style:{position:"absolute",top:"10px",width:"120px",opacity:"0.8",height:"120px",color:"#8E24AA"}}),h.jsxs(ire,{children:[h.jsx("div",{style:{fontSize:"20px",fontWeight:"600",textAlign:"center",marginTop:"25px"},children:"운동별 정보"}),h.jsxs("span",{children:["운동의 장, 단점",h.jsx("br",{})," 효능에 대해 알아보세요"]})]})]});function hI(t){return Ve({tag:"svg",attr:{viewBox:"0 0 448 512"},child:[{tag:"path",attr:{d:"M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"},child:[]}]})(t)}function VF(t){return Ve({tag:"svg",attr:{viewBox:"0 0 512 512"},child:[{tag:"path",attr:{d:"M336 16V80c0 8.8-7.2 16-16 16s-16-7.2-16-16V16c0-8.8 7.2-16 16-16s16 7.2 16 16zm-98.7 7.1l32 48c4.9 7.4 2.9 17.3-4.4 22.2s-17.3 2.9-22.2-4.4l-32-48c-4.9-7.4-2.9-17.3 4.4-22.2s17.3-2.9 22.2 4.4zM135 119c9.4-9.4 24.6-9.4 33.9 0L292.7 242.7c10.1 10.1 27.3 2.9 27.3-11.3V192c0-17.7 14.3-32 32-32s32 14.3 32 32V345.6c0 57.1-30 110-78.9 139.4c-64 38.4-145.8 28.3-198.5-24.4L7 361c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l53 53c6.1 6.1 16 6.1 22.1 0s6.1-16 0-22.1L23 265c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l93 93c6.1 6.1 16 6.1 22.1 0s6.1-16 0-22.1L55 185c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l117 117c6.1 6.1 16 6.1 22.1 0s6.1-16 0-22.1l-93-93c-9.4-9.4-9.4-24.6 0-33.9zM433.1 484.9c-24.2 14.5-50.9 22.1-77.7 23.1c48.1-39.6 76.6-99 76.6-162.4l0-98.1c8.2-.1 16-6.4 16-16V192c0-17.7 14.3-32 32-32s32 14.3 32 32V345.6c0 57.1-30 110-78.9 139.4zM424.9 18.7c7.4 4.9 9.3 14.8 4.4 22.2l-32 48c-4.9 7.4-14.8 9.3-22.2 4.4s-9.3-14.8-4.4-22.2l32-48c4.9-7.4 14.8-9.3 22.2-4.4z"},child:[]}]})(t)}function ore(t){return Ve({tag:"svg",attr:{viewBox:"0 0 640 512"},child:[{tag:"path",attr:{d:"M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"},child:[]}]})(t)}const are=_.div`
+`,sre=({efficacyClick:t})=>h.jsxs(rre,{onClick:t,children:[h.jsx(tre,{style:{position:"absolute",left:"-30px",top:"20px",width:"100px",opacity:"0.7",height:"100px",color:"#8E24AA"}}),h.jsxs(ire,{children:[h.jsx("div",{style:{fontSize:"20px",fontWeight:"600",textAlign:"center",marginTop:"20px"},children:"운동별 정보"}),h.jsxs("span",{children:["운동의 장, 단점",h.jsx("br",{})," 효능에 대해 알아보세요"]})]})]});function hI(t){return Ve({tag:"svg",attr:{viewBox:"0 0 448 512"},child:[{tag:"path",attr:{d:"M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"},child:[]}]})(t)}function VF(t){return Ve({tag:"svg",attr:{viewBox:"0 0 512 512"},child:[{tag:"path",attr:{d:"M336 16V80c0 8.8-7.2 16-16 16s-16-7.2-16-16V16c0-8.8 7.2-16 16-16s16 7.2 16 16zm-98.7 7.1l32 48c4.9 7.4 2.9 17.3-4.4 22.2s-17.3 2.9-22.2-4.4l-32-48c-4.9-7.4-2.9-17.3 4.4-22.2s17.3-2.9 22.2 4.4zM135 119c9.4-9.4 24.6-9.4 33.9 0L292.7 242.7c10.1 10.1 27.3 2.9 27.3-11.3V192c0-17.7 14.3-32 32-32s32 14.3 32 32V345.6c0 57.1-30 110-78.9 139.4c-64 38.4-145.8 28.3-198.5-24.4L7 361c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l53 53c6.1 6.1 16 6.1 22.1 0s6.1-16 0-22.1L23 265c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l93 93c6.1 6.1 16 6.1 22.1 0s6.1-16 0-22.1L55 185c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l117 117c6.1 6.1 16 6.1 22.1 0s6.1-16 0-22.1l-93-93c-9.4-9.4-9.4-24.6 0-33.9zM433.1 484.9c-24.2 14.5-50.9 22.1-77.7 23.1c48.1-39.6 76.6-99 76.6-162.4l0-98.1c8.2-.1 16-6.4 16-16V192c0-17.7 14.3-32 32-32s32 14.3 32 32V345.6c0 57.1-30 110-78.9 139.4zM424.9 18.7c7.4 4.9 9.3 14.8 4.4 22.2l-32 48c-4.9 7.4-14.8 9.3-22.2 4.4s-9.3-14.8-4.4-22.2l32-48c4.9-7.4 14.8-9.3 22.2-4.4z"},child:[]}]})(t)}function ore(t){return Ve({tag:"svg",attr:{viewBox:"0 0 640 512"},child:[{tag:"path",attr:{d:"M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"},child:[]}]})(t)}const are=_.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -4175,9 +4173,9 @@ font-weight:800;
     }
     border-top:${t=>t.selected?"2px solid red":null};
     height:80px;
-    color: ${t=>t.selected?"#E72929":"black"};
+    color: ${t=>t.selected?"#ea6362":"black"};
     svg {
-        fill: ${t=>t.selected?"#E72929":"black"};
+        fill: ${t=>t.selected?"#ea6362":"black"};
     }
 `;function Toe(){const t=ho(),[e,n]=b.useState("");return b.useEffect(()=>{n(t.pathname)},[t.pathname]),h.jsxs(Coe,{children:[h.jsx(Eoe,{children:h.jsxs(koe,{children:[h.jsx(uh,{to:"/",children:h.jsxs(Bg,{selected:e==="/",children:[h.jsx(woe,{}),h.jsx("span",{children:"홈"})]})}),h.jsx(uh,{to:"/records",children:h.jsxs(Bg,{selected:e==="/records",children:[h.jsx(one,{}),h.jsx("span",{children:"기록"})]})}),h.jsx(uh,{to:"/sns",children:h.jsxs(Bg,{selected:e==="/sns",children:[h.jsx(boe,{}),h.jsx("span",{children:"소셜"})]})}),h.jsx(uh,{to:"/profile",children:h.jsxs(Bg,{selected:e==="/profile",children:[h.jsx(Soe,{}),h.jsx("span",{children:"프로필"})]})})]})}),h.jsx(IH,{})]})}/*!
  * @kurkle/color v0.3.2
@@ -4926,7 +4924,7 @@ cursor: pointer;
     width:100%;
     border-radius:5px;
 `,vSe=_.div`
-    color:red;
+    color:#FF5C73;
     border-radius:50%;
     cursor:pointer;
     font-size: 35px;
@@ -5105,7 +5103,7 @@ color:white;
     padding: 10px 15px;
     border-radius: 5px;
     border: none;
-    background-color: #28a745;
+    background-color: #ea6362;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -5130,8 +5128,8 @@ color:white;
     cursor: pointer;
     font-weight: 600;
     font-size: 18px;
-    color: ${t=>t.selected?"red":"black"};
-    border-bottom: 3px solid ${t=>t.selected?"red":"transparent"};
+    color: ${t=>t.selected?"#ea6362":"black"};
+    border-bottom: 3px solid ${t=>t.selected?"#ea6362":"transparent"};
     transition: color 0.3s ease, border-bottom-color 0.3s ease;
 `;function TSe(){const t=ho(),[e,n]=b.useState("calendar");return b.useEffect(()=>{t.state&&t.state.menu&&n(t.state.menu)},[t.state]),h.jsxs(ESe,{children:[h.jsxs(kSe,{children:[h.jsx(ub,{selected:e==="calendar",onClick:()=>n("calendar"),children:"캘린더"}),h.jsx(ub,{selected:e==="photo",onClick:()=>n("photo"),children:"사진"}),h.jsx(ub,{selected:e==="inbody",onClick:()=>n("inbody"),children:"인바디"})]}),e==="calendar"&&h.jsx(dSe,{}),e==="photo"&&h.jsx(wSe,{}),e==="inbody"&&h.jsx(CSe,{})]})}const DSe=_.div`
     width:100vw;
@@ -6648,9 +6646,9 @@ display:none;
     flex-wrap: wrap;
     gap: 3%;
 `,_b=_.div`
-    border: 2px solid ${t=>t.selected?"#ff0000":"#e0e0e0"};
+    border: 2px solid ${t=>t.selected?"#ff6384":"#e0e0e0"};
     background-color: ${t=>t.selected?"white":"#e0e0e0"};
-    color: ${t=>t.selected?"#ff0000":"#909580"};
+    color: ${t=>t.selected?"#ff6384":"#909580"};
     height: 30px;
     line-height: 30px;
     text-align: center;
@@ -6660,9 +6658,9 @@ display:none;
     font-size: 16px;
     flex: 1;
 `,Sb=_.div`
-    border: 2px solid ${t=>t.selected?"#ff0000":"#e0e0e0"};
+    border: 2px solid ${t=>t.selected?"#ff6384":"#e0e0e0"};
     background-color: ${t=>t.selected?"white":"#e0e0e0"};
-    color: ${t=>t.selected?"#ff0000":"#909580"};
+    color: ${t=>t.selected?"#ff6384":"#909580"};
     height: 30px;
     line-height: 30px;
     text-align: center;
@@ -6672,9 +6670,9 @@ display:none;
     font-size: 16px;
     flex: 1;
 `,Cb=_.div`
-    border: 2px solid ${t=>t.selected?"#ff0000":"#e0e0e0"};
+    border: 2px solid ${t=>t.selected?"#ff6384":"#e0e0e0"};
     background-color: ${t=>t.selected?"white":"#e0e0e0"};
-    color: ${t=>t.selected?"#ff0000":"#909580"};
+    color: ${t=>t.selected?"#ff6384":"#909580"};
     height: 30px;
     line-height: 30px;
     text-align: center;
@@ -6684,7 +6682,7 @@ display:none;
     font-size: 16px;
     flex: 1;
 `,QRe=_.div`
-    background-color: #ff0000;
+    background-color: #ff6384;
     width: 100%;
     height: 40px;
     text-align: center;
@@ -6696,9 +6694,9 @@ display:none;
         background-color: #002766;
     }
 `,Y4=_.div`
-    border: 2px solid ${t=>t.selected?"#ff0000":"#e0e0e0"};
+    border: 2px solid ${t=>t.selected?"#ff6384":"#e0e0e0"};
     background-color: ${t=>t.selected?"white":"#e0e0e0"};
-    color: ${t=>t.selected?"#ff0000":"#909580"};
+    color: ${t=>t.selected?"#ff6384":"#909580"};
     height: 30px;
     font-weight:800;
     line-height: 30px;
@@ -6782,7 +6780,7 @@ display:none;
     font-size: 12px;
     color: #666;
 `,iIe=_.div`
-    background-color: #003187;
+    background-color: #6DAEDB;
     width: 70px;
     height: 30px;
     border-radius: 5px;
@@ -6956,7 +6954,7 @@ display:none;
     align-items: center;
     gap: 10px;
 `,SIe=_.span`
-    background-color: red;
+    background-color: #FF4D6D;
     color: white;
     padding: 2px 5px;
     border-radius: 3px;
