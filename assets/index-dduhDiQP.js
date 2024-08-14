@@ -4098,8 +4098,8 @@ font-weight:800;
     display: grid; 
     grid-template-columns:1fr 1fr;
     grid-template-rows: 180px 180px 180px;
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
+    grid-column-gap: 15px;
+    grid-row-gap: 15px;
 `,Eoe=_.div`
    display: flex;
     align-items: center;
