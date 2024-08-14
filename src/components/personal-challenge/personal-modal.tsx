@@ -29,9 +29,13 @@ const GoalWrapper = styled.div`
 
 `;
 const GoalSettingWrapper = styled.div`
+
 `;
 const PeriodSelect = styled.select`
     margin-bottom:23px;
+    width:120px;
+    height:30px;
+    border-radius:5px;
 `;
 const PeriodOption = styled.option`
 

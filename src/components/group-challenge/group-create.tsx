@@ -157,6 +157,7 @@ const PassWordInput = styled.input`
     width:185px;
     height:30px;
     margin-top: 5px;
+    font-size:16px;
     border-radius:5px;
 `;
 const PeopleCompleteWrapper = styled.div`

@@ -18,6 +18,7 @@ const Title = styled.input`
     box-sizing:border-box;
     margin-top:9px;
     border-radius:5px;
+    font-size:16px;
 `;
 const DateWrapper = styled.div`
     margin-bottom:25px;
@@ -54,10 +55,25 @@ const GoalsTitle = styled.h5`
     margin-top:40px;
     margin-bottom:0px;
 `;
-const GoalPlus = styled.div`
-     margin-top:10px;
-    width:130px;
-    height:30px;
+const GoalPlus = styled.button`
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0 15px;
+    height:35px;
+    background-color: #FF6384;
+    margin:10px 0px;
+    color: white;
+    gap: 7px;
+    border: none;
+    border-radius: 6px;
+    span
+        {
+            font-size: 20px;
+            color: #fff;
+            font-weight: 700;
+        }
 `;
 const QuickWrapper = styled.div`
     margin-bottom:15px;
@@ -324,7 +340,7 @@ const LongGoal: React.FC<LongProps> = ({ complet }) => {
                 </WeekListWrapper>
             </WeekWrapper>
             <GoalsTitle>챌린지 목표를 설정해주세요 *</GoalsTitle>
-            <GoalPlus onClick={() => addGoal()}>목표추가+</GoalPlus>
+            <GoalPlus onClick={() => addGoal()}><span>+ </span>목표추가</GoalPlus>
             <QuickWrapper>
                 <QuickList onClick={() => handleQuickAdd("헬스장가기")}>헬스장가기</QuickList>
                 <QuickList onClick={() => handleQuickAdd("필라테스하기")}>필라테스하기</QuickList>

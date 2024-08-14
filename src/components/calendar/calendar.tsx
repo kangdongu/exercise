@@ -8,7 +8,6 @@ import ExerciseRegistration from './records-registration';
 import './calendar.css'
 import CalendarClickModal from './calendar-click-component';
 import { format } from 'date-fns';
-import MoCalendarWrapper from '../slideModal/mo-calendar-click';
 import { ko } from 'date-fns/locale';
 import AchievementModal from '../achievement-alert';
 import BadgeModal from '../badge-modal';
@@ -470,7 +469,7 @@ const Calendar = () => {
                 <Title>Calendar</Title>
                 <Btn onClick={onClick}><span>+</span>운동기록</Btn>
             </BtnWrapper>
-            <div style={{ width: '95%', margin: '0 auto', padding: '10px', backgroundColor: 'white', borderRadius:'5px' }}>
+            <div style={{ width: '95%', margin: '0 auto', padding: '10px', backgroundColor: 'white', borderRadius: '5px' }}>
                 <FullCalendar
                     plugins={[dayGridPlugin]}
                     initialView="dayGridMonth"
@@ -492,11 +491,16 @@ const Calendar = () => {
                 <ExerciseRegistration closeModal={closeModal} congratulations={congratulations} />
                 : null}
             {calendarClick && window.innerWidth <= 700 ? (
-                <MoCalendarWrapper onClose={() => setCalendarClick(false)}>
-                    <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} />;
-                </MoCalendarWrapper>
+                <div>
+                    <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} />
+                </div>
             ) : null}
-            {calendarClick && window.innerWidth >= 700 ? <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} /> : null}
+            {calendarClick && window.innerWidth >= 700 ? (
+                <div>
+                    <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} />
+                </div>
+            ) : null}
+
             {showAchievements && (
                 <AchievementModal achievementName={achievementName} handleModalConfirm={handleModalConfirm} />
             )}

@@ -11,7 +11,7 @@ const Wrapper = styled.div`
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-     background: linear-gradient(to bottom, #FF6F61, #D32F2F);
+     background: linear-gradient(to bottom, #fcb1ac, #ea6362);
 `;
 const Timer = styled.div`
     width:70%;

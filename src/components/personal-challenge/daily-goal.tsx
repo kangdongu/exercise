@@ -8,11 +8,25 @@ import AchievementModal from "../achievement-alert";
 import BadgeModal from "../badge-modal";
 
 const Wrapper = styled.div``;
-const GoalPlus = styled.div`
-    margin-top:10px;
-    width:130px;
-    height:30px;
-    // transform:translate(65vw,0px);
+const GoalPlus = styled.button`
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0 15px;
+    height:35px;
+    background-color: #FF6384;
+    margin:10px 0px;
+    color: white;
+    gap: 7px;
+    border: none;
+    border-radius: 6px;
+    span
+        {
+            font-size: 20px;
+            color: #fff;
+            font-weight: 700;
+        }
 `;
 const GoalsTitle = styled.h5`
     font-weight:600;
@@ -146,10 +160,10 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
                     await updateDoc(userDoc.ref, {
                         개인챌린지생성: increment(1)
                     });
-    
+
                     const challengeCount = userDoc.data().개인챌린지생성;
 
-                    if(challengeCount >= 20){
+                    if (challengeCount >= 20) {
                         const badgesRef = collection(db, "badges")
                         const q = query(badgesRef)
                         const querySnapshot = await getDocs(q);
@@ -166,17 +180,17 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
                             setShowBadge(true)
                         }
                     }
-    
+
                     const achievementsRef = collection(db, 'achievements');
                     const q = query(achievementsRef);
                     const querySnapshot = await getDocs(q);
-    
+
                     const mainAchievementDoc = querySnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 생성");
-    
+
                     if (mainAchievementDoc) {
                         const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
                         const subAchievementsSnapshot = await getDocs(subAchievementsRef);
-    
+
                         const subAchievementDoc =
                             challengeCount >= 20
                                 ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 20개 생성")
@@ -187,7 +201,7 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
                                         : challengeCount >= 5
                                             ? subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "개인챌린지 5개 생성")
                                             : subAchievementsSnapshot.docs.find(doc => doc.data().도전과제이름 === "첫 개인챌린지 생성");
-    
+
                         if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(user.uid)) {
                             const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
                             await updateDoc(subAchievementRef, {
@@ -195,7 +209,7 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
                             });
                             setAchievementName(subAchievementDoc.data().도전과제이름);
                             setShowAchievements(true);
-                        }else{
+                        } else {
                             alert("개인챌린지를 성공적으로 생성하였습니다.");
                             complet();
                         }
@@ -219,9 +233,12 @@ const DailyGoal: React.FC<DailyProps> = ({ complet }) => {
 
     return (
         <Wrapper>
-            <span style={{ border: "0.3px solid lightgray" }}><DateChoiceToday onDateChange={handleDateChange} /></span>
+            <GoalsTitle style={{margin:'0px'}}>챌린지 날짜를 선택해주세요 *</GoalsTitle>
+            <div style={{ borderRadius: '5px',border:'1px solid black',width:'202px', marginTop:'10px' }}>
+                <DateChoiceToday onDateChange={handleDateChange} />
+            </div>
             <GoalsTitle>챌린지 목표를 설정해주세요 *</GoalsTitle>
-            <GoalPlus onClick={() => addGoal()}>목표 추가<span>+</span></GoalPlus>
+            <GoalPlus onClick={() => addGoal()}><span>+ </span>목표 추가</GoalPlus>
             <QuickWrapper>
                 <QuickList onClick={() => handleQuickAdd("헬스장가기")}>헬스장가기</QuickList>
                 <QuickList onClick={() => handleQuickAdd("필라테스하기")}>필라테스하기</QuickList>

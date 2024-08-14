@@ -18,6 +18,7 @@ const Wrapper = styled.div`
   height:calc(100vh - 40px);
   background-color:#f3f1f1;
   overflow-y:scroll;
+  padding-top:20px;
 `;
 const ContentWrapper = styled.div`
   width:95vw;
@@ -115,12 +116,14 @@ const InformationWrapper = styled.div`
   height:100vh;
   background-color:rgba(0,0,0,0.5);
   position:fixed;
+  padding-top:20px;
   top:0;
   left:0;
 `;
 const Information = styled.div`
-  width:100vw;
+  width:95vw;
   padding: 20px;
+  margin: 0 auto;
   height:100vh;
 `;
 const InformationPhoto = styled.div`

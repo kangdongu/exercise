@@ -86,7 +86,7 @@ const FullItem = styled.div<{ selected: boolean }>`
     flex: 1;
 `;
 const FilterButton = styled.div`
-    background-color: #ff0000;
+    background-color: #ea6362;
     width: 100%;
     height: 40px;
     text-align: center;

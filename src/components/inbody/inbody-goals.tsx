@@ -48,9 +48,9 @@ const GoalInput = styled.input`
     font-size: 16px;
 `;
 
-const Result = styled.div<{ increase: boolean }>`
+const Result = styled.div`
     font-size: 16px;
-    color: ${props => (props.increase ? 'green' : 'red')};
+    color: green;
     margin-top: 5px;
 `;
 
@@ -141,6 +141,9 @@ const InbodyGoals = () => {
                 await updateDoc(goalDocRef, {
                     [`목표${type}`]: goalValue,
                     [`${type}목표`]: growthDirection,
+                    [`현재${type}`]: type === "몸무게" ? weightData[weightData.length - 1].weight : "",
+                    [`현재${type}`]: type === "골격근량" ? muscleData[muscleData.length - 1].muscle : "",
+                    [`현재${type}`]: type === "체지방" ? fatData[fatData.length - 1].fat : "",
                 });
             } else {
                 const newGoalDoc = await addDoc(collection(db, "inbody-goals"), {
@@ -157,11 +160,10 @@ const InbodyGoals = () => {
                 });
                 setGoalDocId(newGoalDoc.id);
             }
-            setFatGoal("")
-            setMuscleGoal("")
-            setWeightGoal("")
         } catch (error) {
             console.error("저장된 목표 에러", error);
+        } finally {
+            alert("성공적으로 목표를 설정하였습니다.")
         }
     }
 
@@ -172,9 +174,10 @@ const InbodyGoals = () => {
                 <FaArrowLeft style={{ width: "20px", height: "20px" }} />
             </Back>
             <Wrapper>
+                <h3 style={{margin:'0', marginBottom:'10px'}}>인바디 목표 설정</h3>
                 <ContentWrapper>
                     <h3>몸무게</h3>
-                    <div style={{marginBottom:'10px'}}>
+                    <div style={{ marginBottom: '10px' }}>
                         <NowData>현재 몸무게: <span>{weightData[weightData.length - 1]?.weight}</span>kg</NowData>
                         {weightGoal !== "" ? (
                             <GoalData>목표 몸무게: <span>{weightGoal}</span>kg</GoalData>
@@ -187,7 +190,7 @@ const InbodyGoals = () => {
                         onChange={(e) => setWeightGoal(e.target.value)}
                     />
                     {weightGoal !== "" && (
-                        <Result increase={goalGrowth(weightData, "weight", Number(weightGoal)) > 0}>
+                        <Result>
                             {goalGrowth(weightData, "weight", Number(weightGoal)) > 0 ? "증량" : "감량"} {goalGrowth(weightData, "weight", Number(weightGoal))} kg
                         </Result>
                     )}
@@ -196,7 +199,7 @@ const InbodyGoals = () => {
 
                 <ContentWrapper>
                     <h3>골격근량</h3>
-                    <div style={{marginBottom:'10px'}}>
+                    <div style={{ marginBottom: '10px' }}>
                         <NowData>현재 골격근량: <span>{muscleData[muscleData.length - 1]?.muscle}</span>%</NowData>
                         {muscleGoal !== "" ? (
                             <GoalData>목표 골격근량: <span>{muscleGoal}</span>%</GoalData>
@@ -209,7 +212,7 @@ const InbodyGoals = () => {
                         onChange={(e) => setMuscleGoal(e.target.value)}
                     />
                     {muscleGoal !== "" && (
-                        <Result increase={goalGrowth(muscleData, "muscle", Number(muscleGoal)) > 0}>
+                        <Result>
                             {goalGrowth(muscleData, "muscle", Number(muscleGoal)) > 0 ? "증가" : "감소"} {goalGrowth(muscleData, "muscle", Number(muscleGoal))} %
                         </Result>
                     )}
@@ -218,7 +221,7 @@ const InbodyGoals = () => {
 
                 <ContentWrapper>
                     <h3>체지방</h3>
-                    <div style={{marginBottom:'10px'}}>
+                    <div style={{ marginBottom: '10px' }}>
                         <NowData>현재 체지방: <span>{fatData[fatData.length - 1]?.fat}</span>%</NowData>
                         {fatGoal !== "" ? (
                             <GoalData>목표 체지방: <span>{fatGoal}</span>%</GoalData>
@@ -231,7 +234,7 @@ const InbodyGoals = () => {
                         onChange={(e) => setFatGoal(e.target.value)}
                     />
                     {fatGoal !== "" && (
-                        <Result increase={goalGrowth(fatData, "fat", Number(fatGoal)) < 0}>
+                        <Result>
                             {goalGrowth(fatData, "fat", Number(fatGoal)) < 0 ? "감소" : "증가"} {goalGrowth(fatData, "fat", Number(fatGoal))} %
                         </Result>
                     )}

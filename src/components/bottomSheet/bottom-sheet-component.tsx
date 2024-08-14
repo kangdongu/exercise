@@ -17,7 +17,7 @@ const Wrapper = styled(motion.div)`
   border-top-right-radius: 20px;
   box-shadow: 0px -2px 10px -3px rgba(0, 0, 0, 0.3);
   height: ${BOTTOM_SHEET_HEIGHT}px;
-  transform: translateY(calc(250px - 100vh));
+  transform: translateY(calc(160px - 100vh));
   background: white;
   border-top: 0.5px solid lightgray;
   transition: transform 650ms ease-out;

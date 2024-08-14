@@ -13,7 +13,8 @@ const Wrapper = styled.div`
     flex-direction: column;
     gap:1%;
   }
-    width:100%;
+    width:100vw;
+    overflow:hidden;
     overflow-y:scroll;
     height:calc(100vh - 105px);
     display:flex;
@@ -108,7 +109,7 @@ const Button = styled.button`
     padding: 10px 15px;
     border-radius: 5px;
     border: none;
-    background-color: #28a745;
+    background-color: #ea6362;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -348,7 +349,7 @@ export default function Inbody() {
                     />
                 </LineWrapper>
                 <Form onSubmit={onSubmit}>
-                    <Input onChange={(e) => handleInputChange(e, setWeight)} value={weight} placeholder="몸무게를 입력해주세요"></Input>
+                    <Input onChange={(e) => handleInputChange(e, setWeight)} step="0.1" value={weight} placeholder="몸무게를 입력해주세요"></Input>
                     <Button onClick={handleSaveWeight}>완료</Button>
                     <DetailsButton style={{backgroundColor:'#36A2EB'}} onClick={() => {detailsMemory("weight")}}>상세보기</DetailsButton>
                 </Form>
@@ -377,7 +378,7 @@ export default function Inbody() {
                     />
                 </LineWrapper>
                 <Form onSubmit={onSubmit}>
-                    <Input onChange={(e) => handleInputChange(e, setMuscle)} value={muscle} placeholder="골격근량을 입력해주세요"></Input>
+                    <Input onChange={(e) => handleInputChange(e, setMuscle)} step="0.1" value={muscle} placeholder="골격근량을 입력해주세요"></Input>
                     <Button onClick={handleSaveMuscle}>완료</Button>
                     <DetailsButton style={{backgroundColor:'#FF6384'}} onClick={() => {detailsMemory("muscle") }}>상세보기</DetailsButton>
                 </Form>
@@ -415,7 +416,7 @@ export default function Inbody() {
                     />
                 </LineWrapper>
                 <Form onSubmit={onSubmit}>
-                    <Input onChange={(e) => handleInputChange(e, setFat)} value={fat} placeholder="체지방을 입력해주세요"></Input>
+                    <Input onChange={(e) => handleInputChange(e, setFat)} step="0.1" value={fat} placeholder="체지방을 입력해주세요"></Input>
                     <Button onClick={handleSaveFat}>완료</Button>
                     <DetailsButton style={{backgroundColor:'#4BC0C0'}} onClick={() => {detailsMemory("fat") }}>상세보기</DetailsButton>
                 </Form>

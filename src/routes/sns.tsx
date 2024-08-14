@@ -420,23 +420,25 @@ export default function PublicPhotosPage() {
       setBellOn(true)
     }
   }
- 
+
 
   return (
     <Wrapper>
       <TextTitle>
         <h4 style={{ textAlign: "center", fontSize: "25px", color: "#939393" }}>사람들과 기록 공유하기</h4>
       </TextTitle>
-      <PhotoWrapper>
-        {publicPhotos.map((photo) => (
-          <PhotoUpload
-            onClick={() => handlePhotoClick(photo.id)}
-            key={photo.id}
-            src={photo.사진}
-            alt="Public Photo"
-          />
-        ))}
-      </PhotoWrapper>
+      <div style={{height:'calc(100vh - 133px)', backgroundColor:'#f8f8f8'}}>
+        <PhotoWrapper>
+          {publicPhotos.map((photo) => (
+            <PhotoUpload
+              onClick={() => handlePhotoClick(photo.id)}
+              key={photo.id}
+              src={photo.사진}
+              alt="Public Photo"
+            />
+          ))}
+        </PhotoWrapper>
+      </div>
       {viewDetails && window.innerWidth <= 700 ? (
         <ModalBackdrop>
           {selectedPhotoDetails && (

@@ -54,12 +54,17 @@ const MyChallenge: React.FC<MyChallengeProps> = ({ challenge, photoMyData }) => 
     return (
         <MyChallengeWrapper>
             <WeekWrapper>
-                <h4 style={{marginBottom:"10px"}}>이번주 인증 현황</h4>
+                <h4 style={{ marginBottom: "10px" }}>이번주 인증 현황</h4>
                 <WeekDataWrapper>
                     {getSelectedWeekDates().map(date => (
                         <Week key={date}>
                             {format(new Date(date), 'EEE', { locale: ko })}
-                            <span>{completedForDate(date, challenge.그룹챌린지제목) ? <IoCheckmarkCircleOutline style={{ color: "green" }} /> : <CgCloseO style={{ color: "red" }} />}</span>
+                            <span>
+                                {completedForDate(date, challenge.그룹챌린지제목) ? (
+                                    <IoCheckmarkCircleOutline style={{ color: "green" }} />) : (
+                                    <CgCloseO style={{ color: "red" }} />
+                                )}
+                            </span>
                         </Week>
                     ))}
                 </WeekDataWrapper>

@@ -6,6 +6,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import { format } from "date-fns";
 import { Line } from "react-chartjs-2";
+import { FaEllipsis } from "react-icons/fa6";
+import MoSlideModal from "../slideModal/mo-slide-modal";
 
 const Wrapper = styled.div`
     width:100vw;
@@ -53,7 +55,15 @@ const RecordItem = styled.div`
         border-bottom: none;
     }
 `;
+const MoreDataButton = styled.button`
+    width:100%;
+    border:none;
+    background-color:white;
+    height:40px;
+    font-size:16px;
+`;
 const RecordDate = styled.div`
+    display:flex;
     font-size: 14px;
     color: #888;
 `;
@@ -186,6 +196,7 @@ const InbodyDetails = () => {
     const [afterMuscle, setAfterMuscle] = useState("")
     const [afterFat, setAfterFat] = useState("")
     const BarGoalRef = useRef<HTMLDivElement>(null);
+    const [moreData, setMoreData] = useState(false);
     const currentUser = auth.currentUser;
 
     useEffect(() => {
@@ -254,8 +265,9 @@ const InbodyDetails = () => {
                 const weightProgress = currentWeight - Number(beforeWeight);
                 const weightWidthCalc = barGoalWidth * (weightProgress / weightDiff);
                 const weightPercentCalc = (weightProgress / weightDiff) * 100;
+                const weightPercent = weightPercentCalc > 100 ? 100 : weightPercentCalc;
                 setWeightWidth(weightWidthCalc > barGoalWidth ? barGoalWidth : weightWidthCalc);
-                setWeightPercent(weightPercentCalc > 100 ? 100 : weightPercentCalc);
+                setWeightPercent(Number(weightPercent));
             }
 
             if (beforeMuscle && afterMuscle && muscleData.length > 0) {
@@ -264,8 +276,9 @@ const InbodyDetails = () => {
                 const muscleProgress = currentMuscle - Number(beforeMuscle);
                 const muscleWidthCalc = barGoalWidth * (muscleProgress / muscleDiff);
                 const musclePercentCalc = (muscleProgress / muscleDiff) * 100;
+                const musclePercent = musclePercentCalc > 100 ? 100 : musclePercentCalc.toFixed(2);
                 setMuscleWidth(muscleWidthCalc > barGoalWidth ? barGoalWidth : muscleWidthCalc);
-                setMusclePercent(musclePercentCalc > 100 ? 100 : musclePercentCalc);
+                setMusclePercent(Number(musclePercent));
             }
 
             if (beforeFat && afterFat && fatData.length > 0) {
@@ -274,12 +287,12 @@ const InbodyDetails = () => {
                 const fatProgress = Number(beforeFat) - currentFat;
                 const fatWidthCalc = barGoalWidth * (fatProgress / fatDiff);
                 const fatPercentCalc = (fatProgress / fatDiff) * 100;
+                const fatPercent = fatPercentCalc > 100 ? 100 : fatPercentCalc;
                 setFatWidth(fatWidthCalc > barGoalWidth ? barGoalWidth : fatWidthCalc);
-                setFatPercent(fatPercentCalc > 100 ? 100 : fatPercentCalc);
+                setFatPercent(Number(fatPercent));
             }
-            console.log(barGoalWidth, fatWidth)
         }
-    }, [beforeWeight, afterWeight, weightData, beforeMuscle, afterMuscle, muscleData, beforeFat, afterFat, fatData]);
+    }, [selectedMenu]);
 
     const calculateGrowth = (currentValue: number, previousValue: number) => {
         return currentValue - previousValue;
@@ -296,6 +309,7 @@ const InbodyDetails = () => {
             return true;
         }
     });
+
 
     const chartData = {
         labels: filteredData.map(item => format(item.날짜, "MM/dd")),
@@ -368,7 +382,7 @@ const InbodyDetails = () => {
                     <Content>
 
                         <h4 style={{ margin: '10px 0px' }}>인바디 성장</h4>
-                        {filteredData.map((item, index) => {
+                        {filteredData.slice(-10).map((item, index) => {
                             const previousItem = filteredData[index - 1];
                             const weightGrowth = previousItem ? calculateGrowth(item.weight, previousItem.weight) : 0;
                             const muscleGrowth = previousItem ? calculateGrowth(item.muscle, previousItem.muscle) : 0;
@@ -377,7 +391,12 @@ const InbodyDetails = () => {
                             return (
 
                                 <RecordItem key={index}>
-                                    <RecordDate>{format(item.날짜, "yyyy-MM-dd HH:mm")}</RecordDate>
+                                    <RecordDate>
+                                        <span>{format(item.날짜, "yyyy-MM-dd HH:mm")}</span>
+                                        <div style={{ marginLeft: 'auto' }}>
+                                            <FaEllipsis />
+                                        </div>
+                                    </RecordDate>
                                     {selectedMenu === "weight" && (
                                         <InbodyGrowthWrapper>
                                             <RecordValue>몸무게: <span>{item.weight}</span> kg</RecordValue>
@@ -405,6 +424,7 @@ const InbodyDetails = () => {
                                 </RecordItem>
                             )
                         })}
+                        <MoreDataButton onClick={() => setMoreData(true)}>더 많은 기록 보러가기</MoreDataButton>
                     </Content>
                 )}
                 {weightData.length > 0 && selectedMenu === 'total' && (
@@ -437,28 +457,28 @@ const InbodyDetails = () => {
                             <h4 style={{ marginBottom: '10px' }}>목표 달성 그래프</h4>
                             <GoalWrapper>
                                 <ValueWrapper>
-                                    <span>이전: {beforeWeight} kg</span>
+                                    <span>목표당시: {beforeWeight} kg</span>
                                     <span>현재: {weightData[weightData.length - 1]?.weight} kg</span>
                                     {afterWeight === "" ? (
-                                        "미설정"
-                                    ): (
+                                        <span>목표: 미설정</span>
+                                    ) : (
                                         <span>목표: {afterWeight} kg</span>
                                     )}
                                 </ValueWrapper>
                                 <BarWrapper>
                                     <span style={{ textAlign: 'left' }}>체중</span>
                                     <BarGoal ref={BarGoalRef}>
-                                        <Bar width={weightWidth} /><div style={{ height:'25px', lineHeight:'25px',color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{weightPercent} %</div>
+                                        <Bar width={weightWidth} /><div style={{ height: '25px', lineHeight: '25px', color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{weightPercent} %</div>
                                     </BarGoal>
                                 </BarWrapper>
                             </GoalWrapper>
                             <GoalWrapper>
                                 <ValueWrapper>
-                                    <span>이전: {beforeMuscle} %</span>
+                                    <span>목표당시: {beforeMuscle} %</span>
                                     <span>현재: {muscleData[muscleData.length - 1]?.muscle} %</span>
                                     {afterMuscle === "" ? (
-                                        "미설정"   
-                                    ): (
+                                        <span>목표: 미설정</span>
+                                    ) : (
                                         <span>목표: {afterMuscle} %</span>
                                     )}
                                 </ValueWrapper>
@@ -466,24 +486,24 @@ const InbodyDetails = () => {
                                 <BarWrapper>
                                     <span style={{ textAlign: 'left' }}>골격근량</span>
                                     <BarGoal ref={BarGoalRef}>
-                                        <Bar width={muscleWidth} /><div style={{ height:'25px', lineHeight:'25px',color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{musclePercent} %</div>
+                                        <Bar width={muscleWidth} /><div style={{ height: '25px', lineHeight: '25px', color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{musclePercent} %</div>
                                     </BarGoal>
                                 </BarWrapper>
                             </GoalWrapper>
                             <GoalWrapper>
                                 <ValueWrapper>
-                                    <span>이전: {beforeFat} %</span>
+                                    <span>목표당시: {beforeFat} %</span>
                                     <span>현재: {fatData[fatData.length - 1]?.fat} %</span>
                                     {afterFat === "" ? (
-                                        "미설정"
-                                    ): (
+                                        <span>목표: 미설정</span>
+                                    ) : (
                                         <span>목표: {afterFat} %</span>
                                     )}
                                 </ValueWrapper>
                                 <BarWrapper>
                                     <span style={{ textAlign: 'left' }}>체지방</span>
                                     <BarGoal ref={BarGoalRef}>
-                                        <Bar width={fatWidth} /><div style={{ height:'25px', lineHeight:'25px',color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{fatPercent} %</div>
+                                        <Bar width={fatWidth} /><div style={{ height: '25px', lineHeight: '25px', color: 'white', position: 'absolute', left: '50%', transform: "translate(-50%, 0)" }}>{fatPercent} %</div>
                                     </BarGoal>
                                 </BarWrapper>
                             </GoalWrapper>
@@ -491,6 +511,57 @@ const InbodyDetails = () => {
                     </>
                 )}
             </ContentWrapper>
+            {moreData && (
+                <MoSlideModal onClose={() => setMoreData(false)}>
+                    <ContentWrapper style={{height:'calc(100vh - 40px)',overflowY:'scroll'}}>
+
+                        <Content>
+                        {filteredData.map((item, index) => {
+                            const previousItem = filteredData[index - 1];
+                            const weightGrowth = previousItem ? calculateGrowth(item.weight, previousItem.weight) : 0;
+                            const muscleGrowth = previousItem ? calculateGrowth(item.muscle, previousItem.muscle) : 0;
+                            const fatGrowth = previousItem ? calculateGrowth(item.fat, previousItem.fat) : 0;
+
+                            return (
+
+                                <RecordItem key={index}>
+                                    <RecordDate>
+                                        <span>{format(item.날짜, "yyyy-MM-dd HH:mm")}</span>
+                                        <div style={{ marginLeft: 'auto' }}>
+                                            <FaEllipsis />
+                                        </div>
+                                    </RecordDate>
+                                    {selectedMenu === "weight" && (
+                                        <InbodyGrowthWrapper>
+                                            <RecordValue>몸무게: <span>{item.weight}</span> kg</RecordValue>
+                                            <GrowthValue>
+                                                {weightGrowth >= 0 ? `+${weightGrowth}` : `${weightGrowth}`} kg
+                                            </GrowthValue>
+                                        </InbodyGrowthWrapper>
+                                    )}
+                                    {selectedMenu === "muscle" && (
+                                        <InbodyGrowthWrapper>
+                                            <RecordValue>골격근량: <span>{item.muscle}</span> %</RecordValue>
+                                            <GrowthValue>
+                                                {muscleGrowth >= 0 ? `+${muscleGrowth}` : `${muscleGrowth}`} %
+                                            </GrowthValue>
+                                        </InbodyGrowthWrapper>
+                                    )}
+                                    {selectedMenu === "fat" && (
+                                        <InbodyGrowthWrapper>
+                                            <RecordValue>체지방: <span>{item.fat}</span> %</RecordValue>
+                                            <GrowthValue>
+                                                {fatGrowth >= 0 ? `+${fatGrowth}` : `${fatGrowth}`} %
+                                            </GrowthValue>
+                                        </InbodyGrowthWrapper>
+                                    )}
+                                </RecordItem>
+                            )
+                        })}
+                        </Content>
+                    </ContentWrapper>
+                </MoSlideModal>  
+                )}
         </Wrapper>
     )
 }
