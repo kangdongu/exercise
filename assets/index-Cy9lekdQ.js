@@ -3582,7 +3582,7 @@ font-weight:800;
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-     background: linear-gradient(to bottom, #FFA3B1, #FF6384);
+     background: linear-gradient(to bottom, #FF6A89, #FC286E);
 `,jne=_.div`
     width:70%;
     display: flex;
@@ -3657,7 +3657,7 @@ font-weight:800;
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-     background: linear-gradient(to bottom, #BEE3F8, #6DAEDB);
+     background: linear-gradient(to bottom, #33CCFF, #009cfc);
 `,Gne=_.div`
     width:70%;
     display: flex;
@@ -3707,7 +3707,7 @@ font-weight:800;
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-     background: linear-gradient(to bottom, #BEE3F8, #7393B3);
+     background: linear-gradient(to bottom, #33CCFF, #009cfc);
 `,ire=_.div`
      width:70%;
     display: flex;
