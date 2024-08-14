@@ -11,7 +11,7 @@ const Wrapper = styled.div`
     background-color: #FF6F61;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(to bottom, #e2e4d4, #00b253);
+    background: linear-gradient(to bottom, #a7b0e7, #0079ff);
 `;
 
 const PersonalWrapper = styled.div`

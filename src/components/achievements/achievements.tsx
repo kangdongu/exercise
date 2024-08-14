@@ -11,7 +11,7 @@ const Wrapper = styled.div`
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-     background: linear-gradient(to bottom, #eea2a9, #ff0060);
+     background: linear-gradient(to bottom, #FFA3B1, #FF6384);
 `;
 const AchievementsWrapper = styled.div`
     width:70%;

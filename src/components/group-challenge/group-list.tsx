@@ -102,7 +102,7 @@ const PeopleWrapper = styled.div`
     color: #666;
 `;
 const JoinButton = styled.div<{ disabled: boolean }>`
-    background-color: #003187;
+    background-color: #6DAEDB;
     width: 70px;
     height: 30px;
     border-radius: 5px;
@@ -300,7 +300,7 @@ const JoinText = styled.div`
     gap: 10px;
 `;
 const ExpiredLabel = styled.span`
-    background-color: red;
+    background-color: #FF4D6D;
     color: white;
     padding: 2px 5px;
     border-radius: 3px;

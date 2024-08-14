@@ -12,7 +12,7 @@ const Wrapper = styled.div`
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-     background: linear-gradient(to bottom, #ccbcf4, #937cf7);
+     background: linear-gradient(to bottom, #FFA6B1, #FF4D6D);
 `;
 const GroupWrapper = styled.div`
    width:70%;

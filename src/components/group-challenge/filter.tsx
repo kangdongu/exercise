@@ -47,9 +47,9 @@ const WeekdayBox = styled.div`
     gap: 3%;
 `;
 const Item = styled.div<{ selected: boolean }>`
-    border: 2px solid ${props => props.selected ? '#ff0000' : '#e0e0e0'};
+    border: 2px solid ${props => props.selected ? '#ff6384' : '#e0e0e0'};
     background-color: ${props => props.selected ? 'white' : '#e0e0e0'};
-    color: ${props => props.selected ? '#ff0000' : '#909580'};
+    color: ${props => props.selected ? '#ff6384' : '#909580'};
     height: 30px;
     line-height: 30px;
     text-align: center;
@@ -60,9 +60,9 @@ const Item = styled.div<{ selected: boolean }>`
     flex: 1;
 `;
 const SecretItem = styled.div<{ selected: boolean }>`
-    border: 2px solid ${props => props.selected ? '#ff0000' : '#e0e0e0'};
+    border: 2px solid ${props => props.selected ? '#ff6384' : '#e0e0e0'};
     background-color: ${props => props.selected ? 'white' : '#e0e0e0'};
-    color: ${props => props.selected ? '#ff0000' : '#909580'};
+    color: ${props => props.selected ? '#ff6384' : '#909580'};
     height: 30px;
     line-height: 30px;
     text-align: center;
@@ -73,9 +73,9 @@ const SecretItem = styled.div<{ selected: boolean }>`
     flex: 1;
 `;
 const FullItem = styled.div<{ selected: boolean }>`
-    border: 2px solid ${props => props.selected ? '#ff0000' : '#e0e0e0'};
+    border: 2px solid ${props => props.selected ? '#ff6384' : '#e0e0e0'};
     background-color: ${props => props.selected ? 'white' : '#e0e0e0'};
-    color: ${props => props.selected ? '#ff0000' : '#909580'};
+    color: ${props => props.selected ? '#ff6384' : '#909580'};
     height: 30px;
     line-height: 30px;
     text-align: center;
@@ -86,7 +86,7 @@ const FullItem = styled.div<{ selected: boolean }>`
     flex: 1;
 `;
 const FilterButton = styled.div`
-    background-color: #ea6362;
+    background-color: #ff6384;
     width: 100%;
     height: 40px;
     text-align: center;
@@ -99,9 +99,9 @@ const FilterButton = styled.div`
     }
 `;
 const WeekdayItem = styled.div<{ selected: boolean }>`
-    border: 2px solid ${props => props.selected ? '#ff0000' : '#e0e0e0'};
+    border: 2px solid ${props => props.selected ? '#ff6384' : '#e0e0e0'};
     background-color: ${props => props.selected ? 'white' : '#e0e0e0'};
-    color: ${props => props.selected ? '#ff0000' : '#909580'};
+    color: ${props => props.selected ? '#ff6384' : '#909580'};
     height: 30px;
     font-weight:800;
     line-height: 30px;

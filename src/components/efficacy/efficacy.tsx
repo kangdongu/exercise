@@ -11,7 +11,7 @@ const Wrapper = styled.div`
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-     background: linear-gradient(to bottom, #a7b0e7, #0079ff);
+     background: linear-gradient(to bottom, #BEE3F8, #6DAEDB);
 `;
 const EfficacyWrapper = styled.div`
      width:70%;
