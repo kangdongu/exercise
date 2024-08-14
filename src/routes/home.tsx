@@ -33,7 +33,7 @@ const GridWrapper = styled.div`
     width:100%;
     display: grid; 
     grid-template-columns:1fr 1fr;
-    grid-template-rows: 140px 140px 140px 140px;
+    grid-template-rows: 180px 180px 180px;
     grid-column-gap: 10px;
     grid-row-gap: 10px;
 `;

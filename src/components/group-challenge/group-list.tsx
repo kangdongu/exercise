@@ -102,7 +102,7 @@ const PeopleWrapper = styled.div`
     color: #666;
 `;
 const JoinButton = styled.div<{ disabled: boolean }>`
-    background-color: #6DAEDB;
+    background-color: #009cfc;
     width: 70px;
     height: 30px;
     border-radius: 5px;
