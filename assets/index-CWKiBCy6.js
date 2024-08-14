@@ -3632,7 +3632,7 @@ font-weight:800;
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-     background: linear-gradient(to bottom, #FFA6B1, #FF4D6D);
+     background: linear-gradient(to bottom, #FFA6B1, #ff286f);
 `,Une=_.div`
    width:70%;
     display: flex;
@@ -3682,7 +3682,7 @@ font-weight:800;
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-     background: linear-gradient(to bottom, #FFA3B1, #FF6384);
+     background: linear-gradient(to bottom, #FF6A89, #FC286E);
 `,Jne=_.div`
     width:70%;
     display: flex;
@@ -3707,7 +3707,7 @@ font-weight:800;
     background-color:#FF6F61;
     position:relative;
     overflow:hidden;
-     background: linear-gradient(to bottom, #BEE3F8, #6DAEDB);
+     background: linear-gradient(to bottom, #BEE3F8, #7393B3);
 `,ire=_.div`
      width:70%;
     display: flex;
