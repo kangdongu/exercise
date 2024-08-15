@@ -26,7 +26,7 @@ const Wrapper = styled.div`
     height:calc(100vh - 40px);
     padding: 40px 3.5vw;
     overflow-y:scroll;
-    background-color:#f3f1f1;
+    background-color:#F0F0F0;
     position:relative;
 `;
 const GridWrapper = styled.div`

@@ -35,19 +35,21 @@ const Form = styled.form`
 `;
 const AttachFileButton = styled.label`
     padding: 10px 0px;
-    color: #990033;
+    color: #FC286E;
     text-align: center;
     border-radius: 20px;
-    border: 1px solid #990033;
+    border: 1px solid #FC286E;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
+    margin-top:20px;
+    margin-bottom:10px;
 `;
 const AttachFileInput = styled.input`
     display:none;
 `;
 const SubmitBtn = styled.input`
-    background-color: #990033;
+    background-color: #FC286E;
     color:white;
     border:none;
     padding:10px 0px;
@@ -81,6 +83,8 @@ const PhotoWrapper = styled.div`
 const Memo = styled.textarea`
     width:100%;
     border-radius:5px;
+    font-size:16px;
+    margin-top:20px;
 `;
 const Plus = styled.div`
     color:#FC286E;
@@ -453,14 +457,14 @@ export default function PhotoRecords() {
                                     <Option value="전체공개">전체공개</Option>
                                 </Select>
                                 <DateChoice onDateChange={handleDateChange} />
-                                <Memo rows={5} maxLength={180} onChange={onChange} value={memo} placeholder="오늘의 운동은 어땠나요?" />
-                                <AttachFileButton htmlFor="file">{file ? "다른사진 선택" : "+ 사진 선택"}</AttachFileButton>
-                                <AttachFileInput onChange={onFileChange} type="file" id="file" accept="image" />
                                 {previewUrl && (
                                     <ReadyFile>
                                         <ReadyImg src={previewUrl} alt="Selected" />
                                     </ReadyFile>
                                 )}
+                                <Memo rows={5} maxLength={180} onChange={onChange} value={memo} placeholder="오늘의 운동은 어땠나요?" />
+                                <AttachFileButton htmlFor="file">{file ? "다른사진 선택" : "+ 사진 선택"}</AttachFileButton>
+                                <AttachFileInput onChange={onFileChange} type="file" id="file" accept="image" />
                                 <SubmitBtn type="submit" value={isLoading ? "등록중.." : "완료"} />
                             </Form>
 

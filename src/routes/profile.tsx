@@ -12,13 +12,16 @@ import { GoBell } from "react-icons/go";
 import { IoIosMenu } from "react-icons/io";
 import MenuModal from "../components/menu/menu";
 import BellModal from "../components/bell";
+import { TiPlus } from "react-icons/ti";
+import { FaExchangeAlt } from "react-icons/fa";
 
 const Wrapper = styled.div`
   width:100vw;
   height:calc(100vh - 40px);
-  background-color:#f3f1f1;
+  background-color:#F0F0F0;
   overflow-y:scroll;
-  padding-top:20px;
+  padding:20px 0px;
+  position:relative;
 `;
 const ContentWrapper = styled.div`
   width:95vw;
@@ -34,6 +37,7 @@ const Header = styled.div`
     background-color: white;
     padding: 20px;
     border-radius: 10px;
+    position:relative;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 const UserImgUpload = styled.label`
@@ -84,7 +88,7 @@ const AvatarMent = styled.div`
   position:relative;
 `;
 const UserPofileWrapper = styled.div`
-
+  position:relative;
 `;
 const Title = styled.h4`
   margin:10px 0px;
@@ -206,7 +210,7 @@ export default function Profile() {
 
   useEffect(() => {
     setBellAlerm(true)
-  },[])
+  }, [])
 
   const onUserImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
@@ -368,13 +372,27 @@ export default function Profile() {
 
   return (
     <Wrapper>
+      <div style={{ position: 'absolute', backgroundColor: '#FC286E', width: '100%', height: '100px', top: '0', left: '0' }}></div>
       <Header>
         <UserPofileWrapper>
           <UserImgUpload htmlFor="user-img">
-            {Boolean(userImg) ? <UserImg src={userImg || undefined} /> : <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-              <path fillRule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clipRule="evenodd" />
-            </svg>
-            }
+            {Boolean(userImg) ? (
+              <>
+                <div style={{ position: 'absolute', width: '25px', height: '25px', backgroundColor: 'white', borderRadius: '50%', bottom: '0px', right: '0', border: '1px solid lightgray' }}>
+                  <FaExchangeAlt style={{ width: '15px', height: '15px', marginLeft: '5px', marginTop: '5px', fill: '#FC286E' }} />
+                </div>
+                <UserImg src={userImg || undefined} />
+              </>
+            ) : (
+              <>
+                <div style={{ position: 'absolute', width: '25px', height: '25px', backgroundColor: 'white', borderRadius: '50%', bottom: '0px', right: '0', border: '1px solid lightgray' }}>
+                  <TiPlus style={{ width: '20px', height: '20px', marginLeft: '2.5px', marginTop: '2.5px', fill: '#FC286E' }} />
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                  <path fillRule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clipRule="evenodd" />
+                </svg>
+              </>
+            )}
           </UserImgUpload>
           <UserImgInput onChange={onUserImg} id="user-img" type="file" accept="image/" />
         </UserPofileWrapper>
@@ -385,7 +403,7 @@ export default function Profile() {
           {bellAlerm && (
             <div style={{ position: 'absolute', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'red', left: '20px' }} />
           )}
-          <GoBell onClick={() => {bellClick; alert("업데이트 예정입니다.")}} />
+          <GoBell onClick={() => { bellClick; alert("업데이트 예정입니다.") }} />
           <IoIosMenu onClick={menuClick} style={{ width: '32px', height: '32px', marginTop: '-5px' }} />
         </BellAndMenu>
       </Header>

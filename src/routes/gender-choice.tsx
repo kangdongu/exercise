@@ -36,7 +36,8 @@ const CompleteButton = styled.div`
   background-color:#FC286E;
   color:white; 
   text-align:center;
-  font-size:25px;
+  font-size:18px;
+  font-weight:700;
   line-height:50px;
   cursor: pointer;
 `;
