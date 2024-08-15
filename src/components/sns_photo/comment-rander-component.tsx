@@ -14,10 +14,12 @@ const CommentContnet = styled.div`
   padding: 10px;
   border-bottom: 1px solid #eee;
   display: flex;
+  gap:5%;
   justify-content: space-between;
   align-items: center;
 `;
 const UserInfo = styled.div`
+  width:85%;
   display: flex;
   align-items: center;
 `;
@@ -25,9 +27,6 @@ const UserImg = styled.img`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: white;
-  border: 0.1px solid lightgray;
-  margin-right: 10px;
 `;
 const UserImgUpload = styled.div`
   width: 40px;
@@ -42,6 +41,7 @@ const UserImgUpload = styled.div`
   background-color: #e0e0e0;
 `;
 const CommeentTextWrapper = styled.div`
+  width:calc(100% - 50px);
   display: flex;
   flex-direction: column;
 `;
@@ -57,6 +57,7 @@ const CommentText = styled.p`
   color: #333;
 `;
 const DeleteComment = styled.div`
+  width:10%;
   color: #ff0000;
   cursor: pointer;
   font-weight: 600;
@@ -69,8 +70,8 @@ interface CommentRenderProps {
     댓글내용: string;
     유저아이디: string;
     photoId: string;
-    프로필사진:string;
-    유저닉네임:string;
+    프로필사진: string;
+    유저닉네임: string;
   }[];
   selectedPhotoDetails: {
     id: string;
@@ -97,10 +98,12 @@ const CommentRenderComponent: React.FC<CommentRenderProps> = ({
           <CommentContnet key={comment.id}>
             <UserInfo>
               {comment.프로필사진 !== null ? (
-                <UserImg src={comment.프로필사진} alt="프로필 사진" />
+                <UserImgUpload>
+                  <UserImg style={{ width: '40px', height: '40px' }} src={comment.프로필사진} alt="프로필 사진" />
+                </UserImgUpload>
               ) : (
                 <UserImgUpload>
-                  <FaUserAlt style={{width:"30px", height:'30px',marginTop:"10px", color:'gray'}} />
+                  <FaUserAlt style={{ width: "30px", height: '30px', marginTop: "10px", color: 'gray' }} />
                 </UserImgUpload>
               )}
               <CommeentTextWrapper>

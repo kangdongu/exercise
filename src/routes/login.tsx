@@ -24,7 +24,7 @@ const LoginButtonWrapper = styled.div`
 `;
 const Title = styled.div`
     font-size: 70px;
-    color:#990033;
+    color:#FC286E;
     font-weight:800;
     width:100%;
     line-height:150px;
@@ -50,6 +50,8 @@ const Size = styled.div`
 @media screen and (max-width: 700px) {
        width:100%;
    }
+    color:#FC286E;
+    font-weight:700;
     position:absolute;
     bottom:50px;
     text-align:center;

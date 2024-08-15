@@ -9,7 +9,7 @@ import BadgeModal from "../badge-modal";
 
 const Wrapper = styled.div`
     width: 100%;
-    height: 72.5vh;
+    height: calc(100vh - 228px);
     overflow-y:scroll;
 `;
 const Title = styled.input`
@@ -92,40 +92,46 @@ const QuickList = styled.div`
     border-radius: 15px;
 `;
 const GoalList = styled.div`
-    width: 320px;
-    height: 55px;
-    margin: 5px 0px;
-    border: 1px solid black;
+    width: 100%;
+    height: 50px;
+    margin: 10px 0px;
     display: flex;
+    border-radius:15px;
     align-items: center;
     justify-content: space-between;
 `;
 const GoalDelete = styled.div`
     cursor: pointer;
     width: 20%;
-    height: 55px;
+    height: 50px;
     cursor: pointer;
     text-align: center;
     line-height: 45px;
     font-size:70px;
-    color:red;
+    color:white;
+    border-radius:0px 15px 15px 0px;
+    background-color:#ff4d4f;
 `;
 const GoalMemo = styled.input`
     flex: 1;
     width:80%;
     height:50px;
     font-size:16px;
+    padding-left:10px;
+    border-radius:15px 0px 0px 15px;
 `;
 const Completion = styled.div`
-     width: 100px;
-    height: 35px;
-    border: 1px solid black;
+     width: 100%;
+    height: 50px;
     cursor: pointer;
     text-align: center;
-    line-height: 35px;
-    transform: translate(62vw, 40px);
+    border-radius:15px;
+    line-height: 50px;
+    margin-top:20px;
+    font-size:20px;
+    font-weight:600;
     color:white;
-    background-color:#D32F2F;
+    background-color:#FC286E;
 `;
 
 interface LongProps {

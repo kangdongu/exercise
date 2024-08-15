@@ -12,7 +12,6 @@ const Wrapper = styled.div`
    width:100%;
     height:calc(100vh - 190px);
     overflow-y: scroll;
-    padding: 15px;
     box-sizing: border-box;
 `;
 const DailyGoalsWrapper = styled.div`
@@ -20,22 +19,26 @@ const DailyGoalsWrapper = styled.div`
     overflow-y:scroll;
 `;
 const DailyGoal = styled.div<{ completed: boolean }>`
-    width: 90%;
+    width: 80%;
     height: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 15px auto;
-    background-color: ${props => (props.completed ? '#d4edda' : 'white')};
+    margin: 15px 0px;
+    background-color: ${props => (props.completed ? '#CEDCEC' : '#CEDCEC')};
     padding: 0 10px;
     border-radius: 15px;
     box-sizing: border-box;
+    opacity:${props => (props.completed ? "0.5" : '1')};
+    font-size:18px;
+    font-weight:700;
+    color: ${props => (props.completed ? '#333333' : "#333333")};
     border: 1px solid lightgray;
 `;
 const CompletCountWrapper = styled.div`
     width: 153px;
     height: 37px;
-    border: 1px solid black;
+    border: 3px solid #FC286E;
     border-radius: 13px;
     margin: 0 auto;
     display: flex;
@@ -47,7 +50,7 @@ const CompletCountWrapper = styled.div`
 `;
 const Complet = styled.div`
      width: 50%;
-    border-right: 1px solid black;
+    border-right: 1px solid #FC286E;
     text-align: center;
     line-height: 37px;
 `;
@@ -324,8 +327,8 @@ const TodayGoals = () => {
                     <DailyGoal key={index} completed={goal.완료여부 === '완료'}>
                         <GoalText>{goal.챌린지내용}</GoalText>
                         <GoalComplet onClick={() => toggleCompletion(goal.id, goal.완료여부, goal.longGoalId)}>
-                            <div style={{border:goal.완료여부 === '완료' ? "3px solid green": "3px solid #dcdcdc", borderRadius:'50%', width:'45px',height:'45px',marginTop:'2.5px' ,marginLeft:'5px'}}>
-                                {goal.완료여부 === '완료' ? <FaCheck style={{ fontSize: "30px", color: 'green' }} /> : <FaCheck style={{ fontSize: "30px", color: '#dcdcdc' }} />}
+                            <div style={{border:goal.완료여부 === '완료' ? "3px solid #009cfc": "3px solid white", borderRadius:'50%', width:'45px',height:'45px',marginTop:'2.5px' ,marginLeft:'10px'}}>
+                                {goal.완료여부 === '완료' ? <FaCheck style={{ fontSize: "30px", color: '009cfc' }} /> : <FaCheck style={{ fontSize: "30px", color: 'white' }} />}
                             </div>
                         </GoalComplet>
                     </DailyGoal>

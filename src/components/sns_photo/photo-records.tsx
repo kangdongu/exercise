@@ -83,7 +83,7 @@ const Memo = styled.textarea`
     border-radius:5px;
 `;
 const Plus = styled.div`
-    color:#FF5C73;
+    color:#FC286E;
     border-radius:50%;
     cursor:pointer;
     font-size: 35px;

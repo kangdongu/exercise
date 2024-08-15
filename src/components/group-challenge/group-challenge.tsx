@@ -9,7 +9,7 @@ const Wrapper = styled.div`
     color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-     background: linear-gradient(to bottom, #FFA6B1, #ff286f);
+     background: linear-gradient(to bottom, #FF6A89, #FC286E);
 `;
 const GroupWrapper = styled.div`
     display: flex;
@@ -41,7 +41,7 @@ const GroupChallenge: React.FC<GroupProps> = ({ GroupModal }) => {
             <HiOutlineUserGroup style={{ width: "60px", height: "60px", color: "#ffffff", marginBottom: '15px' }} />
             <GroupWrapper>
                 <TextWrapper>
-                    <div style={{ fontSize: "20px", fontWeight: "600", marginBottom: '5px' }}>그룹챌린지</div>
+                    <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>그룹챌린지</div>
                     <span>사람들과 함께 실천해보세요</span>
                 </TextWrapper>
                 <IoArrowForwardCircle />

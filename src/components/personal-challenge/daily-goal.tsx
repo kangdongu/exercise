@@ -7,7 +7,10 @@ import DateChoiceToday from "../date-picker-today";
 import AchievementModal from "../achievement-alert";
 import BadgeModal from "../badge-modal";
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+    height:calc(100vh - 228px);
+    overflow-y:scroll;
+`;
 const GoalPlus = styled.button`
     display: flex;
     align-items: center;
@@ -54,40 +57,46 @@ const QuickList = styled.div`
     text-overflow: ellipsis;
 `;
 const GoalList = styled.div`
-    width: 320px;
-    height: 55px;
+    width: 100%;
+    height: 50px;
     margin: 10px 0px;
-    border: 1px solid black;
     display: flex;
+    border-radius:15px;
     align-items: center;
     justify-content: space-between;
 `;
 const GoalDelete = styled.div`
     cursor: pointer;
     width: 20%;
-    height: 55px;
+    height: 50px;
     cursor: pointer;
     text-align: center;
     line-height: 45px;
     font-size:70px;
-    color:red;
+    color:white;
+    border-radius:0px 15px 15px 0px;
+    background-color:#ff4d4f;
 `;
 const GoalMemo = styled.input`
     flex: 1;
     width:80%;
     height:50px;
     font-size:16px;
+    padding-left:10px;
+    border-radius:15px 0px 0px 15px;
 `;
 const Completion = styled.div`
-    width: 100px;
-    height: 35px;
-    border: 1px solid black;
+    width: 100%;
+    height:50px;
     cursor: pointer;
+    margin-top:20px;
     text-align: center;
-    line-height: 35px;
-    transform: translate(62vw, 40px);
+    line-height: 50px;
+    border-radius:15px;
     color:white;
-    background-color:#D32F2F;
+    font-weight:600;
+    background-color:#FC286E;
+    font-size:20px;
 `;
 
 interface DailyProps {

@@ -26,16 +26,16 @@ const Wrapper = styled.div`
     height:calc(100vh - 40px);
     padding: 40px 3.5vw;
     overflow-y:scroll;
-     background-color:#f3f1f1;
-    padding-bottom:0px;
+    background-color:#f3f1f1;
+    position:relative;
 `;
 const GridWrapper = styled.div`
     width:100%;
     display: grid; 
     grid-template-columns:1fr 1fr;
     grid-template-rows: 180px 180px 180px;
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
+    grid-column-gap: 15px;
+    grid-row-gap: 15px;
 `;
 const ProfileWrapper = styled.div`
    display: flex;
@@ -46,6 +46,7 @@ const ProfileWrapper = styled.div`
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position:relative;
 `;
 const ProfileImgWrapper = styled.div`
    border-radius: 50%;
@@ -331,6 +332,7 @@ export default function Home() {
 
     return (
         <Wrapper>
+            <div style={{position:'absolute', top:'0', left:'0', backgroundColor:'#FC286E', height:'120px', width:'100%'}}></div>
             <ProfileWrapper>
                 {!isLoading && userProfilePicUrl === "" ? (
                     <ProfileImgWrapper>

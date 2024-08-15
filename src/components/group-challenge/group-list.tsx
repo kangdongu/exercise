@@ -300,7 +300,7 @@ const JoinText = styled.div`
     gap: 10px;
 `;
 const ExpiredLabel = styled.span`
-    background-color: #FF4D6D;
+    background-color: #ec2d42;
     color: white;
     padding: 2px 5px;
     border-radius: 3px;

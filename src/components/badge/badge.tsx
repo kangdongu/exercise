@@ -41,7 +41,7 @@ const Badge: React.FC<badgeProps> = ({ badgeClick }) => {
 
             <TimerWrapper>
                 <TextWrapper>
-                    <div style={{ fontSize: "20px", fontWeight: "600", marginBottom: '5px' }}>뱃지 현황</div>
+                    <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>뱃지 현황</div>
                     <span>뱃지를 획득해보세요</span>
                 </TextWrapper>
                 <IoArrowForwardCircle />

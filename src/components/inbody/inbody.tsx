@@ -45,7 +45,7 @@ const Header = styled.div`
     }
 `;
 const GoalSetting = styled.button`
-    background-color: #36A2EB;
+    background-color: #009cfc;
     color: white;
     border: none;
     border-radius: 5px;
@@ -109,7 +109,7 @@ const Button = styled.button`
     padding: 10px 15px;
     border-radius: 5px;
     border: none;
-    background-color: #ea6362;
+    background-color: #FC286E;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -323,7 +323,7 @@ export default function Inbody() {
                 <h3>Inbody</h3>
                 <div style={{marginLeft:'auto'}}>
                 <GoalSetting onClick={() => navigate("/inbody-goals")}>목표설정</GoalSetting>
-                <DetailsButton onClick={() => {detailsMemory("total") }}>전체 상세보기</DetailsButton>
+                <DetailsButton style={{backgroundColor:'#FC286E'}} onClick={() => {detailsMemory("total") }}>전체 상세보기</DetailsButton>
                 </div>
             </Header>
             <InbodyRecordWrapper>

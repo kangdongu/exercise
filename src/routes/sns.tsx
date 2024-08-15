@@ -199,7 +199,6 @@ export default function PublicPhotosPage() {
       const docSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
         const data = docSnapshot.data();
-        console.log("사진 데이터:", data);
         setSelectedPhotoDetails({ id: docSnapshot.id, ...data });
         setViewDetails(true);
 
@@ -341,7 +340,6 @@ export default function PublicPhotosPage() {
         const docRef = await addDoc(commentRef, newComment);
         setComments([...comments, { id: docRef.id, ...newComment }]);
         setCommentWrite("");
-        console.log(comments)
       } catch (error) {
         console.error("댓글 작성 중 오류가 발생했습니다:", error);
       }

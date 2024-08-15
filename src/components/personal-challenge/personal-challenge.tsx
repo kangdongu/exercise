@@ -9,7 +9,7 @@ const Wrapper = styled.div`
     color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    background: linear-gradient(to bottom, #a7b0e7, #0079ff);
+    background: linear-gradient(to bottom, #33CCFF, #009cfc);
 `;
 
 const PersonalWrapper = styled.div`
@@ -43,7 +43,7 @@ const PersonalChallenge: React.FC<PersonalProps> = ({ personalClick }) => {
             <FaRegUser style={{ width: "60px", height: "60px", color: "#ffffff", marginBottom: '15px' }} />
             <PersonalWrapper>
                 <TextWrapper>
-                    <div style={{ fontSize: "20px", fontWeight: "600", marginBottom: '5px' }}>개인 챌린지</div>
+                    <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>개인 챌린지</div>
                     <span>혼자만의 습관을 세워보세요</span>
                 </TextWrapper>
                 <IoArrowForwardCircle />

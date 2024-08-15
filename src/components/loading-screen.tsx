@@ -8,7 +8,7 @@ const LodingText = styled.h3`
 width: 100%;
 text-align: center;
 font-size: 65px;
-color: #ff5c73;
+color: #FC286E;
 font-weight:800;
 `;
 const LogoWrapper = styled.div`

@@ -41,7 +41,7 @@ const Achievements: React.FC<achievmeentsProps> = ({ achievmeentsClick }) => {
             <GoTrophy style={{ width: "60px", height: "60px", color: "#ffffff", marginBottom: '15px' }} />
             <AchievementsWrapper>
                 <TextWrapper>
-                    <div style={{ fontSize: "20px", fontWeight: "600", marginBottom: '5px' }} >도전과제</div>
+                    <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }} >도전과제</div>
                     <span>습관과 도전과제를 쌓아보세요</span>
                 </TextWrapper>
                 <IoArrowForwardCircle />

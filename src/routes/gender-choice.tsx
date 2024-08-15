@@ -15,7 +15,7 @@ const Button = styled.div<{ selected: boolean }>`
     height:150px;
     border-radius:50%;
     text-align:center;
-    border:${props => props.selected ? "3px solid #990033" : "none"};
+    border:${props => props.selected ? "3px solid #FC286E" : "#f3f1f1"};
     cursor: pointer;
 `;
 const Title = styled.h1`
@@ -33,7 +33,7 @@ const CompleteButton = styled.div`
   width:80vw;
   height:50px;
   margin: 0 auto;
-  background-color:#990033;
+  background-color:#FC286E;
   color:white; 
   text-align:center;
   font-size:25px;

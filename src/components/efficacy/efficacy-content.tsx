@@ -14,16 +14,15 @@ const Wrapper = styled.div`
     width: 100vw;
     height: calc(100vh - 80px);
     overflow-y: scroll;
-    background: linear-gradient(to bottom, #FAC1BA, #FF6F61);
+    background: linear-gradient(to bottom, #FF6A89, #FC286E);
     padding: 20px;
     color: #333;
 `;
 
-const Header = styled.h4`
+const Title = styled.h4`
     font-size: 24px;
     margin: 10px 0;
-    padding-left: 2.5vw;
-    color: #333;
+    color: white;
 `;
 
 const ContentWrapper = styled.div`
@@ -42,7 +41,7 @@ const Content = styled.div`
     text-align: center;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
-
+    opacity:0.85;
     &:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
@@ -69,7 +68,7 @@ const EfficacyContent = () => {
     return (
         <MoSlideModal onClose={() => navigate("/")}>
             <Wrapper>
-                <Header>운동 정보</Header>
+                <Title>운동별 정보</Title>
                 <ContentWrapper>
                     <Content onClick={() => modalOpen("efficacy")}>운동의 효과</Content>
                     <Content onClick={() => modalOpen("health-gym")}>헬스</Content>

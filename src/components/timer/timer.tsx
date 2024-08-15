@@ -43,7 +43,7 @@ const TimerWrapper: React.FC<TimerProps> = ({ timerClick }) => {
             <GrAlarm style={{ width: "60px", height: "60px", color: "#ffffff", marginBottom: '15px' }} />
             <Timer>
                 <TextWrapper>
-                    <div style={{ fontSize: "20px", fontWeight: "600", marginBottom: '5px' }}>운동 타이머</div>
+                    <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>운동 타이머</div>
                     <span>타이머를 이용해 보세요</span>
                 </TextWrapper>
                 <IoArrowForwardCircle />

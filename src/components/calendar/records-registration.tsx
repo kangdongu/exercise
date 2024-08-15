@@ -69,16 +69,13 @@ const Input = styled.input`
 const Button = styled.button`
  width: 100%;
   padding: 15px;
-  background-color: #ff4d4f;
+  background-color: #FC286E;
   color: white;
   border: none;
   border-radius: 10px;
   font-size: 18px;
   cursor: pointer;
   margin-top: 20px;
-  &:hover {
-    background-color: #ff7875;
-  }
 `;
 const CloseBtn = styled.div`
   margin-bottom: 10px;
@@ -102,7 +99,7 @@ const ListBody = styled.div`
 const SetPlus = styled.div`
  width: 35%;
   padding: 10px;
-  background-color: #55a38d;
+  background-color: #53A85B;
   color: white;
   border: none;
   border-radius: 10px;
@@ -129,7 +126,7 @@ const SetDelete = styled.div`
 const ExerciseDataBtn = styled.div`
  width: 35%;
   padding: 10px;
-  background-color: #55a38d;
+  background-color: #53A85B;
   margin-left:auto;
   color: white;
   border: none;
@@ -144,7 +141,7 @@ const ExerciseDataBtn = styled.div`
 const ExerciseChoiceModal = styled.div`
   padding: 20px;
   background-color: #f9f9f9;
-  height: 100vh;
+  height: calc(100vh - 80px);
   position:relative;
   z-index:103;
   overflow-y: scroll;
@@ -165,24 +162,24 @@ const TypeWrapper = styled.ul`
 const TypeMenu = styled.li<{ selected: boolean }>`
   font-size:13px;
   font-weight:600;
-  border:1px solid gray;
+  border:1px solid ${(props) => props.selected ? "#FC286E" :"gray"};
   text-align:center;
   border-radius:10px;
   padding: 5px 0px;
   cursor: pointer;
-  background-color: ${(props) => props.selected ? "#ff0000" : "transparent"};
+  background-color: ${(props) => props.selected ? "#FC286E" : "transparent"};
   color: ${(props) => props.selected ? "white" : "black"};
 `;
 const AreaMenu = styled.li<{ selected: boolean }>`
   font-size:13px;
   width:16.5%;
   font-weight:600;
-  border:1px solid gray;
+  border:1px solid ${(props) => props.selected ? "#FC286E" :"gray"};
   text-align:center;
   border-radius:10px;
   padding: 5px 0px;
   cursor: pointer;
-  background-color: ${(props) => props.selected ? "#ff0000" : "transparent"};
+  background-color: ${(props) => props.selected ? "#FC286E" : "transparent"};
   color: ${(props) => props.selected ? "white" : "black"};
 `;
 const ExerciseList = styled.div`
@@ -373,7 +370,7 @@ export default function ExerciseRegistration({ closeModal, congratulations }: Ex
           <ExerciseNameWrapper>
             <Label>
               운동종류:{" "}
-              <Input
+              <Input style={{width:'127px', border:'1px solid #333333'}}
                 onChange={(e) => setExerciseType(e.target.value)}
                 value={exerciseType}
                 type="text"

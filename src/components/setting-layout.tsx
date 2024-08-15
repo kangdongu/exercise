@@ -27,7 +27,7 @@ const Header = styled.div`
     width:100%;
     height:100px;
     background-color:#E72929;
-    z-index:99999;
+    z-index:9999;
 `;
 const Menu = styled.div`
 @media screen and (max-width: 700px) {
@@ -64,9 +64,9 @@ const MenuItem = styled.div<{ selected: boolean }>`
     }
     border-top:${props => props.selected ? "2px solid red" : null};
     height:80px;
-    color: ${props => props.selected ? '#ea6362' : 'black'};
+    color: ${props => props.selected ? '#FC286E' : 'black'};
     svg {
-        fill: ${props => props.selected ? '#ea6362' : 'black'};
+        fill: ${props => props.selected ? '#FC286E' : 'black'};
     }
 `;
 

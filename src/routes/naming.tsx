@@ -16,6 +16,7 @@ const Wrapper = styled.div`
 
 const Input = styled.input`
   padding: 10px;
+  font-size:16px;
   width: 300px;
   border-radius:5px;
 `;
@@ -37,18 +38,21 @@ const Form = styled.form`
 `;
 
 const InputBtn = styled.input`
-  padding: 10px 20px;
+  padding: 12px 20px;
   font-size: 16px;
   cursor: pointer;
-  background-color:#990033;
+  background-color:#FC286E;
   color:white;
-  width:150px;
-  margin-top:20px;
+  border-radius:10px;
+  width:100%;
+  margin-top:30px;
+  border:none;
 `;
 
 const ValidationMessage = styled.div<{ isValid: boolean | null }>`
   color: ${({ isValid }) => (isValid === null ? "black" : isValid ? "green" : "red")};
   margin-top:5px;
+  font-size:14px;
 `;
 
 export default function Naming() {
@@ -130,7 +134,7 @@ export default function Naming() {
   return (
     <Wrapper>
       <Title>
-        활동하실 닉네임을 설정해주세요.<br />
+        활동하실 닉네임을 설정해주세요<br />
         <span>(2자에서 10자 사이의 문자로 설정할 수 있습니다.)</span>
       </Title>
       <Form onSubmit={onSubmit}>

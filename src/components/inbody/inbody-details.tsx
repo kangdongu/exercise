@@ -31,7 +31,7 @@ const MenuItem = styled.div<{ selected: boolean }>`
     font-weight:bold;
     border-bottom:1px solid #939393;
     height:30px;
-    color: ${props => props.selected ? "red" : "#939393"}
+    color: ${props => props.selected ? "#FC286E" : "#939393"}
 `;
 const ContentWrapper = styled.div`
     width:100%;
@@ -162,7 +162,7 @@ const Bar = styled.div<{ width: number }>`
     top:0;
     left:0;
     height:100%;
-    background-color:red;
+    background-color:#FC286E;
     border-radius: 12px;
     width: ${props => props.width}px;
 `;
@@ -265,7 +265,7 @@ const InbodyDetails = () => {
                 const weightProgress = currentWeight - Number(beforeWeight);
                 const weightWidthCalc = barGoalWidth * (weightProgress / weightDiff);
                 const weightPercentCalc = (weightProgress / weightDiff) * 100;
-                const weightPercent = weightPercentCalc > 100 ? 100 : weightPercentCalc;
+                const weightPercent = weightPercentCalc > 100 ? 100 : weightPercentCalc.toFixed(2);
                 setWeightWidth(weightWidthCalc > barGoalWidth ? barGoalWidth : weightWidthCalc);
                 setWeightPercent(Number(weightPercent));
             }
@@ -287,7 +287,7 @@ const InbodyDetails = () => {
                 const fatProgress = Number(beforeFat) - currentFat;
                 const fatWidthCalc = barGoalWidth * (fatProgress / fatDiff);
                 const fatPercentCalc = (fatProgress / fatDiff) * 100;
-                const fatPercent = fatPercentCalc > 100 ? 100 : fatPercentCalc;
+                const fatPercent = fatPercentCalc > 100 ? 100 : fatPercentCalc.toFixed(2);
                 setFatWidth(fatWidthCalc > barGoalWidth ? barGoalWidth : fatWidthCalc);
                 setFatPercent(Number(fatPercent));
             }
@@ -434,19 +434,19 @@ const InbodyDetails = () => {
                             <TotalNowDataWrapper>
                                 <TotalNowData>
                                     <h5>현재 몸무게</h5> <span>{weightData[weightData.length - 1].weight}</span>kg
-                                    <NowGrowth style={{ backgroundColor: Growth(weightData, "weight") >= 0 ? "green" : "green" }}>
+                                    <NowGrowth style={{ backgroundColor: Growth(weightData, "weight") >= 0 ? "#53A85B" : "#53A85B" }}>
                                         {Growth(weightData, "weight") >= 0 ? `+${Growth(weightData, "weight")}` : `${Growth(weightData, "weight")}`} kg
                                     </NowGrowth>
                                 </TotalNowData>
                                 <TotalNowData>
                                     <h5>현재 골격근량</h5> <span>{muscleData[muscleData.length - 1].muscle}</span>%
-                                    <NowGrowth style={{ backgroundColor: Growth(muscleData, "muscle") >= 0 ? "green" : "red" }}>
+                                    <NowGrowth style={{ backgroundColor: Growth(muscleData, "muscle") >= 0 ? "#53A85B" : "#FC286E" }}>
                                         {Growth(muscleData, "muscle") >= 0 ? `+${Growth(muscleData, "muscle")}` : `${Growth(muscleData, "muscle")}`} %
                                     </NowGrowth>
                                 </TotalNowData>
                                 <TotalNowData>
                                     <h5>현재 체지방</h5> <span>{fatData[fatData.length - 1].fat}</span>%
-                                    <NowGrowth style={{ backgroundColor: Growth(fatData, "fat") <= 0 ? "green" : "red" }}>
+                                    <NowGrowth style={{ backgroundColor: Growth(fatData, "fat") <= 0 ? "#53A85B" : "#FC286E" }}>
                                         {Growth(fatData, "fat") >= 0 ? `+${Growth(fatData, "fat")}` : `${Growth(fatData, "fat")}`} %
                                     </NowGrowth>
                                 </TotalNowData>

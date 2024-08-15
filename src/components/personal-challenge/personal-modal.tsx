@@ -18,7 +18,7 @@ const MenuWrapper = styled.div`
 margin: 25px 0px;
 `;
 const Menu = styled.span<{ selected: boolean }>`
-    color: ${props => props.selected ? '#cc0033' : '#939393'};
+    color: ${props => props.selected ? '#FC286E' : '#939393'};
     font-weight:${props => props.selected ? '600' : '500'};
     margin-left:15px;
     &:first-child {

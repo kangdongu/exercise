@@ -45,7 +45,7 @@ const ContentWrapper = styled.div`
 
 const Button = styled.button`
   padding: 10px 15px;
-  background-color: #ff6384;
+  background-color: #FC286E;
   color: white;
   border: none;
   border-radius: 5px;
