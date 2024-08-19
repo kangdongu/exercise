@@ -64,9 +64,9 @@ const MenuItem = styled.div<{ selected: boolean }>`
     }
     border-top:${props => props.selected ? "2px solid red" : null};
     height:80px;
-    color: ${props => props.selected ? '#FC286E' : 'black'};
+    color: ${props => props.selected ? '#FF286F' : 'black'};
     svg {
-        fill: ${props => props.selected ? '#FC286E' : 'black'};
+        fill: ${props => props.selected ? '#FF286F' : 'black'};
     }
 `;
 

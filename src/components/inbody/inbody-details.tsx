@@ -255,7 +255,7 @@ const InbodyDetails = () => {
         fetchInbodyGoals()
     }, [])
 
-    useEffect(() => {
+    const fetchBar = () => {
         if (BarGoalRef.current) {
             const barGoalWidth = BarGoalRef.current.offsetWidth;
 
@@ -292,6 +292,13 @@ const InbodyDetails = () => {
                 setFatPercent(Number(fatPercent));
             }
         }
+    }
+    
+    useEffect(() => {
+        fetchBar()
+    },[])
+    useEffect(() => {
+        fetchBar()
     }, [selectedMenu]);
 
     const calculateGrowth = (currentValue: number, previousValue: number) => {

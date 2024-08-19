@@ -19,6 +19,7 @@ import { GoBell } from "react-icons/go";
 import { IoIosMenu } from "react-icons/io";
 import MenuModal from "../components/menu/menu";
 import BellModal from "../components/bell";
+import ThisWeekRecords from "../components/this-week-records";
 
 const Wrapper = styled.div`
     width:100vw;
@@ -33,7 +34,7 @@ const GridWrapper = styled.div`
     width:100%;
     display: grid; 
     grid-template-columns:1fr 1fr;
-    grid-template-rows: 180px 180px 180px;
+    grid-template-rows: 160px 160px 160px;
     grid-column-gap: 15px;
     grid-row-gap: 15px;
 `;
@@ -332,7 +333,6 @@ export default function Home() {
 
     return (
         <Wrapper>
-            <div style={{position:'absolute', top:'0', left:'0', backgroundColor:'#FC286E', height:'120px', width:'100%'}}></div>
             <ProfileWrapper>
                 {!isLoading && userProfilePicUrl === "" ? (
                     <ProfileImgWrapper>
@@ -352,6 +352,7 @@ export default function Home() {
                     <IoIosMenu onClick={menuClick} style={{ width: '32px', height: '32px', marginTop: '-5px' }} />
                 </HeaderContentWrapper>
             </ProfileWrapper>
+            <ThisWeekRecords />
             <GridWrapper>
                 <TimerWrapper timerClick={() => handleNavigation('/timer')} />
                 <Badge badgeClick={() => handleNavigation('/badge')} />

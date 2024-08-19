@@ -9,7 +9,7 @@ const Wrapper = styled.div`
     color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-     background: linear-gradient(to bottom, #FF6A89, #FC286E);
+     background: linear-gradient(to bottom, #89C995, #54AA5C);
 `;
 const AchievementsWrapper = styled.div`
     display: flex;
@@ -38,7 +38,7 @@ interface achievmeentsProps {
 const Achievements: React.FC<achievmeentsProps> = ({ achievmeentsClick }) => {
     return (
         <Wrapper onClick={achievmeentsClick}>
-            <GoTrophy style={{ width: "60px", height: "60px", color: "#ffffff", marginBottom: '15px' }} />
+            <GoTrophy style={{ width: "40px", height: "40px", color: "#ffffff", marginBottom: '15px' }} />
             <AchievementsWrapper>
                 <TextWrapper>
                     <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }} >도전과제</div>

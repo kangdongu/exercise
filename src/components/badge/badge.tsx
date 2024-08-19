@@ -9,7 +9,7 @@ const Wrapper = styled.div`
     color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-     background: linear-gradient(to bottom, #33CCFF, #009cfc);
+     background: linear-gradient(to bottom, #FF6A85, #FF286F);
 `;
 const TimerWrapper = styled.div`
     display: flex;
@@ -37,7 +37,7 @@ interface badgeProps {
 const Badge: React.FC<badgeProps> = ({ badgeClick }) => {
     return (
         <Wrapper onClick={badgeClick}>
-            <RiPoliceBadgeLine style={{ width: "60px", height: "60px", color: "#ffffff", marginBottom: '15px' }} />
+            <RiPoliceBadgeLine style={{ width: "40px", height: "40px", color: "#ffffff", marginBottom: '15px' }} />
 
             <TimerWrapper>
                 <TextWrapper>

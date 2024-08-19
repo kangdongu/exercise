@@ -7,7 +7,7 @@ const Wrapper = styled.div`
     padding: 15px;
     align-items: center;
     color: white;
-    background: linear-gradient(to bottom, #FF6A89, #FC286E);
+    background: linear-gradient(to bottom, #FF6A85, #FF286F);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
 `;
@@ -40,7 +40,7 @@ interface TimerProps {
 const TimerWrapper: React.FC<TimerProps> = ({ timerClick }) => {
     return (
         <Wrapper onClick={timerClick}>
-            <GrAlarm style={{ width: "60px", height: "60px", color: "#ffffff", marginBottom: '15px' }} />
+            <GrAlarm style={{ width: "40px", height: "40px", color: "#ffffff", marginBottom: '15px' }} />
             <Timer>
                 <TextWrapper>
                     <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>운동 타이머</div>

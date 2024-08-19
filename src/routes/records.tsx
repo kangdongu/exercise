@@ -25,8 +25,8 @@ const MenuItem = styled.span<{ selected: boolean }>`
     cursor: pointer;
     font-weight: 600;
     font-size: 18px;
-    color: ${props => props.selected ? '#FC286E' : 'black'};
-    border-bottom: 3px solid ${props => props.selected ? '#FC286E' : 'transparent'};
+    color: ${props => props.selected ? '#FF286F' : 'black'};
+    border-bottom: 3px solid ${props => props.selected ? '#FF286F' : 'transparent'};
     transition: color 0.3s ease, border-bottom-color 0.3s ease;
 `;
 

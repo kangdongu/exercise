@@ -9,7 +9,7 @@ const Wrapper = styled.div`
     color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-     background: linear-gradient(to bottom, #33CCFF, #009cfc);
+     background: linear-gradient(to bottom, #89C995, #54AA5C);
 `;
 const EfficacyWrapper = styled.div`
     display: flex;
@@ -37,7 +37,7 @@ interface efficacyProps {
 const Efficacy: React.FC<efficacyProps> = ({ efficacyClick }) => {
     return (
         <Wrapper onClick={efficacyClick}>
-            <CiDumbbell style={{ width: "60px", height: "60px", color: "#ffffff", marginBottom: '15px' }} />
+            <CiDumbbell style={{ width: "40px", height: "40px", color: "#ffffff", marginBottom: '15px' }} />
             <EfficacyWrapper>
                 <TextWrapper>
                     <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }} >운동별 정보</div>
