@@ -3596,7 +3596,7 @@ font-weight:800;
         width:40px;
         height:40px;
         margin-top:20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 `,Wne=_.div`
     width:80%;
@@ -3622,7 +3622,7 @@ font-weight:800;
         width:40px;
         height:40px;
         margin-top:20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 `,Gne=_.div`
     width:80%;
@@ -3648,7 +3648,7 @@ font-weight:800;
         width:40px;
         height:40px;
         margin-top:20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 `,Jne=_.div`
     width:80%;
@@ -3674,7 +3674,7 @@ font-weight:800;
         width:40px;
         height:40px;
         margin-top:20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 `,sre=_.div`
     width:80%;
@@ -3700,7 +3700,7 @@ font-weight:800;
         width:40px;
         height:40px;
         margin-top:20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 `,dre=_.div`
     width:80%;
@@ -3726,7 +3726,7 @@ font-weight:800;
         width:40px;
         height:40px;
         margin-top:20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 `,yre=_.div`
     width:80%;
