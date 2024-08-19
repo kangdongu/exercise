@@ -4122,7 +4122,7 @@ font-weight:800;
     display:flex;
     gap:10px;
 `,aae=_.div`
-    color:#333333;
+    color:white;
     display:flex;
     flex-direction: column;
     align-items: center;
@@ -4139,7 +4139,7 @@ font-weight:800;
         fill:#FF286F;
     }
 `,cae=_.div`
-
+    margin-top:5px;
 `,uae=()=>{const t=xe.currentUser,[e,n]=b.useState([]);b.useEffect(()=>{(async()=>{try{const s=Z(U,"records"),a=(await te(se(s,ae("유저아이디","==",t==null?void 0:t.uid)))).docs.map(l=>l.data().날짜);n(a)}catch(s){console.log(s)}})()},[]);const r=D1({start:Tr(new Date,{weekStartsOn:1}),end:id(new Date,{weekStartsOn:1})}).map(i=>({date:Fe(i,"yyyy-MM-dd"),day:Fe(i,"EEE",{locale:lo})}));return h.jsx(tae,{children:h.jsxs(nae,{children:[h.jsx(rae,{children:h.jsx(EI,{})}),h.jsxs(iae,{children:[h.jsx(sae,{children:"이번주 7일 운동현황"}),h.jsx(oae,{children:r.map(({date:i,day:s})=>h.jsxs(aae,{children:[h.jsx(lae,{children:e.includes(i)&&h.jsx(EI,{})}),h.jsx(cae,{children:s})]},i))})]})]})})},dae=_.div`
     width:100vw;
     margin: 0 auto;
