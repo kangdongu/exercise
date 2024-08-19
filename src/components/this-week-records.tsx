@@ -36,15 +36,15 @@ const IconWrapper = styled.div`
     }
 `;
 const WeekWrapper = styled.div`
-
+    width:calc(100% - 60px);
 `;
 const WeekTitle = styled.h3`
     color:#F2F2F2;
-    margin:10px 0px 10px 0px;
+    margin:7px 0px 7px 0px;
 `;
 const WeekData = styled.div`
     display:flex;
-    gap:10px;
+    justify-content: space-between;
 `;
 const Week = styled.div`
     color:white;
@@ -96,7 +96,7 @@ const ThisWeekRecords = () => {
         end: endOfWeek(new Date(), { weekStartsOn: 1 })
     }).map(date => ({
         date: format(date, 'yyyy-MM-dd'),
-        day: format(date, 'EEE', {locale: ko})
+        day: format(date, 'EEE', { locale: ko })
     }));
 
     return (

@@ -26,7 +26,7 @@ const Timer = styled.div`
         width:40px;
         height:40px;
         margin-top:20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 `;
 const TextWrapper = styled.div`
