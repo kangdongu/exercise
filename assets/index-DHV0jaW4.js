@@ -3579,7 +3579,7 @@ font-weight:800;
     padding: 15px;
     align-items: center;
     color: white;
-    background: linear-gradient(to bottom, #FF6A85, #FF286F);
+    background: linear-gradient(to bottom, #FF85A1, #E05885);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
 `,zne=_.div`
@@ -3607,7 +3607,7 @@ font-weight:800;
     color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    background: linear-gradient(to bottom, #33CCFF, #009cfc);
+    background: linear-gradient(to bottom, #7EC8E3, #4CA7D8);
 `,Yne=_.div`
     display: flex;
     justify-content: center;
@@ -3685,7 +3685,7 @@ font-weight:800;
     color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-     background: linear-gradient(to bottom, #89C995, #54AA5C);
+     background: linear-gradient(to bottom, #98CDA3, #6F9F75);
 `,cre=_.div`
     display: flex;
     justify-content: center;
@@ -4153,8 +4153,8 @@ font-weight:800;
     display: grid; 
     grid-template-columns:1fr 1fr;
     grid-template-rows: 160px 160px 160px;
-    grid-column-gap: 15px;
-    grid-row-gap: 15px;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
 `,fae=_.div`
    display: flex;
     align-items: center;
