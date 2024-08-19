@@ -9,7 +9,7 @@ const Wrapper = styled.div`
     color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-     background: linear-gradient(to bottom, #89C995, #54AA5C);
+     background: linear-gradient(to bottom, #98CDA3, #6F9F75);
 `;
 const EfficacyWrapper = styled.div`
     display: flex;

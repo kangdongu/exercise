@@ -5,13 +5,13 @@ import { startOfWeek, endOfWeek, format, subWeeks } from 'date-fns';
 import { Line } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
 import styled from 'styled-components';
+import ThisWeekRecords from './this-week-records';
 
 const Wrapper = styled.div`
 @media screen and (max-width: 700px) {
   flex-direction: column;
 }
   width:100%;
-  height:500px;
   display:flex;
 `;
 const LineWrapper = styled.div`
@@ -23,7 +23,6 @@ const LineWrapper = styled.div`
 `;
 const NowWeekWrapper = styled.div`
   width:100%;
-  height:150px;
   background-color:white;
   border-radius:10px;
   margin-bottom:20px;
@@ -163,7 +162,8 @@ const WeekDates = () => {
       <NowWeekWrapper>
         <p>월요일: {format(startDate, 'yyyy-MM-dd')}</p>
         <p>일요일: {format(endDate, 'yyyy-MM-dd')}</p>
-        <p>이번주는 현재 {exerciseCount}일 운동하셨습니다.</p>
+        <ThisWeekRecords />
+        <p style={{fontSize:'20px'}}>이번주 현재 {exerciseCount}일 운동하셨습니다.</p>
       </NowWeekWrapper>
     </Wrapper>
   );

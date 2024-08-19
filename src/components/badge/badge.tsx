@@ -9,7 +9,7 @@ const Wrapper = styled.div`
     color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-     background: linear-gradient(to bottom, #FF6A85, #FF286F);
+     background: linear-gradient(to bottom, #FF85A1, #E05885);
 `;
 const TimerWrapper = styled.div`
     display: flex;

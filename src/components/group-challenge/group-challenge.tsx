@@ -9,7 +9,7 @@ const Wrapper = styled.div`
     color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-     background: linear-gradient(to bottom, #33CCFF, #009cfc);
+     background: linear-gradient(to bottom, #7EC8E3, #4CA7D8);
 `;
 const GroupWrapper = styled.div`
     display: flex;

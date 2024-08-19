@@ -35,8 +35,8 @@ const GridWrapper = styled.div`
     display: grid; 
     grid-template-columns:1fr 1fr;
     grid-template-rows: 160px 160px 160px;
-    grid-column-gap: 15px;
-    grid-row-gap: 15px;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
 `;
 const ProfileWrapper = styled.div`
    display: flex;
@@ -53,8 +53,8 @@ const ProfileImgWrapper = styled.div`
    border-radius: 50%;
     overflow: hidden;
     background-color: #f3f1f1;
-    width:80px;
-    height:80px;
+    width:70px;
+    height:70px;
     border:0.1px solid #f3f1f1;
 `;
 const HeaderContentWrapper = styled.div`
@@ -336,11 +336,11 @@ export default function Home() {
             <ProfileWrapper>
                 {!isLoading && userProfilePicUrl === "" ? (
                     <ProfileImgWrapper>
-                        <FaUserAlt style={{ width: '60px', height: '60px', marginLeft: '10px', marginTop: '20px', color: 'gray' }} />
+                        <FaUserAlt style={{ width: '45px', height: '45px', marginLeft: '17.5px', marginTop: '17.5px', color: 'gray' }} />
                     </ProfileImgWrapper>
                 ) : (
                     <ProfileImgWrapper>
-                        <img style={{ width: '80px', height: '80px', borderRadius: '50%' }} src={userProfilePicUrl} />
+                        <img style={{ width: '70px', height: '70px', borderRadius: '50%' }} src={userProfilePicUrl} />
                     </ProfileImgWrapper>
                 )}
                 <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{nickname}</span>
