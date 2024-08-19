@@ -4114,13 +4114,13 @@ font-weight:800;
         margin-left:5px;
     }
 `,sae=_.div`
-
+    width:calc(100% - 60px);
 `,oae=_.h3`
     color:#F2F2F2;
     margin:10px 0px 10px 0px;
 `,aae=_.div`
     display:flex;
-    gap:10px;
+    justify-content: space-between;
 `,lae=_.div`
     color:white;
     display:flex;
