@@ -4117,7 +4117,7 @@ font-weight:800;
     width:calc(100% - 60px);
 `,oae=_.h3`
     color:#F2F2F2;
-    margin:10px 0px 10px 0px;
+    margin:7px 0px 7px 0px;
 `,aae=_.div`
     display:flex;
     justify-content: space-between;
