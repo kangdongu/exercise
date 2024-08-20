@@ -27,6 +27,10 @@
 .fc-daygrid-day-frame {
     padding: 1px 5px;
 }
+.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events{
+    overflow:hidden;
+    max-height:30px;
+}
 
 /* 모바일 화면 스타일 */
 @media screen and (max-width: 700px) {

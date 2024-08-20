@@ -481,7 +481,7 @@ const Calendar = () => {
                             end: 'prev,today,next'
                         }
                     }
-                    height={`60vh`}
+                    height={`55vh`}
                     locale={ko}
                     dayCellContent={renderDayCellContent}
                     eventClick={handleEventClick}
