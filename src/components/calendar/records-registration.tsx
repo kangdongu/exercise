@@ -5,8 +5,8 @@ import { auth, db } from "../../firebase";
 import DateChoice from "../date-picker";
 import { format } from 'date-fns';
 import MoSlideModal from "../slideModal/mo-slide-modal";
-import BottomSheet from "../bottomSheet/bottom-sheet-component";
 import { IoSearch } from "react-icons/io5";
+import MoSlideLeft from "../slideModal/mo-slide-left";
 
 const searchWidth = keyframes`
   from {
@@ -248,7 +248,6 @@ export default function ExerciseRegistration({ closeModal, congratulations }: Ex
   ]);
   const [selectedType, setSelectedType] = useState<string>("전체");
   const [selectedArea, setSelectedArea] = useState<String>("전체");
-  const [bottomSheetOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleDateChange = (date: Date | null) => {
@@ -358,7 +357,7 @@ export default function ExerciseRegistration({ closeModal, congratulations }: Ex
 
   return (
     <Wrapper>
-      <BottomSheet open={bottomSheetOpen} onClose={closeModal}>
+      <MoSlideLeft onClose={closeModal}>
         <RecordsWrapper>
           <div style={{display:'flex', alignItems:'center', padding:'10px 0px'}}>
             <h3 style={{fontSize:'18px', margin:'0'}}>운동기록</h3>
@@ -407,7 +406,7 @@ export default function ExerciseRegistration({ closeModal, congratulations }: Ex
           </SetList>
           <Button onClick={onClick}>운동 완료</Button>
         </RecordsWrapper>
-      </BottomSheet>
+      </MoSlideLeft>
 
       {exerciseModal ? <MoSlideModal onClose={() => { setExerciseModal(false); }}>
         <ExerciseChoiceModal>
