@@ -469,7 +469,7 @@ const Calendar = () => {
                 <Title>Calendar</Title>
                 <Btn onClick={onClick}><span>+</span>운동기록</Btn>
             </BtnWrapper>
-            <div style={{ width: '95%', margin: '0 auto', padding: '10px', backgroundColor: 'white', borderRadius: '5px' }}>
+            <div style={{ width: '90%', margin: '0 auto', padding: '10px', backgroundColor: 'white', borderRadius: '5px' }}>
                 <FullCalendar
                     plugins={[dayGridPlugin]}
                     initialView="dayGridMonth"
@@ -481,7 +481,7 @@ const Calendar = () => {
                             end: 'prev,today,next'
                         }
                     }
-                    height={`55vh`}
+                    height={`50vh`}
                     locale={ko}
                     dayCellContent={renderDayCellContent}
                     eventClick={handleEventClick}
