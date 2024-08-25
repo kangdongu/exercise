@@ -26,9 +26,10 @@ const Wrapper = styled.div`
 `;
 
 const Back = styled.div`
-width: 20px;
-  height: 20px;
-  margin:10px;
+    width: 20px;
+    height: 20px;
+    margin:10px;
+    margin-left:0px;
 `;
 const TitleWrapper = styled.div`
 
