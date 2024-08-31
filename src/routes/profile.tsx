@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components"
-import { auth, db, storage } from "../firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { updateProfile } from "firebase/auth";
+import { auth, db } from "../firebase";
 import { collection, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import WeekDates from "../components/week-records";
 import { format } from "date-fns";
@@ -14,6 +12,7 @@ import MenuModal from "../components/menu/menu";
 import BellModal from "../components/bell";
 import { TiPlus } from "react-icons/ti";
 import { FaExchangeAlt } from "react-icons/fa";
+import ProfileImageCropper from "../components/image-crop/profile-image-crop";
 
 const Wrapper = styled.div`
   width:100vw;
@@ -197,41 +196,38 @@ interface Badges {
 
 export default function Profile() {
   const user = auth.currentUser;
-  const [userImg, setUserImg] = useState(user?.photoURL);
   const [nickname, setNickname] = useState("");
   const [ment, setMent] = useState("");
   const [badges, setBadge] = useState<Badges[]>([])
+  const [userImg, setUserImg] = useState<string | null>(user?.photoURL || null);
   const [information, setInformation] = useState(false)
   const [character, setCharacter] = useState("");
   const [loading, setLoading] = useState(true);
   const [menuOn, setMenuOn] = useState(false);
   const [bellOn, setBellOn] = useState(false);
   const [bellAlerm, setBellAlerm] = useState(false);
+  const [croppedImage, setCroppedImage] = useState<string | ArrayBuffer | null>(null);
+  const [cropperModal, setCropperModal] = useState(false);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
 
   useEffect(() => {
     setBellAlerm(true)
+    croppedAreaPixels
   }, [])
 
   const onUserImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { files } = e.target;
-    if (!user) return;
-    if (files && files.length === 1) {
-      const file = files[0];
-      const locationRef = ref(storage, `avatars/${user.uid}`);
-      const result = await uploadBytes(locationRef, file);
-      const userImgUrl = await getDownloadURL(result.ref);
-      setUserImg(userImgUrl);
-      await updateProfile(user, {
-        photoURL: userImgUrl,
-      });
-      const userRef = collection(db, "user");
-      const docSnapshot = await getDocs(query(userRef, where("유저아이디", "==", user.uid)));
-
-      if (!docSnapshot.empty) {
-        const existingDoc = docSnapshot.docs[0];
-        await updateDoc(existingDoc.ref, { 프로필사진: userImgUrl });
-      }
+    const reader = new FileReader();
+    if (e.target.files && e.target.files[0]) {
+      setCropperModal(true);
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = () => {
+        setCroppedImage(reader.result);
+      };
     }
+  };
+
+  const closeCropperModal = () => {
+    setCropperModal(false);
   };
 
   useEffect(() => {
@@ -372,10 +368,19 @@ export default function Profile() {
 
   return (
     <Wrapper>
-      {/* <div style={{ position: 'absolute', backgroundColor: '#FC286E', width: '100%', height: '100px', top: '0', left: '0' }}></div> */}
       <Header>
         <UserPofileWrapper>
           <UserImgUpload htmlFor="user-img">
+            {cropperModal && (
+              <ProfileImageCropper
+                croppedImage={croppedImage}
+                setCroppedAreaPixels={setCroppedAreaPixels}
+                width={1}
+                height={1}
+                onClose={closeCropperModal}
+                setUserImg={setUserImg}
+              />
+            )}
             {Boolean(userImg) ? (
               <>
                 <div style={{ position: 'absolute', width: '25px', height: '25px', backgroundColor: 'white', borderRadius: '50%', bottom: '0px', right: '0', border: '1px solid lightgray' }}>
