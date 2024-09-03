@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components"
 import { auth, db } from "../firebase";
 import { collection, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
@@ -39,7 +39,7 @@ const Header = styled.div`
     position:relative;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
-const UserImgUpload = styled.label`
+const UserImgUpload = styled.button`
   width: 80px;
   overflow: hidden;
   height: 80px;
@@ -208,11 +208,10 @@ export default function Profile() {
   const [bellAlerm, setBellAlerm] = useState(false);
   const [croppedImage, setCroppedImage] = useState<string | ArrayBuffer | null>(null);
   const [cropperModal, setCropperModal] = useState(false);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
+  const imgInput = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setBellAlerm(true)
-    croppedAreaPixels
   }, [])
 
   const onUserImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -370,13 +369,10 @@ export default function Profile() {
     <Wrapper>
       <Header>
         <UserPofileWrapper>
-          <UserImgUpload htmlFor="user-img">
+          <UserImgUpload onClick={() => imgInput.current?.click()}>
             {cropperModal && (
               <ProfileImageCropper
                 croppedImage={croppedImage}
-                setCroppedAreaPixels={setCroppedAreaPixels}
-                width={1}
-                height={1}
                 onClose={closeCropperModal}
                 setUserImg={setUserImg}
               />
@@ -399,7 +395,7 @@ export default function Profile() {
               </>
             )}
           </UserImgUpload>
-          <UserImgInput onChange={onUserImg} id="user-img" type="file" accept="image/" />
+          <UserImgInput onChange={onUserImg} ref={imgInput} type="file" accept="image/" />
         </UserPofileWrapper>
         <UserInfo>
           {nickname ? <span>{nickname}</span> : <span>{user?.displayName}</span>}
