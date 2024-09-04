@@ -5173,7 +5173,7 @@ ${e}`,Tce=Object.getOwnPropertyDescriptor(Function.prototype,"toString"),Dce=Obj
     margin:0;
     font-size:24px;
 `,Fde=w.button`
- display: flex;
+    display: flex;
     align-items: center;
     font-size: 14px;
     cursor: pointer;
