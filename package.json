@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.2.56",
+    "@types/react-calendar": "^4.1.0",
     "@types/react-datepicker": "^6.2.0",
     "@types/react-dom": "^18.2.19",
     "@types/styled-components": "^5.1.34",

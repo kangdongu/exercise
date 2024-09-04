@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import Calendar from "../components/calendar/calendar";
+// import Calendar from "../components/calendar/calendar";
 import PhotoRecords from "../components/sns_photo/photo-records";
 import { useEffect, useState } from "react";
 import Inbody from "../components/inbody/inbody";
 import { useLocation } from "react-router-dom";
+import TestCalendar from "../components/calendar/test-calendar";
 
 
 const Wrapper = styled.div`
@@ -32,7 +33,7 @@ const MenuItem = styled.span<{ selected: boolean }>`
 
 export default function Records() {
     const location = useLocation();
-    const [selectedMenu, setSelectedMenu] = useState('calendar');
+    const [selectedMenu, setSelectedMenu] = useState('TestCalendar');
 
     useEffect(() => {
         if (location.state && location.state.menu) {
@@ -43,11 +44,11 @@ export default function Records() {
     return (
         <Wrapper>
             <Menu>
-                <MenuItem selected={selectedMenu === 'calendar'} onClick={() => setSelectedMenu('calendar')}>캘린더</MenuItem>
+                <MenuItem selected={selectedMenu === 'TestCalendar'} onClick={() => setSelectedMenu('TestCalendar')}>캘린더</MenuItem>
                 <MenuItem selected={selectedMenu === 'photo'} onClick={() => setSelectedMenu('photo')}>사진</MenuItem>
                 <MenuItem selected={selectedMenu === 'inbody'} onClick={() => setSelectedMenu('inbody')}>인바디</MenuItem>
             </Menu>
-                {selectedMenu === 'calendar' && <Calendar />}
+                {selectedMenu === 'TestCalendar' && <TestCalendar />}
                 {selectedMenu === 'photo' && <PhotoRecords />}
                 {selectedMenu === 'inbody' && <Inbody />}
         </Wrapper>

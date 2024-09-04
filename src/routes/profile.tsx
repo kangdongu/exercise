@@ -374,6 +374,8 @@ export default function Profile() {
               <ProfileImageCropper
                 croppedImage={croppedImage}
                 onClose={closeCropperModal}
+                width={1}
+                height={1}
                 setUserImg={setUserImg}
               />
             )}

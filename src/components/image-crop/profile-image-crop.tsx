@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import styled from 'styled-components';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, getDownloadURL, uploadString } from 'firebase/storage';
 import { updateProfile } from 'firebase/auth';
 import { collection, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { auth, db, storage } from '../../firebase';
@@ -78,12 +78,16 @@ const CancelButton = styled(Button)`
 interface ProfileImageCropperProps {
   croppedImage: any;
   onClose: () => void;
+  width:number;
+  height:number;
   setUserImg: (url: string) => void;
 }
 
 const ProfileImageCropper: React.FC<ProfileImageCropperProps> = ({
   croppedImage,
   onClose,
+  width,
+  height,
   setUserImg,
 }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -100,15 +104,12 @@ const ProfileImageCropper: React.FC<ProfileImageCropperProps> = ({
     if (!croppedImage || !croppedAreaPixels) return;
 
     try {
-      const croppedImgBlob = await getCroppedImg(croppedImage, croppedAreaPixels);
-      if (!croppedImgBlob) {
-        alert('이미지를 자르는 중 오류가 발생했습니다.');
-        return;
-      }
+      const croppedBase64Image = await getCroppedImg(croppedImage, croppedAreaPixels);
 
+      // Firebase Storage에 Base64 이미지 업로드
       const storageRef = ref(storage, `avatars/${currentUser?.uid}`);
-      const snapshot = await uploadBytes(storageRef, croppedImgBlob);
-      const downloadURL = await getDownloadURL(snapshot.ref);
+      await uploadString(storageRef, croppedBase64Image, 'data_url');
+      const downloadURL = await getDownloadURL(storageRef);
 
       await updateProfile(currentUser!, { photoURL: downloadURL });
 
@@ -117,7 +118,7 @@ const ProfileImageCropper: React.FC<ProfileImageCropperProps> = ({
       const querySnapshot = await getDocs(userQuery);
 
       if (!querySnapshot.empty) {
-        const userDocRef = querySnapshot.docs[0].ref;
+        const userDocRef = querySnapshot.docs[0].ref; 
         await updateDoc(userDocRef, { 프로필사진: downloadURL });
       }
 
@@ -137,7 +138,7 @@ const ProfileImageCropper: React.FC<ProfileImageCropperProps> = ({
           image={croppedImage}
           crop={crop}
           zoom={zoom}
-          aspect={1}
+          aspect={width / height}
           onCropChange={setCrop}
           onCropComplete={onCropComplete}
           onZoomChange={setZoom}
