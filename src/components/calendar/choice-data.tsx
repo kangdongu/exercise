@@ -22,40 +22,24 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
-const ExerciseList = styled.div`
-  width: 100%;
-`;
-
-const ExerciseItem = styled.div`
-  margin-bottom: 15px;
-  padding: 15px;
-  background-color: #f1f1f1;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-`;
-
 const AreaList = styled.div`
   width: 100%;
   margin-bottom: 5px;
 `;
-
-const DayArea = styled.span`
-  display: inline-block;
-  font-size: 16px;
-  color: #555;
-  margin-right: 10px;
-  padding: 5px 10px;
-  background-color: #e0f7fa;
-  border-radius: 5px;
-  margin-bottom: 5px;
-`;
 const TextWrapper = styled.div`
-    width:100%;
+  margin-top: 10px;
+  background-color: #f9f9f9;
+  padding: 15px; /* 여백을 늘려서 정보가 빽빽하지 않도록 */
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
 `;
-const Text = styled.div`
-    display:flex;
 
+const Text = styled.div`
+  display: flex;
+  justify-content: space-between; /* 양쪽 끝으로 텍스트 정렬 */
+  padding: 10px 0;
+  border-bottom: 1px solid #eaeaea; /* 섹션 구분선 */
 `;
 const Title = styled.div`
     font-weight:600;
@@ -80,101 +64,107 @@ const ChoiceData: React.FC<ChoiceDataProps> = ({ clickDate }) => {
     const currentUser = auth.currentUser;
     const [exerciseRecords, setExerciseRecords] = useState<{ [key: string]: ExerciseData[] }>({});
     const [exerciseAreas, setExerciseAreas] = useState<string[]>([]);
-    const [clickFormat, setClickFormat] = useState<string>("")
+    const [clickFormat, setClickFormat] = useState<string>("");
     const [clickModal, setClickModal] = useState(false);
-
+    const [totalSets, setTotalSets] = useState<number>(0);
+    const [totalReps, setTotalReps] = useState<number>(0);
+    const [totalWeight, setTotalWeight] = useState<number>(0);
+  
     useEffect(() => {
-        // clickDate가 변경될 때마다 포맷된 날짜를 설정
-        if (clickDate) {
-            const formattedDate = format(new Date(clickDate), "yyyy년 MM월 dd일");
-            setClickFormat(formattedDate);
-        }
+      if (clickDate) {
+        const formattedDate = format(new Date(clickDate), "yyyy년 MM월 dd일");
+        setClickFormat(formattedDate);
+      }
     }, [clickDate]);
-
+  
     useEffect(() => {
-        const fetchRecords = async () => {
-            try {
-                const recordsRefs = collection(db, "records");
-                const querySnapshot = await getDocs(query(recordsRefs, where("유저아이디", "==", currentUser?.uid), where("날짜", "==", clickDate)))
-
-                const records: { [key: string]: ExerciseData[] } = {};
-                const areas: string[] = [];
-
-                querySnapshot.forEach(doc => {
-                    const data = doc.data() as ExerciseData;
-                    if (!records[data.종류]) {
-                        records[data.종류] = [];
-                    }
-                    records[data.종류].push(data);
-                    if (!areas.includes(data.운동부위)) {
-                        areas.push(data.운동부위);
-                    }
-                });
-
-                Object.keys(records).forEach(key => {
-                    records[key].sort((a, b) => {
-                        return parseInt(a.무게) - parseInt(b.무게);
-                    });
-                });
-                setExerciseRecords(records);
-                setExerciseAreas(areas);
-
-            } catch (error) {
-                console.log(error)
+      const fetchRecords = async () => {
+        try {
+          const recordsRefs = collection(db, "records");
+          const querySnapshot = await getDocs(query(recordsRefs, where("유저아이디", "==", currentUser?.uid), where("날짜", "==", clickDate)));
+  
+          const records: { [key: string]: ExerciseData[] } = {};
+          const areas: string[] = [];
+          let sets = 0;
+          let reps = 0;
+          let weight = 0;
+  
+          querySnapshot.forEach((doc) => {
+            const data = doc.data() as ExerciseData;
+            if (!records[data.종류]) {
+              records[data.종류] = [];
             }
+            records[data.종류].push(data);
+            if (!areas.includes(data.운동부위)) {
+              areas.push(data.운동부위);
+            }
+            sets++;
+            reps += parseInt(data.횟수);
+            weight += (parseInt(data.무게) * parseInt(data.횟수));
+          });
+  
+          Object.keys(records).forEach((key) => {
+            records[key].sort((a, b) => {
+              return parseInt(a.무게) - parseInt(b.무게);
+            });
+          });
+  
+          setExerciseRecords(records);
+          setExerciseAreas(areas);
+          setTotalSets(sets);
+          setTotalReps(reps);
+          setTotalWeight(weight);
+  
+        } catch (error) {
+          console.log(error);
         }
-        if (clickDate) {
-            fetchRecords();
-        }
-
-        fetchRecords()
-        console.log(exerciseRecords)
-    }, [clickDate])
-
+      };
+      if (clickDate) {
+        fetchRecords();
+      }
+    }, [clickDate]);
+  
     return (
-        <>
-            {exerciseAreas.length !== 0 && (
-                <Wrapper>
-                    <ContentWrapper>
-                        <AreaList>
-                            <div style={{ display: 'flex', alignItems:'center' }}>
-                                <h3 style={{ fontWeight: '600' }}>{clickFormat}</h3>
-                                <IoIosArrowForward onClick={() => setClickModal(true)} style={{marginLeft:'auto', width:'20px', height:'20px'}} />
-                            </div>
-
-                            {exerciseAreas.map((area, index) => (
-                                <DayArea key={index}>{area}</DayArea>
-                            ))}
-                        </AreaList>
-                        <ExerciseList>
-                            {Object.keys(exerciseRecords).map((exerciseType, index) => (
-                                <ExerciseItem key={index}>
-                                    <Title>{exerciseType}</Title>
-                                    {exerciseRecords[exerciseType].map((record, recordIndex) => (
-                                        <p key={recordIndex}> {recordIndex + 1}세트 무게: {record.무게} 횟수/시간:  {record.횟수} 회/분</p>
-                                    ))}
-                                </ExerciseItem>
-                            ))}
-                        </ExerciseList>
-                        <TextWrapper>
-                            <Text>
-                                <Title>운동 부위</Title>
-                                {exerciseAreas.map((area, index) => (
-                                    <Sub key={index}>{area}</Sub>
-                                ))} 
-                            </Text>
-                            <Text>
-                                <Title>운동 종류</Title>
-                                    <Sub></Sub>
-                            </Text>
-                        </TextWrapper>
-                    </ContentWrapper>
-                    {clickModal && (
-                        <CalendarClickModal setCalendarClick={setClickModal} clickDate={clickDate} />
-                    )}
-                </Wrapper>
+      <>
+        {exerciseAreas.length !== 0 && (
+          <Wrapper>
+            <ContentWrapper>
+              <AreaList>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <h3 style={{ fontWeight: '600' }}>{clickFormat}</h3>
+                  <IoIosArrowForward onClick={() => setClickModal(true)} style={{ marginLeft: 'auto', width: '18px', height: '18px' }} />
+                </div>
+                <TextWrapper>
+                  <Text>
+                    <Title>운동 부위</Title>
+                    <Sub>{exerciseAreas.join(", ")}</Sub>
+                  </Text>
+                  <Text>
+                    <Title>운동 종류</Title>
+                    <Sub>{Object.keys(exerciseRecords).length}개</Sub>
+                  </Text>
+                  <Text>
+                    <Title>총 세트 수</Title>
+                    <Sub>{totalSets}세트</Sub>
+                  </Text>
+                  <Text>
+                    <Title>총 횟수</Title>
+                    <Sub>{totalReps}회</Sub>
+                  </Text>
+                  <Text>
+                    <Title>총 무게</Title>
+                    <Sub>{totalWeight}kg</Sub>
+                  </Text>
+                </TextWrapper>
+              </AreaList>
+            </ContentWrapper>
+            {clickModal && (
+              <CalendarClickModal setCalendarClick={setClickModal} clickDate={clickDate} />
             )}
-        </>
-    )
-}
-export default ChoiceData
+          </Wrapper>
+        )}
+      </>
+    );
+  };
+  
+  export default ChoiceData;
