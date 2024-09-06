@@ -488,7 +488,7 @@ const Calendar = () => {
                 />
             </div>
             {modal ?
-                <ExerciseRegistration closeModal={closeModal} congratulations={congratulations} />
+                <ExerciseRegistration closeModal={closeModal} congratulations={congratulations} records={closeModal} />
                 : null}
             {calendarClick && window.innerWidth <= 700 ? (
                 <div>

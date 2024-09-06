@@ -1,3 +1,6 @@
+.react-calendar__tile--weekday{
+    color:#333333;
+}
 .react-calendar__tile--saturday {
     color: #009FFF; 
     font-weight: bold;
@@ -8,6 +11,7 @@
 }
 .react-calendar__month-view__days__day--neighboringMonth, .react-calendar__decade-view__years__year--neighboringDecade, .react-calendar__century-view__decades__decade--neighboringCentury{
     opacity: 0.6;
+    color:#333333;
 }
 .react-calendar{
     width:100%;
@@ -24,7 +28,7 @@
     background-color:white;
     color:#333333;
     font-size:18px;
-    font-weight:600;
+    font-weight:bold;
 }
 .react-calendar__tile--active:enabled:hover, .react-calendar__tile--active:enabled:focus {
     background: #1087ff;
@@ -55,4 +59,3 @@ abbr[title] {
     color: #333 !important; 
     border: 1px solid #91b6ff !important; 
   }
-  

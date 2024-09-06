@@ -77,12 +77,6 @@ const Button = styled.button`
   cursor: pointer;
   margin-top: 20px;
 `;
-const CloseBtn = styled.div`
-  margin-bottom: 10px;
-  font-size:18px;
-  margin-left:auto;
-  cursor:pointer;
-`;
 const ListSetButtonWrapper = styled.div`
   width:100%;
   display:flex;
@@ -233,9 +227,10 @@ interface Exercise {
 interface ExerciseRegistrationProps {
   closeModal: () => void;
   congratulations: () => void;
+  records: () => void;
 }
 
-export default function ExerciseRegistration({ closeModal, congratulations }: ExerciseRegistrationProps) {
+export default function ExerciseRegistration({ closeModal, congratulations, records }: ExerciseRegistrationProps) {
   const user = auth.currentUser;
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [exerciseType, setExerciseType] = useState("");
@@ -322,7 +317,8 @@ export default function ExerciseRegistration({ closeModal, congratulations }: Ex
 
         await Promise.all(promises);
         closeModal();
-        congratulations()
+        congratulations();
+        records();
       } catch (error) {
         console.error('문서 추가 오류: ', error);
       }
@@ -331,9 +327,6 @@ export default function ExerciseRegistration({ closeModal, congratulations }: Ex
     }
   };
 
-  const back = () => {
-    closeModal();
-  };
 
   const onDelete = (index: number, event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.preventDefault();
@@ -361,7 +354,6 @@ export default function ExerciseRegistration({ closeModal, congratulations }: Ex
         <RecordsWrapper>
           <div style={{display:'flex', alignItems:'center', padding:'10px 0px'}}>
             <h3 style={{fontSize:'18px', margin:'0'}}>운동기록</h3>
-            <CloseBtn onClick={back}>X</CloseBtn>
           </div>
           <DateChoiceWrapper>
             <DateChoice onDateChange={handleDateChange} />

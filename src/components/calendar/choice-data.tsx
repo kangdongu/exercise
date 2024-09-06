@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  margin-bottom:20px;
 `;
 
 const ContentWrapper = styled.div`
@@ -29,7 +29,7 @@ const AreaList = styled.div`
 const TextWrapper = styled.div`
   margin-top: 10px;
   background-color: #f9f9f9;
-  padding: 15px; /* 여백을 늘려서 정보가 빽빽하지 않도록 */
+  padding: 15px;
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 10px;
@@ -37,9 +37,9 @@ const TextWrapper = styled.div`
 
 const Text = styled.div`
   display: flex;
-  justify-content: space-between; /* 양쪽 끝으로 텍스트 정렬 */
+  justify-content: space-between;
   padding: 10px 0;
-  border-bottom: 1px solid #eaeaea; /* 섹션 구분선 */
+  border-bottom: 1px solid #eaeaea;
 `;
 const Title = styled.div`
     font-weight:600;
@@ -131,7 +131,7 @@ const ChoiceData: React.FC<ChoiceDataProps> = ({ clickDate }) => {
             <ContentWrapper>
               <AreaList>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <h3 style={{ fontWeight: '600' }}>{clickFormat}</h3>
+                  <h3 style={{ fontWeight: '600', fontSize:'18px' }}>{clickFormat}</h3>
                   <IoIosArrowForward onClick={() => setClickModal(true)} style={{ marginLeft: 'auto', width: '18px', height: '18px' }} />
                 </div>
                 <TextWrapper>

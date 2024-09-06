@@ -60,6 +60,9 @@ const Title = styled.span`
 const AreaList = styled.div`
   width: 100%;
   margin-bottom: 20px;
+  h1{
+    font-size:25px;
+  }
 `;
 
 const DayArea = styled.span`

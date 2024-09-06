@@ -6,15 +6,19 @@ import { useEffect, useState } from "react";
 import { format, isSaturday, isSunday } from "date-fns";
 import ExerciseRegistration from "./records-registration";
 import { auth, db } from "../../firebase";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import { arrayUnion, collection, doc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import Congratulations from "../congratulations";
 import ChoiceData from "./choice-data";
+import BadgeModal from "../badge-modal";
+import AchievementModal from "../achievement-alert";
+import CharacterModal from "../character-modal";
 
 const Wrapper = styled.div`
     margin: 0 auto;
     width:100%;
-    height:calc(100vh - 117px);
+    height:calc(100vh - 111px);
     background-color: #f8f8f8;
+    overflow-y:scroll;
 `;
 const CalenderWrapper = styled.div`
     margin: 0 auto;
@@ -83,55 +87,239 @@ const TestCalendar = () => {
     const [showCongratulations, setShowCongratulations] = useState(false)
     const [eventDate, setEventDate] = useState<string[]>([])
     const [clickDate, setClickDate] = useState<string>("")
+    const [showBadge, setShowBadge] = useState(false);
+    const [badgeImg, setBadgeImg] = useState("");
+    const [badgeName, setBadgeName] = useState("");
+    const [achievementName, setAchievementName] = useState("");
+    const [showAchievements, setShowAchievements] = useState(false);
+    const [showCharacter, setShowCharacter] = useState(false)
+    const [newCharacterImage, setNewCharacterImage] = useState("");
+    const [congratulationMessage, setCongratulationMessage] = useState("");
 
     useEffect(() => {
         const fetchRecords = async () => {
             try {
-                const userCollectionRef = collection(db, "user");
-                const userQuerySnapshot = await getDocs(query(userCollectionRef, where("유저아이디", "==", currentUser?.uid)));
+                const recordsCollectionRef = collection(db, "records");
+                const querySnapshot = await getDocs(query(recordsCollectionRef, where("유저아이디", "==", currentUser?.uid), orderBy("날짜", "asc")));
 
-                if (!userQuerySnapshot.empty) {
-                    // const userDoc = userQuerySnapshot.docs[0];
-                    // const gender = userDoc.data().성별;
-                    const recordsCollectionRef = collection(db, "records");
-                    const querySnapshot = await getDocs(query(recordsCollectionRef, where("유저아이디", "==", currentUser?.uid), orderBy("날짜", "asc")));
+                if (!querySnapshot.empty) {
+                    const uniqueDates = new Set<string>();
 
-                    if (!querySnapshot.empty) {
-                        const uniqueDates = new Set<string>(); // 날짜 타입을 명시적으로 지정
+                    querySnapshot.forEach((doc) => {
+                        const date = doc.data().날짜;
+                        uniqueDates.add(date);
+                    });
 
-                        querySnapshot.forEach((doc) => {
-                            const date = doc.data().날짜;
-                            uniqueDates.add(date);
-                        });
-
-                        // Set 객체를 배열로 변환하고 상태에 저장
-                        const uniqueDateArray = Array.from(uniqueDates);
-                        setEventDate(uniqueDateArray);
-                    }
+                    const uniqueDateArray = Array.from(uniqueDates);
+                    setEventDate(uniqueDateArray);
                 }
             } catch (error) {
                 console.log(error)
             }
         }
         fetchRecords()
+    }, [modal])
+
+    const recordsComplete = async () => {
+        const today = new Date();
+        const formattedDate = format(today, 'yyyy-MM-dd');
+    
+        const userCollectionRef = collection(db, "user");
+        const userQuerySnapshot = await getDocs(query(userCollectionRef, where("유저아이디", "==", currentUser?.uid)));
+    
+        if (userQuerySnapshot.empty) return;
+    
+        const userDoc = userQuerySnapshot.docs[0];
+        const todayExercise = userDoc.data().오늘운동;
+        const userStep = userDoc.data().단계;
+        const gender = userDoc.data().성별;
+    
+        // 오늘 운동 여부 확인 및 캐릭터 이미지 변경
+        if (!todayExercise) {
+            const recordsCollectionRef = collection(db, "records");
+            const querySnapshot = await getDocs(
+                query(recordsCollectionRef, where("날짜", "==", formattedDate), where("유저아이디", "==", currentUser?.uid))
+            );
+    
+            if (!querySnapshot.empty) {
+                await updateCharacterImage(userDoc, gender, userStep);
+            }
+        }
+    
+        // 운동일수 업데이트
+        await updateDoc(userDoc.ref, {
+            운동일수: eventDate.length
+        });
+    
+        // 뱃지 획득 로직
+        await checkAndAwardBadge(eventDate.length);
+    
+        // 도전과제 달성 로직
+        await checkAndCompleteAchievement(eventDate.length);
+    
+        // 캐릭터 성장 확인
+        await checkAndGrowCharacter(gender, eventDate.length, userDoc);
+    };
+
+    // 오늘 운동달성시 캐릭터이미지 변경
+    const updateCharacterImage = async (
+        userDoc: any,
+        gender: string,
+        userStep: string
+      ): Promise<void> => {
+        const charactersRef = collection(db, "characters");
+        const characterSnapshot = await getDocs(query(charactersRef, where("성별", "==", gender === "남자" ? "남성" : "여성")));
+    
+        if (!characterSnapshot.empty) {
+            const characterDoc = characterSnapshot.docs[0];
+            const stepsRef = collection(characterDoc.ref, "steps");
+    
+            const stepSnapshot = await getDocs(query(stepsRef, where("단계", "==", userStep)));
+    
+            if (!stepSnapshot.empty) {
+                const stepDoc = stepSnapshot.docs[0];
+                const exerciseAfterImage = stepDoc.data().운동후;
+    
+                await updateDoc(userDoc.ref, {
+                    캐릭터이미지: exerciseAfterImage,
+                    오늘운동: true,
+                });
+            }
+        }
+    };
+
+    // 뱃지획득
+    const checkAndAwardBadge = async (days: number): Promise<void> => {
+        if (days === 200) {
+            const badgesRef = collection(db, "badges");
+            const badgesQuerySnapshot = await getDocs(query(badgesRef, where("필요일수", "==", days)));
+    
+            const badgeDoc = badgesQuerySnapshot.docs[0];
+    
+            if (badgeDoc && !badgeDoc.data().유저아이디.includes(currentUser?.uid)) {
+                const badgeRef = doc(db, "badges", badgeDoc.id);
+                await updateDoc(badgeRef, {
+                    유저아이디: arrayUnion(currentUser?.uid),
+                });
+                setBadgeImg(badgeDoc.data().뱃지이미지);
+                setBadgeName(badgeDoc.data().뱃지이름);
+                setShowBadge(true);
+            }
+        }
+    };
+
+    // 도전과제 달성
+    const checkAndCompleteAchievement = async (days: number): Promise<void> => {
+        const achievementsRef = collection(db, "achievements");
+        const achievementQuerySnapshot = await getDocs(query(achievementsRef));
+    
+        const mainAchievementDoc = achievementQuerySnapshot.docs.find(doc => doc.data().도전과제이름 === "누적 운동기록");
+    
+        if (mainAchievementDoc) {
+            const subAchievementsRef = collection(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`);
+            const subAchievementsSnapshot = await getDocs(subAchievementsRef);
+    
+            const subAchievementDoc = subAchievementsSnapshot.docs.find(doc => doc.data().필요일수 === days);
+    
+            if (subAchievementDoc && !subAchievementDoc.data().유저아이디.includes(currentUser?.uid)) {
+                const subAchievementRef = doc(db, `achievements/${mainAchievementDoc.id}/${mainAchievementDoc.id}`, subAchievementDoc.id);
+                await updateDoc(subAchievementRef, {
+                    유저아이디: arrayUnion(currentUser?.uid),
+                });
+                setAchievementName(subAchievementDoc.data().도전과제이름);
+                setShowAchievements(true);
+            }
+        }
+    };
+    
+    // 캐릭터 잠금해제
+    const checkAndGrowCharacter = async (
+        gender: string,
+        days: number,
+        userDoc: any
+      ): Promise<void> => {
+        const genderStr = gender === "남자" ? "남성" : "여성";
+        const charactersRef = collection(db, 'characters');
+        const characterSnapshot = await getDocs(query(charactersRef, where("성별", "==", genderStr)));
+      
+        if (!characterSnapshot.empty) {
+          const characterDoc = characterSnapshot.docs[0];
+          const stepsRef = collection(characterDoc.ref, "steps");
+      
+          const recordsCollectionRef = collection(db, "records"); 
+          const today = new Date();
+          const formattedDate = format(today, 'yyyy-MM-dd');
+          const recordsQuerySnapshot = await getDocs(
+            query(recordsCollectionRef, where("날짜", "==", formattedDate), where("유저아이디", "==", currentUser?.uid))
+          );
+      
+          const hasExerciseToday = !recordsQuerySnapshot.empty;
+      
+          const stepData = [
+            { minDays: 50, stepName: "4단계" },
+            { minDays: 30, stepName: "3단계" },
+            { minDays: 10, stepName: "2단계" }
+          ];
+      
+          for (const step of stepData) {
+            if (days >= step.minDays) {
+              const stepSnapshot = await getDocs(query(stepsRef, where("단계", "==", step.stepName)));
+              if (!stepSnapshot.empty && !stepSnapshot.docs[0].data().유저아이디.includes(currentUser?.uid)) {
+                const stepDoc = stepSnapshot.docs[0];
+                const newCharacterImage = hasExerciseToday ? stepDoc.data().운동후 : stepDoc.data().운동전;
+      
+                await updateDoc(stepDoc.ref, {
+                  유저아이디: arrayUnion(currentUser?.uid),
+                });
+                await updateDoc(userDoc.ref, {
+                  캐릭터이미지: newCharacterImage,
+                  오늘운동: hasExerciseToday,
+                  단계: step.stepName
+                });
+      
+                setNewCharacterImage(newCharacterImage);
+                setCongratulationMessage(`축하합니다! 캐릭터 ${step.stepName}가 잠금해제 되었습니다.`);
+                setShowCharacter(true);
+                break;
+              }
+            }
+          }
+        }
+      };
+      
+    
+
+    useEffect(() => {
+        if (value instanceof Date || (Array.isArray(value) && value.length === 2 && value.every(v => v instanceof Date))) {
+            setValue(value as Date | [Date, Date]);
+        } else {
+            setValue(null);
+        }
+
+        if (value instanceof Date) {
+            const formattedDate = format(value, "yyyy-MM-dd");
+            setClickDate(formattedDate);
+        } else if (Array.isArray(value) && value.length === 2 && value[0] instanceof Date) {
+            const formattedDate = format(value[0], "yyyy-MM-dd");
+            setClickDate(formattedDate);
+        }
     }, [])
 
     const onChange: CalendarProps["onChange"] = (value) => {
         if (value instanceof Date || (Array.isArray(value) && value.length === 2 && value.every(v => v instanceof Date))) {
-          setValue(value as Date | [Date, Date]); // 타입이 확실하므로 as를 사용해 안전하게 변환
+            setValue(value as Date | [Date, Date]); // 타입이 확실하므로 as를 사용해 안전하게 변환
         } else {
-          setValue(null); // value가 null인 경우도 처리
+            setValue(null); // value가 null인 경우도 처리
         }
-    
+
         if (value instanceof Date) {
-          const formattedDate = format(value, "yyyy-MM-dd");
-          setClickDate(formattedDate);
+            const formattedDate = format(value, "yyyy-MM-dd");
+            setClickDate(formattedDate);
         } else if (Array.isArray(value) && value.length === 2 && value[0] instanceof Date) {
-          const formattedDate = format(value[0], "yyyy-MM-dd");
-          setClickDate(formattedDate);
+            const formattedDate = format(value[0], "yyyy-MM-dd");
+            setClickDate(formattedDate);
         }
-      };
-    
+    };
 
     const onClick = () => {
         setModal(true);
@@ -170,9 +358,10 @@ const TestCalendar = () => {
                             }
                             if (isSaturday(date)) {
                                 return 'react-calendar__tile--saturday';
-                            }
-                            if (isSunday(date)) {
+                            } else if (isSunday(date)) {
                                 return 'react-calendar__tile--sunday';
+                            } else {
+                                return 'react-calendar__tile--weekday';
                             }
                         }
                         return null;
@@ -186,7 +375,7 @@ const TestCalendar = () => {
                         }
                         return (
                             <>
-                                <div style={{display:'flex', justifyContent:'center'}}>
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
                                     {html}
                                 </div>
                             </>
@@ -196,12 +385,25 @@ const TestCalendar = () => {
                 />
             </CalenderWrapper>
             {modal ?
-                <ExerciseRegistration closeModal={closeModal} congratulations={congratulations} />
+                <ExerciseRegistration closeModal={closeModal} congratulations={congratulations} records={recordsComplete} />
                 : null}
             {showCongratulations && (
                 <Congratulations title='운동기록 완료' content='운동기록을 완료하였습니다' />
             )}
             <ChoiceData clickDate={clickDate} />
+            {showBadge && (
+                <BadgeModal badgeImg={badgeImg} badgeName={badgeName} badgeModalConfirm={() => setShowBadge(false)} />
+            )}
+            {showAchievements && (
+                <AchievementModal achievementName={achievementName} handleModalConfirm={() => setShowAchievements(false)} />
+            )}
+            {showCharacter && (
+                <CharacterModal
+                    characterModalConfirm={() => setShowCharacter}
+                    characterImage={newCharacterImage}
+                    message={congratulationMessage}
+                />
+            )}
         </Wrapper>
     )
 }
