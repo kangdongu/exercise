@@ -121,6 +121,7 @@ export default function Naming() {
         오늘운동: false,
         단계: "1단계",
         마지막운동: "",
+        선택단계:'1단계'
       });
 
       navigate("/gender");

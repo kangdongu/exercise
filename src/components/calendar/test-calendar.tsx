@@ -231,7 +231,7 @@ const TestCalendar = () => {
             }
         }
     };
-    
+
     // 캐릭터 잠금해제
     const checkAndGrowCharacter = async (
         gender: string,
@@ -307,9 +307,9 @@ const TestCalendar = () => {
 
     const onChange: CalendarProps["onChange"] = (value) => {
         if (value instanceof Date || (Array.isArray(value) && value.length === 2 && value.every(v => v instanceof Date))) {
-            setValue(value as Date | [Date, Date]); // 타입이 확실하므로 as를 사용해 안전하게 변환
+            setValue(value as Date | [Date, Date]); 
         } else {
-            setValue(null); // value가 null인 경우도 처리
+            setValue(null); 
         }
 
         if (value instanceof Date) {

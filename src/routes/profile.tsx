@@ -13,6 +13,7 @@ import BellModal from "../components/bell";
 import { TiPlus } from "react-icons/ti";
 import { FaExchangeAlt } from "react-icons/fa";
 import ProfileImageCropper from "../components/image-crop/profile-image-crop";
+import CharacterChoice from "../components/character-choice";
 
 const Wrapper = styled.div`
   width:100vw;
@@ -77,6 +78,24 @@ const AvatarWrapper = styled.div`
   margin-bottom:20px;
    background: linear-gradient(135deg, #BBDEFB , #D1C4E9);
   position:relative;
+  svg{
+ position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 24px;
+  height: 24px;
+  color: #FF286F;
+  cursor: pointer;
+  background-color: white;
+  border-radius: 50%;
+  padding: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+  }
 `;
 const AvatarMent = styled.div`
   margin: 10px 0 0 0;
@@ -209,6 +228,7 @@ export default function Profile() {
   const [croppedImage, setCroppedImage] = useState<string | ArrayBuffer | null>(null);
   const [cropperModal, setCropperModal] = useState(false);
   const imgInput = useRef<HTMLInputElement | null>(null);
+  const [characterChoice, setCharacterChoice] = useState(false);
 
   useEffect(() => {
     setBellAlerm(true)
@@ -413,6 +433,7 @@ export default function Profile() {
       <ContentWrapper>
         <Title>캐릭터 및 보유뱃지</Title>
         <AvatarWrapper>
+          <FaExchangeAlt onClick={() => setCharacterChoice(true)} />
           <CharacterWrapper>
             <Character>
               <img style={{ width: '100%', height: 'auto', objectFit: 'cover' }} src={character} alt="Character" />
@@ -457,6 +478,9 @@ export default function Profile() {
           <BellModal onClose={bellClick} />
         )
       }
+      {characterChoice && (
+        <CharacterChoice onClose={() => setCharacterChoice(false)} />
+      )}
     </Wrapper>
   )
 }
