@@ -4454,7 +4454,8 @@ font-weight:800;
     width:100%;
   }
 `,lae=w.div`
-  width: 20%;
+  width: 22%;
+  height:70px;
   background-color: white;
   border-radius: 8px;
   display: flex;
@@ -4482,10 +4483,10 @@ font-weight:800;
 `,cae=w.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
   overflow-y:scroll;
   justify-content: center;
   background-color:#f0f0f0;
+  gap:2.4%;
   height:calc(50% - 70px);
   padding-top:10px;
 `,uae=w.button`
@@ -4507,7 +4508,7 @@ font-weight:800;
     background-color: #ddd;
     cursor: not-allowed;
   }
-`,dae=({onClose:t,modal:e})=>{const n=ve.currentUser,[r,i]=b.useState([]),[s,o]=b.useState(null),a=b.useRef(null),[l,c]=b.useState(0);b.useEffect(()=>{a.current&&c(a.current.offsetWidth)},[e]),b.useEffect(()=>{(async()=>{try{const p=Q(H,"user"),x=(await te(re(p,oe("유저아이디","==",n==null?void 0:n.uid)))).docs[0].data().성별,v=Q(H,"characters"),y=await te(re(v,oe("성별","==",x==="남자"?"남성":"여성")));if(!y.empty){const _=y.docs,S=await Promise.all(_.map(async k=>{const E=Q(k.ref,"steps");return(await te(re(E,Rr("필요일수","asc")))).docs.map(T=>T.data())}));i(S.flat())}}catch(p){console.log(p)}})()},[]);const u=(f,p)=>{p||o(f)},h=async()=>{console.log("선택된 캐릭터:",s);const f=Q(H,"user"),p=await te(re(f,oe("유저아이디","==",n==null?void 0:n.uid)));if(!p.empty){const g=p.docs[0],m=g.data().오늘운동;await be(g.ref,{선택단계:s.단계,캐릭터이미지:m?s.운동후:s.운동전})}t()};return d.jsxs(iae,{children:[d.jsx(sae,{onClick:t}),d.jsxs(oae,{children:[d.jsx(aae,{children:s?d.jsx("img",{src:s.운동후,alt:"Selected Character"}):d.jsx("span",{children:"캐릭터를 선택해주세요."})}),d.jsx(cae,{children:r.map((f,p)=>{const g=!f.유저아이디.includes(n==null?void 0:n.uid);return d.jsxs(lae,{style:{height:`${l}px`},ref:a,locked:g,onClick:()=>u(f,g),children:[d.jsx("img",{src:f.운동후,alt:"Character"}),g&&d.jsx(XK,{})]},p)})}),d.jsx(uae,{onClick:h,disabled:!s,children:"변경"})]})]})},hae=w.div`
+`,dae=({onClose:t,modal:e})=>{const n=ve.currentUser,[r,i]=b.useState([]),[s,o]=b.useState(null),a=b.useRef(null),[l,c]=b.useState(0);b.useEffect(()=>{e&&a.current&&c(a.current.offsetWidth)},[e]),b.useEffect(()=>{(async()=>{try{const p=Q(H,"user"),x=(await te(re(p,oe("유저아이디","==",n==null?void 0:n.uid)))).docs[0].data().성별,v=Q(H,"characters"),y=await te(re(v,oe("성별","==",x==="남자"?"남성":"여성")));if(!y.empty){const _=y.docs,S=await Promise.all(_.map(async k=>{const E=Q(k.ref,"steps");return(await te(re(E,Rr("필요일수","asc")))).docs.map(T=>T.data())}));i(S.flat())}}catch(p){console.log(p)}})()},[e]);const u=(f,p)=>{p||o(f)},h=async()=>{console.log("선택된 캐릭터:",s);const f=Q(H,"user"),p=await te(re(f,oe("유저아이디","==",n==null?void 0:n.uid)));if(!p.empty){const g=p.docs[0],m=g.data().오늘운동;await be(g.ref,{선택단계:s.단계,캐릭터이미지:m?s.운동후:s.운동전})}t()};return d.jsxs(iae,{children:[d.jsx(sae,{onClick:t}),d.jsxs(oae,{children:[d.jsx(aae,{children:s?d.jsx("img",{src:s.운동후,alt:"Selected Character"}):d.jsx("span",{children:"캐릭터를 선택해주세요."})}),d.jsx(cae,{children:r.map((f,p)=>{const g=!f.유저아이디.includes(n==null?void 0:n.uid);return d.jsxs(lae,{style:{height:`${l}px`},ref:a,locked:g||void 0,onClick:()=>u(f,g),children:[d.jsx("img",{src:f.운동후,alt:"Character"}),g&&d.jsx(XK,{})]},p)})}),d.jsx(uae,{onClick:h,disabled:!s,children:"변경"})]})]})},hae=w.div`
   width:100vw;
   height:calc(100vh - 40px);
   background-color:#F0F0F0;
