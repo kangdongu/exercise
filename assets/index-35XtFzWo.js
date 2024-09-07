@@ -4164,8 +4164,8 @@ font-weight:800;
     height:calc(100vh - 40px);
     padding: 40px 20px;
     overflow-y:scroll;
-    background-color:rgba(224, 88, 133, 0.5);
-    // background-color:#F0F0F0;
+    // background-color:rgba(224, 88, 133, 0.4);
+    background-color:#F0F0F0;
     position:relative;
 `,ete=w.div`
     width:100%;
