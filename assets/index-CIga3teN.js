@@ -4442,17 +4442,21 @@ font-weight:800;
   transform: translate(-50%, -50%);
   padding: 20px;
 `,aae=w.div`
-  width: 100%;
+  width: 150px;
   height: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0 auto;
   margin-bottom: 20px;
   border-bottom: 1px solid #ddd;
+  img{
+    width:100%;
+  }
 `,lae=w.div`
-  width: 80px;
+  width: 20%;
   height: 80px;
-  background-color: #f0f0f0;
+  background-color: white;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -4480,7 +4484,11 @@ font-weight:800;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  overflow-y:scroll;
   justify-content: center;
+  background-color:#f0f0f0;
+  height:calc(50% - 70px);
+  padding-top:10px;
 `,uae=w.button`
   width: 100px;
   padding: 10px;
