@@ -6,10 +6,11 @@ const Wrapper = styled.div`
     border-radius: 10px;
     padding: 15px;
     align-items: center;
-    color: white;
+    color: #333333;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-     background: linear-gradient(to bottom, #FF85A1, #E05885);
+    //  background: linear-gradient(to bottom, #FF85A1, #E05885);
+    background-color:white;
 `;
 const TimerWrapper = styled.div`
     display: flex;
@@ -19,12 +20,13 @@ const TimerWrapper = styled.div`
     gap:5px;
     span {
         font-size: 14px;
-        color: #f0f0f0;
+        color: #333333;
     }
     svg{
         width:40px;
         height:40px;
         margin-top:20px;
+        color:#E05885;
         // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 `;
@@ -37,7 +39,7 @@ interface badgeProps {
 const Badge: React.FC<badgeProps> = ({ badgeClick }) => {
     return (
         <Wrapper onClick={badgeClick}>
-            <RiPoliceBadgeLine style={{ width: "40px", height: "40px", color: "#ffffff", marginBottom: '15px' }} />
+            <RiPoliceBadgeLine style={{ width: "40px", height: "40px", color: "#E05885", marginBottom: '15px' }} />
 
             <TimerWrapper>
                 <TextWrapper>

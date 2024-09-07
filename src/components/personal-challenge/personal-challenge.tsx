@@ -6,10 +6,11 @@ const Wrapper = styled.div`
     border-radius: 10px;
     padding: 15px;
     align-items: center;
-    color: white;
+    color: #333333;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    background: linear-gradient(to bottom, #7EC8E3, #4CA7D8);
+    // background: linear-gradient(to bottom, #7EC8E3, #4CA7D8);
+    background-color:white;
 `;
 
 const PersonalWrapper = styled.div`
@@ -20,12 +21,13 @@ const PersonalWrapper = styled.div`
     gap:5px;
     span {
         font-size: 14px;
-        color: #f0f0f0;
+        color: #333333;
     }
     svg{
         width:40px;
         height:40px;
         margin-top:20px;
+        color:#4CA7D8;
         // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 `;
@@ -40,7 +42,7 @@ interface PersonalProps {
 const PersonalChallenge: React.FC<PersonalProps> = ({ personalClick }) => {
     return (
         <Wrapper onClick={personalClick}>
-            <FaRegUser style={{ width: "40px", height: "40px", color: "#ffffff", marginBottom: '15px' }} />
+            <FaRegUser style={{ width: "40px", height: "40px", color: "#4CA7D8", marginBottom: '15px' }} />
             <PersonalWrapper>
                 <TextWrapper>
                     <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>개인 챌린지</div>

@@ -6,10 +6,11 @@ const Wrapper = styled.div`
     border-radius: 10px;
     padding: 15px;
     align-items: center;
-    color: white;
+    color: #333333;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-     background: linear-gradient(to bottom, #98CDA3, #6F9F75);
+    //  background: linear-gradient(to bottom, #98CDA3, #6F9F75);
+    background-color:white;
 `;
 const EfficacyWrapper = styled.div`
     display: flex;
@@ -19,13 +20,14 @@ const EfficacyWrapper = styled.div`
     gap:5px;
     span {
         font-size: 14px;
-        color: #f0f0f0;
+        color: #333333;
     }
     svg{
         width:40px;
         height:40px;
         margin-top:20px;
         // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        color:#6F9F75;
     }
 `;
 const TextWrapper = styled.div`
@@ -37,7 +39,7 @@ interface efficacyProps {
 const Efficacy: React.FC<efficacyProps> = ({ efficacyClick }) => {
     return (
         <Wrapper onClick={efficacyClick}>
-            <CiDumbbell style={{ width: "40px", height: "40px", color: "#ffffff", marginBottom: '15px' }} />
+            <CiDumbbell style={{ width: "40px", height: "40px", color: "#6F9F75", marginBottom: '15px' }} />
             <EfficacyWrapper>
                 <TextWrapper>
                     <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }} >운동별 정보</div>

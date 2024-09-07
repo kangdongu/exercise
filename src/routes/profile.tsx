@@ -299,38 +299,38 @@ export default function Profile() {
     fetchUserData();
   }, []);
 
-  useEffect(() => {
-    const fetchGender = async () => {
-      try {
-        if (user) {
-          const currentUserUID = user.uid;
+  const fetchGender = async () => {
+    try {
+      if (user) {
+        const currentUserUID = user.uid;
 
-          const usersCollectionRef = collection(db, "user");
-          const querySnapshot = await getDocs(
-            query(usersCollectionRef, where("유저아이디", "==", currentUserUID))
-          );
+        const usersCollectionRef = collection(db, "user");
+        const querySnapshot = await getDocs(
+          query(usersCollectionRef, where("유저아이디", "==", currentUserUID))
+        );
 
-          if (!querySnapshot.empty) {
-            const userDoc = querySnapshot.docs[0];
-            const userNickname = userDoc.data().닉네임;
-            const profileGuide = userDoc.data().프로필안내;
-            const userCharacter = userDoc.data().캐릭터이미지;
-            setNickname(userNickname);
-            setCharacter(userCharacter);
+        if (!querySnapshot.empty) {
+          const userDoc = querySnapshot.docs[0];
+          const userNickname = userDoc.data().닉네임;
+          const profileGuide = userDoc.data().프로필안내;
+          const userCharacter = userDoc.data().캐릭터이미지;
+          setNickname(userNickname);
+          setCharacter(userCharacter);
 
-            if (profileGuide === false) {
-              setInformation(true);
-              await updateDoc(userDoc.ref, { 프로필안내: true });
-            }
-          } else {
-            console.error("유저 데이터를 찾지 못했습니다.");
+          if (profileGuide === false) {
+            setInformation(true);
+            await updateDoc(userDoc.ref, { 프로필안내: true });
           }
+        } else {
+          console.error("유저 데이터를 찾지 못했습니다.");
         }
-      } catch (error) {
-        console.error("유저 데이터를 찾지 못했습니다:", error);
       }
-    };
+    } catch (error) {
+      console.error("유저 데이터를 찾지 못했습니다:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchGender();
   }, []);
 
@@ -479,7 +479,7 @@ export default function Profile() {
         )
       }
       {characterChoice && (
-        <CharacterChoice onClose={() => setCharacterChoice(false)} />
+        <CharacterChoice modal={characterChoice} change={() => fetchGender()} onClose={() => setCharacterChoice(false)}  />
       )}
     </Wrapper>
   )

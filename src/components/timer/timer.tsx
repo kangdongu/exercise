@@ -6,10 +6,14 @@ const Wrapper = styled.div`
     border-radius: 10px;
     padding: 15px;
     align-items: center;
-    color: white;
-    background: linear-gradient(to bottom, #FF85A1, #E05885);
+    color: #333333;
+    // background: linear-gradient(to bottom, #FF85A1, #E05885);
+    background-color:white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
+    svg{
+        color:#E05885;
+    }
 `;
 
 const Timer = styled.div`
@@ -20,7 +24,8 @@ const Timer = styled.div`
     gap:5px;
     span {
         font-size: 14px;
-        color: #f0f0f0;
+        // color: #f0f0f0;
+        color:#333333;
     }
     svg{
         width:40px;
@@ -40,7 +45,7 @@ interface TimerProps {
 const TimerWrapper: React.FC<TimerProps> = ({ timerClick }) => {
     return (
         <Wrapper onClick={timerClick}>
-            <GrAlarm style={{ width: "40px", height: "40px", color: "#ffffff", marginBottom: '15px' }} />
+            <GrAlarm style={{ width: "40px", height: "40px", color: "#E05885", marginBottom: '15px' }} />
             <Timer>
                 <TextWrapper>
                     <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>운동 타이머</div>

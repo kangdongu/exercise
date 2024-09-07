@@ -41,6 +41,8 @@ const WeekWrapper = styled.div`
 const WeekTitle = styled.h3`
     color:#F2F2F2;
     margin:7px 0px 7px 0px;
+    font-size:18px;
+    font-weight:bold;
 `;
 const WeekData = styled.div`
     display:flex;
@@ -53,13 +55,13 @@ const Week = styled.div`
     align-items: center;
 `;
 const WeekIcon = styled.div`
-    width:25px;
-    height:25px;
+    width:30px;
+    height:30px;
     background-color:white;
     border-radius:50%;
     svg{
-        width:20px;
-        height:20px;
+        width:25px;
+        height:25px;
         margin-top:2.5px;
         margin-left:2.5px;
         fill:#FF286F;
@@ -67,6 +69,7 @@ const WeekIcon = styled.div`
 `;
 const WeekText = styled.div`
     margin-top:5px;
+    font-size:16px;
 `;
 
 
@@ -106,7 +109,7 @@ const ThisWeekRecords = () => {
                     <AiFillFire />
                 </IconWrapper>
                 <WeekWrapper>
-                    <WeekTitle>이번주 7일 운동현황</WeekTitle>
+                    <WeekTitle>이번주 운동현황</WeekTitle>
                     <WeekData>
                         {weekDates.map(({ date, day }) => (
                             <Week key={date}>

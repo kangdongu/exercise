@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { auth, db } from "../firebase";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
-import { FaLock } from "react-icons/fa"; // 잠금 아이콘 추가
+import { collection, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
+import { FaLock } from "react-icons/fa";
 
 const BackGround = styled.div`
   width: 100vw;
@@ -31,25 +31,31 @@ const Wrapper = styled.div`
 `;
 
 const ChoiceCharacter = styled.div`
-  width: 100%;
+  width: 120px;
   height: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0 auto;
   margin-bottom: 20px;
   border-bottom: 1px solid #ddd;
+  img{
+    width:100%;
+  }
 `;
 
-const CharacterCard = styled.div<{ locked: boolean }>`
-  width: 80px;
-  height: 80px;
-  background-color: #f0f0f0;
+const CharacterCard = styled.div<{ locked?: boolean }>`
+  width: 22%;
+  height:70px;
+  background-color: white;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  opacity: ${(props) => (props.locked ? 0.5 : 1)};
+  margin-left:2.4%;
+  margin-bottom:10px;
+  opacity: ${(props) => (props.locked ? 0.3 : 1)};
   transition: opacity 0.3s;
   cursor: ${(props) => (props.locked ? "not-allowed" : "pointer")};
 
@@ -70,10 +76,10 @@ const CharacterCard = styled.div<{ locked: boolean }>`
 `;
 
 const CharacterList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
+  overflow-y:scroll;
+  background-color:#f0f0f0;
+  height:calc(50% - 70px);
+  padding-top:10px;
 `;
 
 const CompleteButton = styled.button`
@@ -99,12 +105,15 @@ const CompleteButton = styled.button`
 
 interface CharacterProps {
   onClose: () => void;
+  modal: boolean;
+  change: () => void;
 }
 
-const CharacterChoice: React.FC<CharacterProps> = ({ onClose }) => {
+const CharacterChoice: React.FC<CharacterProps> = ({ modal, onClose, change }) => {
   const currentUser = auth.currentUser;
   const [characters, setCharacters] = useState<any[]>([]);
-  const [selectedCharacter, setSelectedCharacter] = useState<any>(null); // 선택된 캐릭터 상태 추가
+  const [selectedCharacter, setSelectedCharacter] = useState<any>(null);
+
 
   useEffect(() => {
     const fetchCharacters = async () => {
@@ -116,7 +125,7 @@ const CharacterChoice: React.FC<CharacterProps> = ({ onClose }) => {
 
         const userDoc = userQuerySnapshot.docs[0];
         const gender = userDoc.data().성별;
-
+        console.log(gender)
         const charactersRef = collection(db, "characters");
         const characterSnapshot = await getDocs(
           query(charactersRef, where("성별", "==", gender === "남자" ? "남성" : "여성"))
@@ -124,23 +133,26 @@ const CharacterChoice: React.FC<CharacterProps> = ({ onClose }) => {
 
         if (!characterSnapshot.empty) {
           const characterDocs = characterSnapshot.docs;
+          console.log(characterDocs)
 
           const allCharacters = await Promise.all(
             characterDocs.map(async (characterDoc) => {
               const stepsRef = collection(characterDoc.ref, "steps");
               const stepSnapshot = await getDocs(query(stepsRef, orderBy("필요일수", "asc")));
+              console.log(stepSnapshot)
               return stepSnapshot.docs.map((doc) => doc.data());
             })
           );
 
           setCharacters(allCharacters.flat());
+          console.log(characters, allCharacters)
         }
       } catch (error) {
         console.log(error);
       }
     };
     fetchCharacters();
-  }, []);
+  }, [modal]);
 
   const handleCharacterClick = (character: any, isLocked: boolean) => {
     if (!isLocked) {
@@ -148,12 +160,31 @@ const CharacterChoice: React.FC<CharacterProps> = ({ onClose }) => {
     }
   };
 
-  const handleComplete = () => {
-    console.log("선택된 캐릭터:", selectedCharacter);
-    onClose();
+  const handleComplete = async () => {
+    try {
+      console.log("선택된 캐릭터:", selectedCharacter);
+      const usersRef = collection(db, "user");
+      const querySnapshot = await getDocs(query(usersRef, where("유저아이디", "==", currentUser?.uid)));
+      if (!querySnapshot.empty) {
+        const userRef = querySnapshot.docs[0]
+        const todayExercise = userRef.data().오늘운동
+
+        await updateDoc(userRef.ref, {
+          선택단계: selectedCharacter.단계,
+          캐릭터이미지: todayExercise ? selectedCharacter.운동후 : selectedCharacter.운동전
+        })
+
+        change();
+      }
+    } catch (error) {
+      console.error("캐릭터 업데이트 중 오류가 발생했습니다.", error);
+    } finally {
+      onClose();
+    }
   };
 
   return (
+
     <BackGround>
       <Close onClick={onClose} />
       <Wrapper>
@@ -165,19 +196,21 @@ const CharacterChoice: React.FC<CharacterProps> = ({ onClose }) => {
           )}
         </ChoiceCharacter>
         <CharacterList>
-          {characters.map((character, index) => {
-            const isLocked = !character.유저아이디.includes(currentUser?.uid);
-            return (
-              <CharacterCard
-                key={index}
-                locked={isLocked}
-                onClick={() => handleCharacterClick(character, isLocked)}
-              >
-                <img src={character.운동후} alt="Character" />
-                {isLocked && <FaLock />}
-              </CharacterCard>
-            );
-          })}
+          <div style={{ width: '100%', display: 'flex', flexWrap: 'wrap', paddingLeft: '2.4%' }}>
+            {characters.map((character, index) => {
+              const isLocked = !character.유저아이디.includes(currentUser?.uid);
+              return (
+                <CharacterCard
+                  key={index}
+                  locked={isLocked || undefined}
+                  onClick={() => handleCharacterClick(character, isLocked)}
+                >
+                  <img src={character.운동후} alt="Character" />
+                  {isLocked && <FaLock />}
+                </CharacterCard>
+              );
+            })}
+          </div>
         </CharacterList>
         <CompleteButton onClick={handleComplete} disabled={!selectedCharacter}>
           변경
