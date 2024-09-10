@@ -152,6 +152,9 @@ export default function Inbody() {
     const getCurrentDate = () => {
         return format(new Date(), "yyyy-MM-dd HH:mm");
     }
+    const getDate = () => {
+        return format(new Date(), "yyyy-MM-dd")
+    }
 
     const fetchData = async () => {
         try {
@@ -197,6 +200,7 @@ export default function Inbody() {
             const docRef = await addDoc(collection(db, 'inbody'), {
                 유저아이디: auth.currentUser?.uid,
                 날짜: getCurrentDate(),
+                단순날짜:getDate(),
                 weight,
                 종류:'weight'
             });
@@ -234,6 +238,7 @@ export default function Inbody() {
             const docRef = await addDoc(collection(db, 'inbody'), {
                 유저아이디: auth.currentUser?.uid,
                 날짜: getCurrentDate(),
+                단순날짜:getDate(),
                 muscle,
                 종류:'muscle'
             });
@@ -271,6 +276,7 @@ export default function Inbody() {
             const docRef = await addDoc(collection(db, 'inbody'), {
                 유저아이디: auth.currentUser?.uid,
                 날짜: getCurrentDate(),
+                단순날짜:getDate(),
                 fat,
                 종류:'fat'
             });

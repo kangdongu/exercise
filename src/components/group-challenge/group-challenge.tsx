@@ -40,7 +40,7 @@ interface GroupProps {
 const GroupChallenge: React.FC<GroupProps> = ({ GroupModal }) => {
     return (
         <Wrapper onClick={GroupModal}>
-            <HiOutlineUserGroup style={{ width: "40px", height: "40px", color: "#4CA7D8", marginBottom: '15px' }} />
+            <HiOutlineUserGroup style={{ width: "50px", height: "50px", color: "#4CA7D8", marginBottom: '15px' }} />
             <GroupWrapper>
                 <TextWrapper>
                     <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>그룹챌린지</div>

@@ -39,7 +39,7 @@ interface badgeProps {
 const Badge: React.FC<badgeProps> = ({ badgeClick }) => {
     return (
         <Wrapper onClick={badgeClick}>
-            <RiPoliceBadgeLine style={{ width: "40px", height: "40px", color: "#E05885", marginBottom: '15px' }} />
+            <RiPoliceBadgeLine style={{ width: "50px", height: "50px", color: "#E05885", marginBottom: '15px' }} />
 
             <TimerWrapper>
                 <TextWrapper>

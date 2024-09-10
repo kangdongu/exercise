@@ -40,7 +40,7 @@ interface achievmeentsProps {
 const Achievements: React.FC<achievmeentsProps> = ({ achievmeentsClick }) => {
     return (
         <Wrapper onClick={achievmeentsClick}>
-            <GoTrophy style={{ width: "40px", height: "40px", color: "#6F9F75", marginBottom: '15px' }} />
+            <GoTrophy style={{ width: "50px", height: "50px", color: "#6F9F75", marginBottom: '15px' }} />
             <AchievementsWrapper>
                 <TextWrapper>
                     <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }} >도전과제</div>

@@ -42,7 +42,7 @@ interface PersonalProps {
 const PersonalChallenge: React.FC<PersonalProps> = ({ personalClick }) => {
     return (
         <Wrapper onClick={personalClick}>
-            <FaRegUser style={{ width: "40px", height: "40px", color: "#4CA7D8", marginBottom: '15px' }} />
+            <FaRegUser style={{ width: "50px", height: "50px", color: "#4CA7D8", marginBottom: '15px' }} />
             <PersonalWrapper>
                 <TextWrapper>
                     <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>개인 챌린지</div>

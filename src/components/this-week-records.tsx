@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import styled from "styled-components"
 import { auth, db } from "../firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { AiFillFire } from "react-icons/ai";
+// import { AiFillFire } from "react-icons/ai";
 import { ko } from "date-fns/locale";
+import { GiFlamer } from "react-icons/gi";
 
 const Wrapper = styled.div`
     width:100%;
@@ -55,13 +56,13 @@ const Week = styled.div`
     align-items: center;
 `;
 const WeekIcon = styled.div`
-    width:30px;
-    height:30px;
+    width:27px;
+    height:27px;
     background-color:white;
     border-radius:50%;
     svg{
-        width:25px;
-        height:25px;
+        width:22px;
+        height:22px;
         margin-top:2.5px;
         margin-left:2.5px;
         fill:#FF286F;
@@ -106,7 +107,7 @@ const ThisWeekRecords = () => {
         <Wrapper>
             <ContentWrapper>
                 <IconWrapper>
-                    <AiFillFire />
+                    <GiFlamer />
                 </IconWrapper>
                 <WeekWrapper>
                     <WeekTitle>이번주 운동현황</WeekTitle>
@@ -114,7 +115,7 @@ const ThisWeekRecords = () => {
                         {weekDates.map(({ date, day }) => (
                             <Week key={date}>
                                 <WeekIcon>
-                                    {recordsData.includes(date) && <AiFillFire />}
+                                    {recordsData.includes(date) && <GiFlamer />}
                                 </WeekIcon>
                                 <WeekText>
                                     {day}

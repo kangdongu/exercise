@@ -45,7 +45,7 @@ interface TimerProps {
 const TimerWrapper: React.FC<TimerProps> = ({ timerClick }) => {
     return (
         <Wrapper onClick={timerClick}>
-            <GrAlarm style={{ width: "40px", height: "40px", color: "#E05885", marginBottom: '15px' }} />
+            <GrAlarm style={{ width: "50px", height: "50px", color: "#E05885", marginBottom: '15px' }} />
             <Timer>
                 <TextWrapper>
                     <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>운동 타이머</div>

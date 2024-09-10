@@ -39,7 +39,7 @@ interface efficacyProps {
 const Efficacy: React.FC<efficacyProps> = ({ efficacyClick }) => {
     return (
         <Wrapper onClick={efficacyClick}>
-            <CiDumbbell style={{ width: "40px", height: "40px", color: "#6F9F75", marginBottom: '15px' }} />
+            <CiDumbbell style={{ width: "50px", height: "50px", color: "#6F9F75", marginBottom: '15px' }} />
             <EfficacyWrapper>
                 <TextWrapper>
                     <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }} >운동별 정보</div>

@@ -1,4 +1,7 @@
 /* 기본 스타일 */
+.react-calendar__month-view__days__day--weekend {
+    color: inherit !important; /* 기본 색상으로 덮어쓰기 */
+}
 .fc {
     font-size: 12px; /* 기본 폰트 크기 */
 }
@@ -10,6 +13,14 @@
 .fc-day-sat a {
     color: blue;
 }
+.react-calendar__month-view__days__day--weekend:nth-child(7n) {
+    color: blue !important;
+}
+
+/* 일요일을 빨간색으로 지정 */
+.react-calendar__month-view__days__day--weekend:nth-child(1) {
+    color: red !important;
+}
 
 .fc-event {
     background-color: #FF286F; 
@@ -17,6 +28,9 @@
     border: none; 
     border-radius: 5px; 
     padding: 2px 5px; 
+}
+.fc-day-sat .fc-event {
+    color: blue !important; /* 토요일 이벤트 텍스트 색상을 파란색으로 강제 적용 */
 }
 
 .fc-daygrid-day.fc-day-today {
@@ -51,6 +65,7 @@
     
     .fc-daygrid-day-number {
         font-size: 10px;
+        color: #333333 !important;
     }
     
     .fc-daygrid-day {
