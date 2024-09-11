@@ -1,4 +1,4 @@
-import { QueryDocumentSnapshot, collection, getDocs, query, where, DocumentData } from 'firebase/firestore';
+import { QueryDocumentSnapshot, collection, getDocs, DocumentData, doc } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 import { auth, db } from '../firebase';
 import { startOfWeek, endOfWeek, format, subWeeks } from 'date-fns';
@@ -49,21 +49,16 @@ const WeekDates = () => {
     const fetchExerciseCount = async () => {
       try {
         if (currentUserUID) {
-          const recordsCollectionRef = collection(db, 'records');
-          const querySnapshot = await getDocs(
-            query(
-              recordsCollectionRef,
-              where('유저아이디', '==', currentUserUID),
-              where('날짜', '>=', startDateStr),
-              where('날짜', '<=', endDateStr)
-            )
-          );
+          const recordsDocRef = doc(db, 'records', currentUserUID);
+          const exerciseCollectionRef = collection(recordsDocRef, '운동기록');
+
+          const exerciseQuerySnapshot = await getDocs(exerciseCollectionRef);
 
           const uniqueDates = new Set();
 
-          querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
-            const date = doc.data().날짜;
-            if (date) {
+          exerciseQuerySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
+            const date = doc.id; // 날짜가 문서 ID로 저장됨
+            if (date >= startDateStr && date <= endDateStr) {
               uniqueDates.add(date);
             }
           });
@@ -94,21 +89,16 @@ const WeekDates = () => {
           const weekEndDate = endOfWeek(subWeeks(currentDate, week), { weekStartsOn: 1 });
           const startStr = format(weekStartDate, 'yyyy-MM-dd');
           const endStr = format(weekEndDate, 'yyyy-MM-dd');
-          const recordsCollectionRef = collection(db, 'records');
-          const querySnapshot = await getDocs(
 
-            query(
-              recordsCollectionRef,
-              where('유저아이디', '==', currentUserUID),
-              where('날짜', '>=', startStr),
-              where('날짜', '<=', endStr)
-            )
-          );
+          const recordsDocRef = doc(db, 'records', currentUserUID);
+          const exerciseCollectionRef = collection(recordsDocRef, '운동기록');
+          const exerciseQuerySnapshot = await getDocs(exerciseCollectionRef);
+
           const uniqueDates = new Set();
 
-          querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
-            const date = doc.data().날짜;
-            if (date) {
+          exerciseQuerySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
+            const date = doc.id; // 날짜가 문서 ID로 저장됨
+            if (date >= startStr && date <= endStr) {
               uniqueDates.add(date);
             }
           });

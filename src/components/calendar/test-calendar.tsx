@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { format, isSaturday, isSunday } from "date-fns";
 import ExerciseRegistration from "./records-registration";
 import { auth, db } from "../../firebase";
-import { arrayUnion, collection, doc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
+import { arrayUnion, collection, doc, getDoc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import Congratulations from "../congratulations";
 import ChoiceData from "./choice-data";
 import BadgeModal from "../badge-modal";
@@ -140,7 +140,7 @@ const TestCalendar = () => {
                 // "운동기록" 하위 컬렉션에서 모든 문서 가져오기
                 const recordsQuerySnapshot = await getDocs(query(exerciseCollectionRef));
 
-                if(!recordsQuerySnapshot.empty){
+                if (!recordsQuerySnapshot.empty) {
                     const recordUniqueDates = new Set<string>();
 
                     recordsQuerySnapshot.forEach((doc) => {
@@ -192,12 +192,16 @@ const TestCalendar = () => {
 
         // 오늘 운동 여부 확인 및 캐릭터 이미지 변경
         if (!todayExercise) {
-            const recordsCollectionRef = collection(db, "records");
-            const querySnapshot = await getDocs(
-                query(recordsCollectionRef, where("날짜", "==", formattedDate), where("유저아이디", "==", currentUser?.uid))
-            );
+            if (!currentUser?.uid) {
+                return;
+            }
+            const recordsDocRef = doc(db, "records", currentUser?.uid);
+            const recordsCollectionRef = collection(recordsDocRef, "운동기록");
 
-            if (!querySnapshot.empty) {
+            const dateDocRef = doc(recordsCollectionRef, formattedDate);
+            const dateDocSnapshot = await getDoc(dateDocRef);
+
+            if (dateDocSnapshot.exists()) {
                 await updateCharacterImage(userDoc, gender, userStep);
             }
         }
@@ -299,17 +303,20 @@ const TestCalendar = () => {
         const characterSnapshot = await getDocs(query(charactersRef, where("성별", "==", genderStr)));
 
         if (!characterSnapshot.empty) {
+            if (!currentUser?.uid) {
+                return;
+            }
             const characterDoc = characterSnapshot.docs[0];
             const stepsRef = collection(characterDoc.ref, "steps");
 
-            const recordsCollectionRef = collection(db, "records");
             const today = new Date();
             const formattedDate = format(today, 'yyyy-MM-dd');
-            const recordsQuerySnapshot = await getDocs(
-                query(recordsCollectionRef, where("날짜", "==", formattedDate), where("유저아이디", "==", currentUser?.uid))
-            );
 
-            const hasExerciseToday = !recordsQuerySnapshot.empty;
+            const recordsDocRef = doc(db, "records", currentUser?.uid);
+            const todayRecordRef = doc(collection(recordsDocRef, "운동기록"), formattedDate);
+            const todayExercisesSnapshot = await getDocs(collection(todayRecordRef, "exercises"));
+
+            const hasExerciseToday = !todayExercisesSnapshot.empty;
 
             const stepData = [
                 { minDays: 50, stepName: "4단계" },

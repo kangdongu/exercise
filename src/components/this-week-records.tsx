@@ -2,7 +2,7 @@ import { eachDayOfInterval, endOfWeek, format, startOfWeek } from "date-fns";
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 import { auth, db } from "../firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDocs, query } from "firebase/firestore";
 import { AiFillFire } from "react-icons/ai";
 import { ko } from "date-fns/locale";
 
@@ -81,11 +81,16 @@ const ThisWeekRecords = () => {
     useEffect(() => {
         const fetchRecords = async () => {
             try {
-                const recordsRefs = collection(db, "records")
-                const querySnapshot = await getDocs(
-                    query(recordsRefs, where("유저아이디", "==", currentUser?.uid))
-                )
-                const records = querySnapshot.docs.map(doc => doc.data().날짜);
+                if(!currentUser?.uid){
+                    alert("로그인을 확인해주세요")
+                    return;
+                }
+
+                const recordsDocRefs = doc(db, "records", currentUser?.uid)
+                const recordsCollectionRef = collection(recordsDocRefs, "운동기록");
+
+                const querySnapshot = await getDocs(query(recordsCollectionRef))
+                const records = querySnapshot.docs.map(doc => doc.id);
 
                 setRecordsData(records)
             } catch (error) {
