@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 import { auth, db } from "../../firebase";
@@ -39,7 +39,6 @@ const Text = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
-  border-bottom: 1px solid #eaeaea;
 `;
 const Title = styled.div`
     font-weight:600;
@@ -58,6 +57,7 @@ interface ExerciseData {
     횟수: string;
     무게: string;
     운동부위: string;
+    세트:number;
 }
 
 const ChoiceData: React.FC<ChoiceDataProps> = ({ clickDate }) => {
@@ -80,8 +80,16 @@ const ChoiceData: React.FC<ChoiceDataProps> = ({ clickDate }) => {
     useEffect(() => {
       const fetchRecords = async () => {
         try {
-          const recordsRefs = collection(db, "records");
-          const querySnapshot = await getDocs(query(recordsRefs, where("유저아이디", "==", currentUser?.uid), where("날짜", "==", clickDate)));
+          if(!currentUser?.uid){
+            alert("로그인을 확인해주세요")
+            return;
+          }
+          const recordsDocRefs = doc(db, "records", currentUser?.uid);
+          const recordsCollectionRef = doc(collection(recordsDocRefs, "운동기록"), clickDate);
+          const exercisesCollectionRef = collection(recordsCollectionRef, "exercises")
+
+          const recordsQuerySnapshot = await getDocs(exercisesCollectionRef)
+
   
           const records: { [key: string]: ExerciseData[] } = {};
           const areas: string[] = [];
@@ -89,7 +97,7 @@ const ChoiceData: React.FC<ChoiceDataProps> = ({ clickDate }) => {
           let reps = 0;
           let weight = 0;
   
-          querySnapshot.forEach((doc) => {
+          recordsQuerySnapshot.forEach((doc) => {
             const data = doc.data() as ExerciseData;
             if (!records[data.종류]) {
               records[data.종류] = [];
@@ -100,7 +108,8 @@ const ChoiceData: React.FC<ChoiceDataProps> = ({ clickDate }) => {
             }
             sets++;
             reps += parseInt(data.횟수);
-            weight += (parseInt(data.무게) * parseInt(data.횟수));
+            const weightValue = data.무게 === "" ? 0 : parseInt(data.무게);
+            weight += weightValue * parseInt(data.횟수);
           });
   
           Object.keys(records).forEach((key) => {

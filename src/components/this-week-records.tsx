@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import styled from "styled-components"
 import { auth, db } from "../firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
-// import { AiFillFire } from "react-icons/ai";
+import { AiFillFire } from "react-icons/ai";
 import { ko } from "date-fns/locale";
-import { GiFlamer } from "react-icons/gi";
+
 
 const Wrapper = styled.div`
     width:100%;
@@ -107,7 +107,7 @@ const ThisWeekRecords = () => {
         <Wrapper>
             <ContentWrapper>
                 <IconWrapper>
-                    <GiFlamer />
+                    <AiFillFire />
                 </IconWrapper>
                 <WeekWrapper>
                     <WeekTitle>이번주 운동현황</WeekTitle>
@@ -115,7 +115,7 @@ const ThisWeekRecords = () => {
                         {weekDates.map(({ date, day }) => (
                             <Week key={date}>
                                 <WeekIcon>
-                                    {recordsData.includes(date) && <GiFlamer />}
+                                    {recordsData.includes(date) && <AiFillFire />}
                                 </WeekIcon>
                                 <WeekText>
                                     {day}

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { auth, db } from '../../firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, doc, getDocs } from 'firebase/firestore';
 import styled from 'styled-components';
 import MoSlideLeft from '../slideModal/mo-slide-left';
+import { format } from 'date-fns';
 
 interface ExerciseData {
   이름: string;
@@ -30,6 +31,7 @@ const Wrapper = styled.div`
   padding: 20px;
   box-sizing: border-box;
   border-radius: 12px;
+  position:relative;
 `;
 
 const ContentWrapper = styled.div`
@@ -80,20 +82,33 @@ const DayArea = styled.span`
 const CalendarClickModal: React.FC<CalendarClickModalProps> = ({ setCalendarClick, clickDate }) => {
   const [exerciseRecords, setExerciseRecords] = useState<{ [key: string]: ExerciseData[] }>({});
   const [exerciseAreas, setExerciseAreas] = useState<string[]>([]);
+  const [formatDate, setFormatDate] = useState<string>("")
+  const user = auth.currentUser;
+
+  useEffect(() => {
+    const formatClickDate = format(clickDate, "yyyy년 MM월 dd일")
+    setFormatDate(formatClickDate)
+  })
 
   useEffect(() => {
     const fetchExerciseRecords = async () => {
       try {
-        const user = auth.currentUser;
-        if (user) {
-          const currentUserUID = user.uid;
-          const recordsRef = collection(db, 'records');
-          const querySnapshot = await getDocs(query(recordsRef, where('유저아이디', '==', currentUserUID), where('날짜', '==', clickDate)));
+        const currentUserUID = user?.uid;
+          if(!currentUserUID){
+            alert("로그인을 확인해주세요")
+            return;
+          }
+
+          const recordsDocRef = doc(db, 'records', currentUserUID);
+          const recordsCollectionRef = doc(collection(recordsDocRef, "운동기록"), clickDate)
+          const exercisesCollectionRef = collection(recordsCollectionRef, "exercises");
+
+          const recordsQuerySnapshot = await getDocs(exercisesCollectionRef);
 
           const records: { [key: string]: ExerciseData[] } = {};
           const areas: string[] = [];
 
-          querySnapshot.forEach(doc => {
+          recordsQuerySnapshot.forEach(doc => {
             const data = doc.data() as ExerciseData;
             if (!records[data.종류]) {
               records[data.종류] = [];
@@ -104,15 +119,9 @@ const CalendarClickModal: React.FC<CalendarClickModalProps> = ({ setCalendarClic
             }
           });
 
-          Object.keys(records).forEach(key => {
-            records[key].sort((a, b) => {
-              return parseInt(a.무게) - parseInt(b.무게);
-            });
-          });
-
           setExerciseRecords(records);
           setExerciseAreas(areas);
-        }
+        
       } catch (error) {
         console.error('Error fetching exercise records:', error);
       }
@@ -124,6 +133,7 @@ const CalendarClickModal: React.FC<CalendarClickModalProps> = ({ setCalendarClic
   return (
     <MoSlideLeft onClose={() => setCalendarClick(false)}>
       <Wrapper>
+      <div style={{fontSize:'20px', fontWeight:'600'}}>{formatDate}</div>
         <ContentWrapper>
           <AreaList>
             <h1>운동 부위</h1>

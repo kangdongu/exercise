@@ -110,7 +110,7 @@ const TestCalendar = () => {
     const [value, setValue] = useState<Date | [Date, Date] | null>(new Date());
     const [modal, setModal] = useState(false);
     const [showCongratulations, setShowCongratulations] = useState(false)
-    const [eventDate, setEventDate] = useState<string[]>([])
+    const [exerciseDate, setExerciseDate] = useState<string[]>([])
     const [inbodyDate, setInbodyDate] = useState<string[]>([])
     const [clickDate, setClickDate] = useState<string>("")
     const [showBadge, setShowBadge] = useState(false);
@@ -125,10 +125,34 @@ const TestCalendar = () => {
     useEffect(() => {
         const fetchRecords = async () => {
             try {
-                const recordsCollectionRef = collection(db, "records");
-                const querySnapshot = await getDocs(query(recordsCollectionRef, where("유저아이디", "==", currentUser?.uid), orderBy("날짜", "asc")));
+                const userId = currentUser?.uid;
+                if (!userId) {
+                    alert("로그인을 확인해주세요");
+                    return;
+                }
+
+                // 사용자 문서 참조
+                const recordsDocRef = doc(db, "records", userId);
+
+                // "운동기록" 하위 컬렉션 참조
+                const exerciseCollectionRef = collection(recordsDocRef, "운동기록");
+
+                // "운동기록" 하위 컬렉션에서 모든 문서 가져오기
+                const recordsQuerySnapshot = await getDocs(query(exerciseCollectionRef));
+
+                if(!recordsQuerySnapshot.empty){
+                    const recordUniqueDates = new Set<string>();
+
+                    recordsQuerySnapshot.forEach((doc) => {
+                        const date = doc.id
+                        recordUniqueDates.add(date)
+                    })
+                    const recordUniqueDatesArray = Array.from(recordUniqueDates);
+                    setExerciseDate(recordUniqueDatesArray)
+                }
+
                 const inbodysRef = collection(db, "inbody");
-                const inbodysQuerySnapshot = await getDocs(query(inbodysRef, where("유저아이디", "==", currentUser?.uid), orderBy("날짜", "asc")));
+                const inbodysQuerySnapshot = await getDocs(query(inbodysRef, where("유저아이디", "==", userId), orderBy("날짜", "asc")));
 
                 if (!inbodysQuerySnapshot.empty) {
                     const inbodyUniqueDates = new Set<string>();
@@ -136,29 +160,21 @@ const TestCalendar = () => {
                     inbodysQuerySnapshot.forEach((doc) => {
                         const date = doc.data().날짜;
                         const dateFormat = format(date, "yyyy-MM-dd");
-                        inbodyUniqueDates.add(dateFormat)
-                    })
-                    const inbodyUniqueDatesArray = Array.from(inbodyUniqueDates)
-                    setInbodyDate(inbodyUniqueDatesArray)
-                }
-
-                if (!querySnapshot.empty) {
-                    const uniqueDates = new Set<string>();
-
-                    querySnapshot.forEach((doc) => {
-                        const date = doc.data().날짜;
-                        uniqueDates.add(date);
+                        inbodyUniqueDates.add(dateFormat);
                     });
 
-                    const uniqueDateArray = Array.from(uniqueDates);
-                    setEventDate(uniqueDateArray);
+                    const inbodyUniqueDatesArray = Array.from(inbodyUniqueDates);
+                    setInbodyDate(inbodyUniqueDatesArray);
                 }
+
             } catch (error) {
-                console.log(error)
+                console.log("데이터를 가져오는 중 오류가 발생했습니다: ", error);
             }
-        }
-        fetchRecords()
-    }, [modal])
+        };
+        fetchRecords();
+    }, [modal]);
+
+
 
     const recordsComplete = async () => {
         const today = new Date();
@@ -188,17 +204,17 @@ const TestCalendar = () => {
 
         // 운동일수 업데이트
         await updateDoc(userDoc.ref, {
-            운동일수: eventDate.length
+            운동일수: exerciseDate.length
         });
 
         // 뱃지 획득 로직
-        await checkAndAwardBadge(eventDate.length);
+        await checkAndAwardBadge(exerciseDate.length);
 
         // 도전과제 달성 로직
-        await checkAndCompleteAchievement(eventDate.length);
+        await checkAndCompleteAchievement(exerciseDate.length);
 
         // 캐릭터 성장 확인
-        await checkAndGrowCharacter(gender, eventDate.length, userDoc);
+        await checkAndGrowCharacter(gender, exerciseDate.length, userDoc);
     };
 
     // 오늘 운동달성시 캐릭터이미지 변경
@@ -315,7 +331,7 @@ const TestCalendar = () => {
                             캐릭터이미지: newCharacterImage,
                             오늘운동: hasExerciseToday,
                             단계: step.stepName,
-                            선택단계:step.stepName
+                            선택단계: step.stepName
                         });
 
                         setNewCharacterImage(newCharacterImage);
@@ -394,11 +410,11 @@ const TestCalendar = () => {
                     tileClassName={({ date, view }) => {
                         if (view === 'month') {
                             const formattedDate = format(date, 'yyyy-MM-dd');
-                            if (eventDate.includes(formattedDate)) {
+                            if (exerciseDate.includes(formattedDate)) {
                                 return 'react-calendar__tile--has-event';
                             }
                             if (inbodyDate.includes(formattedDate)) {
-                                return 'react-calendar__tile--has-inbody'; // Inbody 이벤트
+                                return 'react-calendar__tile--has-inbody';
                             }
                             if (isSaturday(date)) {
                                 return 'react-calendar__tile--saturday';
@@ -412,7 +428,7 @@ const TestCalendar = () => {
                     }}
                     tileContent={({ date }) => {
                         let html = []
-                        if (eventDate.find((x) => x === format(date, "yyyy-MM-dd"))) {
+                        if (exerciseDate.find((x) => x === format(date, "yyyy-MM-dd"))) {
                             html.push(<Dot></Dot>)
                         } else {
                             html.push(<div style={{ height: '8px' }} />)
