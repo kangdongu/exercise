@@ -4,7 +4,6 @@ import 'react-calendar/dist/Calendar.css';
 import "./test-calendar.css"
 import { useEffect, useState } from "react";
 import { format, isSaturday, isSunday } from "date-fns";
-import ExerciseRegistration from "./records-registration";
 import { auth, db } from "../../firebase";
 import { arrayUnion, collection, doc, getDoc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import Congratulations from "../congratulations";
@@ -12,6 +11,7 @@ import ChoiceData from "./choice-data";
 import BadgeModal from "../badge-modal";
 import AchievementModal from "../achievement-alert";
 import CharacterModal from "../character-modal";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
     margin: 0 auto;
@@ -21,11 +21,11 @@ const Wrapper = styled.div`
     overflow-y:scroll;
 `;
 const CalenderWrapper = styled.div`
-    position: relative; /* 캘린더 전체를 상대 위치로 설정 */
+    position: relative;
     margin: 0 auto;
     width: 90%;
     margin-bottom: 20px;
-    padding-bottom: 40px; /* 범례를 위한 공간 확보 */
+    padding-bottom: 40px;
 `;
 const Title = styled.h3`
     margin:0;
@@ -90,7 +90,7 @@ const Inbody = styled.div`
 `;
 const Legend = styled.div`
     position: absolute;
-    bottom: 10px; /* 캘린더 하단으로 위치 설정 */
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
     background-color: #ffffff;
@@ -108,7 +108,6 @@ const Legend = styled.div`
 const TestCalendar = () => {
     const currentUser = auth.currentUser;
     const [value, setValue] = useState<Date | [Date, Date] | null>(new Date());
-    const [modal, setModal] = useState(false);
     const [showCongratulations, setShowCongratulations] = useState(false)
     const [exerciseDate, setExerciseDate] = useState<string[]>([])
     const [inbodyDate, setInbodyDate] = useState<string[]>([])
@@ -121,6 +120,19 @@ const TestCalendar = () => {
     const [showCharacter, setShowCharacter] = useState(false)
     const [newCharacterImage, setNewCharacterImage] = useState("");
     const [congratulationMessage, setCongratulationMessage] = useState("");
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+      if (location.state?.congratulations) {
+        setShowCongratulations(true);
+        setTimeout(() => setShowCongratulations(false), 3000);
+      }
+  
+      if (location.state?.recordsComplete) {
+        recordsComplete();
+      }
+    }, [location.state]);
 
     useEffect(() => {
         const fetchRecords = async () => {
@@ -131,13 +143,10 @@ const TestCalendar = () => {
                     return;
                 }
 
-                // 사용자 문서 참조
                 const recordsDocRef = doc(db, "records", userId);
 
-                // "운동기록" 하위 컬렉션 참조
                 const exerciseCollectionRef = collection(recordsDocRef, "운동기록");
 
-                // "운동기록" 하위 컬렉션에서 모든 문서 가져오기
                 const recordsQuerySnapshot = await getDocs(query(exerciseCollectionRef));
 
                 if (!recordsQuerySnapshot.empty) {
@@ -172,7 +181,7 @@ const TestCalendar = () => {
             }
         };
         fetchRecords();
-    }, [modal]);
+    }, []);
 
 
 
@@ -385,17 +394,12 @@ const TestCalendar = () => {
         }
     };
 
-    const onClick = () => {
-        setModal(true);
-    };
-    const closeModal = () => setModal(false);
-
-    const congratulations = () => {
-        setShowCongratulations(true);
-        setTimeout(() => {
-            setShowCongratulations(false);
-        }, 3000);
-    }
+    // const congratulations = () => {
+    //     setShowCongratulations(true);
+    //     setTimeout(() => {
+    //         setShowCongratulations(false);
+    //     }, 3000);
+    // }
 
 
 
@@ -403,7 +407,7 @@ const TestCalendar = () => {
         <Wrapper>
             <BtnWrapper>
                 <Title>Calendar</Title>
-                <Btn onClick={onClick}><span>+</span>운동기록</Btn>
+                <Btn onClick={() => navigate('/exercise-choice')}><span>+</span>운동기록</Btn>
             </BtnWrapper>
             <CalenderWrapper>
                 <Calendar
@@ -463,9 +467,7 @@ const TestCalendar = () => {
                     </div>
                 </Legend>
             </CalenderWrapper>
-            {modal ?
-                <ExerciseRegistration closeModal={closeModal} congratulations={congratulations} records={recordsComplete} />
-                : null}
+
             {showCongratulations && (
                 <Congratulations title='운동기록 완료' content='운동기록을 완료하였습니다' />
             )}

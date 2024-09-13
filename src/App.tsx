@@ -24,6 +24,8 @@ import { ChallengeProvider } from './components/group-challenge/group-context';
 import JoinedRoom from './components/group-challenge/joined-room';
 import InbodyDetails from './components/inbody/inbody-details';
 import InbodyGoals from './components/inbody/inbody-goals';
+import ExericseChoicePage from './components/calendar/exercise-choice';
+import ExerciseRecords from './components/calendar/exercise-records';
 
 const Wrapper = styled.div`
 `;
@@ -78,10 +80,12 @@ function App() {
               <Route path="efficacy" element={<EfficacyContent />} />
             </Route>
             <Route path="/group-challenge/:challengeId" element={
-                <ChallengeProvider>
-                  <JoinedRoom />
-                </ChallengeProvider>
-              } />
+              <ChallengeProvider>
+                <JoinedRoom />
+              </ChallengeProvider>
+            } />
+            <Route path='/exercise-records' element={<ExerciseRecords />} />
+            <Route path='/exercise-choice' element={<ExericseChoicePage />} />
             <Route path='/inbody-details' element={<InbodyDetails />} />
             <Route path='/inbody-goals' element={<InbodyGoals />} />
             <Route path="/start-page" element={<StartPage />} />

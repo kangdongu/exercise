@@ -140,6 +140,7 @@ const ExerciseChoiceModal = styled.div`
   position:relative;
   z-index:103;
   overflow-y: scroll;
+  padding-bottom:70px;
 `;
 const TypeWrapper = styled.ul`
 @media screen and (max-width: 700px) {
@@ -237,6 +238,25 @@ const ExericseDelete = styled.div`
     height:25px;
   }
 `;
+const SelectedButton = styled.div`
+  width:100%;
+  position:fixed;
+  bottom:40px;
+  left:0px;
+  display:flex;
+  justify-content: center;
+  align-items:center;
+  button{
+    padding:8px 15px;
+    background-color:blue;
+    color:white;
+    font-size:16px;
+    border-radius:7px;
+    span{
+      font-size:25px;
+    }
+  }
+`;
 
 interface Exercise {
   name: string;
@@ -262,7 +282,7 @@ export default function ExerciseRegistration({ closeModal, congratulations, reco
   const [exercises, setExercises] = useState<{ exerciseType: string; sets: { kg: string; count: string }[]; areaDb: string; }[]>([
     { exerciseType: "", sets: [{ kg: "", count: "" }], areaDb: "" }
   ]);
-  const [selectedExerciseIndex, setSelectedExerciseIndex] = useState<number | null>(null)
+  const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([])
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
@@ -308,6 +328,7 @@ export default function ExerciseRegistration({ closeModal, congratulations, reco
     newExercises[exerciseIndex].sets.push({ kg: "", count: "" })
     setExercises(newExercises)
   };
+
   const addExercise = () => {
     setExercises([...exercises, { exerciseType: "", sets: [{ kg: "", count: "" }], areaDb: "" }]);
   };
@@ -327,7 +348,6 @@ export default function ExerciseRegistration({ closeModal, congratulations, reco
 
         await setDoc(dateDocRef, { 날짜: date });
 
-        // 모든 운동을 Firestore에 저장
         const exercisePromises = exercises.map((exercise) => {
           const exercisesCollectionRef = collection(dateDocRef, 'exercises');
           const setPromises = exercise.sets.map((set, index) =>
@@ -381,9 +401,8 @@ export default function ExerciseRegistration({ closeModal, congratulations, reco
     setExercises(newExercises);
   };
 
-  const ExerciseChoice = (exerciseIndex: number) => {
-    setSelectedExerciseIndex(exerciseIndex); 
-    setExerciseModal(true); 
+  const ExerciseChoice = () => {
+    setExerciseModal(true);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -396,17 +415,42 @@ export default function ExerciseRegistration({ closeModal, congratulations, reco
     exercise.name.includes(searchTerm)
   );
 
+  const handleExerciseSelect = (exercise: Exercise) => {
+    // 이미 선택된 운동인지 확인
+    const isSelected = selectedExercises.some((selected) => selected.name === exercise.name);
+
+    if (isSelected) {
+      // 이미 선택된 경우, 해당 운동을 선택 목록에서 제거
+      setSelectedExercises(selectedExercises.filter((selected) => selected.name !== exercise.name));
+    } else {
+      // 선택되지 않은 경우, 선택 목록에 추가
+      setSelectedExercises([...selectedExercises, exercise]);
+    }
+  };
+
+  const addSelectedExercises = () => {
+    const newExercises = selectedExercises.map((exercise) => ({
+      exerciseType: exercise.name,
+      sets: [{ kg: "", count: "" }],
+      areaDb: exercise.area
+    }));
+
+    setExercises([...exercises, ...newExercises]);
+    setExerciseModal(false);
+    setSelectedExercises([]); // 선택 초기화
+  };
+
   return (
     <Wrapper>
       <MoSlideLeft onClose={closeModal}>
         <RecordsWrapper>
-            <div style={{ display: 'flex', alignItems: 'center', padding: '10px 0px' }}>
-              <h3 style={{ fontSize: '18px', margin: '0' }}>운동기록</h3>
-            </div>
-            <DateChoiceWrapper>
-              <DateChoice onDateChange={handleDateChange} />
-            </DateChoiceWrapper>
-            <div style={{color:'green'}} onClick={addExercise}>+ 운동추가</div>
+          <div style={{ display: 'flex', alignItems: 'center', padding: '10px 0px' }}>
+            <h3 style={{ fontSize: '18px', margin: '0' }}>운동기록</h3>
+          </div>
+          <DateChoiceWrapper>
+            <DateChoice onDateChange={handleDateChange} />
+          </DateChoiceWrapper>
+          <div style={{ color: 'green' }} onClick={addExercise}>+ 운동추가</div>
           {exercises.map((exercise, exerciseIndex) => (
             <ExerciseWrapper key={exerciseIndex}>
               <ExericseDelete onClick={(event) => exerciseDelete(exerciseIndex, event)}>
@@ -430,7 +474,7 @@ export default function ExerciseRegistration({ closeModal, congratulations, reco
                 </Label>
               </ExerciseNameWrapper>
               <ListSetButtonWrapper>
-                <ExerciseDataBtn onClick={() => ExerciseChoice(exerciseIndex)}>운동선택<span style={{ marginLeft: "auto", fontSize: "20px", fontWeight: '600' }}>&gt;</span></ExerciseDataBtn>
+                <ExerciseDataBtn onClick={() => ExerciseChoice()}>운동선택<span style={{ marginLeft: "auto", fontSize: "20px", fontWeight: '600' }}>&gt;</span></ExerciseDataBtn>
                 <SetPlus onClick={() => addSet(exerciseIndex)}>세트추가<span style={{ marginLeft: "auto", fontSize: "20px", fontWeight: '600' }}>+</span></SetPlus>
               </ListSetButtonWrapper>
               <SetList>
@@ -504,17 +548,10 @@ export default function ExerciseRegistration({ closeModal, congratulations, reco
             {filteredExercises.map((exercise, index) => (
               <ExerciseItem
                 key={index}
-                onClick={() => {
-                  if (selectedExerciseIndex !== null) {
-                    const updatedExercises = [...exercises];
-                    updatedExercises[selectedExerciseIndex] = {
-                      ...updatedExercises[selectedExerciseIndex],
-                      exerciseType: exercise.name,
-                      areaDb: exercise.area,
-                    };
-                    setExercises(updatedExercises);
-                    setExerciseModal(false);
-                  }
+                onClick={() => handleExerciseSelect(exercise)}
+                style={{
+                  backgroundColor: selectedExercises.some((selected) => selected.name === exercise.name) ? "#d3d3d3" : "white",
+                  opacity: selectedExercises.some((selected) => selected.name === exercise.name) ? "0.5" : "1",
                 }}
               >
                 <div>운동이름: {exercise.name}</div>
@@ -522,6 +559,12 @@ export default function ExerciseRegistration({ closeModal, congratulations, reco
                 <div>운동부위: {exercise.area}</div>
               </ExerciseItem>
             ))}
+
+            {selectedExercises.length > 0 && (
+              <SelectedButton style={{ position: 'fixed', bottom: '40px', left: '0px', width: '100%' }}>
+                <button onClick={addSelectedExercises}><span>+</span> {selectedExercises.length}개의 선택된 운동 추가</button>
+              </SelectedButton>
+            )}
           </ExerciseList>
         </ExerciseChoiceModal>
       </MoSlideModal> : null}
