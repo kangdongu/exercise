@@ -90,12 +90,12 @@ Firebase Authentication을 사용하여 사용자 인증을 처리합니다. 현
 
 로그인, 닉네임설정, 성별선택
 
-![1](https://github.com/kangdongu/exercise/assets/162076741/e73be311-a56a-4566-8308-9d51fbabc3c2)
+![1new](https://github.com/user-attachments/assets/2c7d7449-b6d6-4aac-af00-f641b7de4473)
 
 
 홈화면, 개인챌린지
 
-![2-2](https://github.com/kangdongu/exercise/assets/162076741/984969ae-af57-45d4-96f5-8ffbbf6a0052)
+![2new](https://github.com/user-attachments/assets/a427fea7-b4ea-423e-b05f-a27caec093b4)
 
 
 그룹챌린지리스트 및 그룹생성
@@ -107,20 +107,31 @@ Firebase Authentication을 사용하여 사용자 인증을 처리합니다. 현
 
 ![3-2](https://github.com/kangdongu/exercise/assets/162076741/5c2992ef-4f42-4767-a40e-295634f87c9c)
 
-타이머, 뱃지, 도전과제
+타이머, 도전과제, 뱃지
 
-![4](https://github.com/kangdongu/exercise/assets/162076741/814d159f-4177-4f8a-80a9-4401555417d2)
-
-
-기록
-
-![5](https://github.com/kangdongu/exercise/assets/162076741/f2d6607e-0a03-4785-bf7b-11e9adc060b5)
+![3new](https://github.com/user-attachments/assets/91f370d1-657c-48a5-b69a-b646fe1f5eb8)
 
 
-소셜, 프로필
+기록(캘린더, 사진)
 
-![10](https://github.com/kangdongu/exercise/assets/162076741/fe488bf0-a954-4095-b65f-4c54540c91e0)
+![4new](https://github.com/user-attachments/assets/582f3a4e-1a4d-498a-8889-64a6737d446c)
+
+
+인바디
+
+![5new](https://github.com/user-attachments/assets/270f08a8-bfab-4d40-8506-d8b0ae5dcd80)
+
+
+소셜
+
+![소셜new](https://github.com/user-attachments/assets/cd91da8a-9d06-47d7-a418-f0116f52ae7e)
+
+
+프로필
+
+![6new](https://github.com/user-attachments/assets/4ba08b0f-daf0-4366-9e52-460726009ae3)
+
 
 +추가할것
 
-반응형 및 전체적인 디자인 수정보완 및 운동정보, 도전과제 뱃지, 프로필 부분에 캐릭터 등 추가 예정<br /> 현재 완성도(70%)
+반응형 및 전체적인 디자인 수정보완 및 운동정보, 도전과제 뱃지, 프로필 부분에 캐릭터 등 추가 예정<br /> 현재 완성도(80%)
