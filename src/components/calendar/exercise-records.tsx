@@ -71,31 +71,26 @@ const Button = styled.button`
 `;
 const ListSetButtonWrapper = styled.div`
   width:100%;
-  display:flex;
-  flex-direction: column;
-  gap:10px;
 `;
 const SetList = styled.div``;
 const ListBody = styled.div`
-   display: flex;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 10px 0;
 `;
 const SetPlus = styled.div`
- width: 35%;
-  padding: 10px;
-  background-color: #53A85B;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  display:flex;
-  margin-left:auto;
-  &:hover {
-    background-color: #66bb99;
-  }
+    width: 100%;
+    padding: 10px;
+    color: #53A85B;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 `;
 const SetDelete = styled.div`
  padding: 5px 10px;
@@ -109,22 +104,6 @@ const SetDelete = styled.div`
     background-color: #ff7875;
   }
 `;
-const ExerciseDataBtn = styled.div`
- width: 35%;
-  padding: 10px;
-  background-color: #53A85B;
-  margin-left:auto;
-  color: white;
-  border: none;
-  display:flex;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  &:hover {
-    background-color: #66bb99;
-  }
-`;
-
 
 const DateChoiceWrapper = styled.div`
   margin-top:20px;
@@ -256,9 +235,6 @@ const ExerciseRecords = () => {
     setExercises(newExercises);
   };
 
-  const ExerciseChoice = () => {
-    navigate('/exercise-choice');
-  };
   const handleClose = () => {
     navigate('/exercise-choice');
   };
@@ -297,8 +273,7 @@ const ExerciseRecords = () => {
                 </Label>
               </ExerciseNameWrapper>
               <ListSetButtonWrapper>
-                <ExerciseDataBtn onClick={() => ExerciseChoice()}>운동선택<span style={{ marginLeft: "auto", fontSize: "20px", fontWeight: '600' }}>&gt;</span></ExerciseDataBtn>
-                <SetPlus onClick={() => addSet(exerciseIndex)}>세트추가<span style={{ marginLeft: "auto", fontSize: "20px", fontWeight: '600' }}>+</span></SetPlus>
+                <SetPlus onClick={() => addSet(exerciseIndex)}><span style={{fontSize:'20px'}}>+ </span> 세트추가</SetPlus>
               </ListSetButtonWrapper>
               <SetList>
                 {exercise.sets.map((set, setIndex) => (
