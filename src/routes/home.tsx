@@ -25,9 +25,8 @@ const Wrapper = styled.div`
     width:100vw;
     margin: 0 auto;
     height:calc(100vh - 40px);
-    padding: 40px 20px;
+    padding: 40px 25px;
     overflow-y:scroll;
-    // background-color:rgba(224, 88, 133, 0.4);
     background-color:#F0F0F0;
     position:relative;
 `;
