@@ -6,7 +6,8 @@ import DateChoice from "../date-picker";
 import { format } from 'date-fns';
 import MoSlideLeft from "../slideModal/mo-slide-left";
 import { AiOutlineDelete } from "react-icons/ai";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useExerciseContext } from "./exercises-context";
 
 
 const Wrapper = styled.div`
@@ -134,45 +135,52 @@ const ExericseDelete = styled.div`
   }
 `;
 
+
 const ExerciseRecords = () => {
   const currentUser = auth.currentUser;
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [exercises, setExercises] = useState<{ exerciseType: string; sets: { kg: string; count: string }[]; areaDb: string; }[]>([]);
   const navigate = useNavigate();
-  const location = useLocation(); 
-
-  useEffect(() => {
-    const initialExercises = location.state?.exercises || [];
-    setExercises(initialExercises);
-  }, [location.state]);
+  const { exercise, setExercise } = useExerciseContext();
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
   };
 
-  const onChange = (
-    exerciseIndex: number,
-    setIndex: number,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  useEffect(() => {
+    if (!Array.isArray(exercise)) {
+      console.error('exercise is not an array', exercise);
+    } else {
+      console.log('exercise is an array:', exercise);
+    }
+  }, [exercise]);
+
+
+  const onChangeType = (exerciseIndex: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const newExercises = [...exercise];
+    newExercises[exerciseIndex].exerciseType = e.target.value;
+    setExercise(newExercises);
+  };
+
+  const onChangeSets = (exerciseIndex: number, setIndex: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const newExercises = [...exercises];
+    const newExercises = [...exercise];
     newExercises[exerciseIndex].sets[setIndex] = { ...newExercises[exerciseIndex].sets[setIndex], [name]: value };
-    setExercises(newExercises);
+    setExercise(newExercises);
   };
 
   const addSet = (exerciseIndex: number) => {
-    const newExercises = [...exercises]
-    newExercises[exerciseIndex].sets.push({ kg: "", count: "" })
-    setExercises(newExercises)
+    const newExercises = [...exercise];
+    newExercises[exerciseIndex].sets.push({ kg: "", count: "" });
+    setExercise(newExercises);
   };
 
   const addExercise = () => {
-    setExercises([...exercises, { exerciseType: "", sets: [{ kg: "", count: "" }], areaDb: "" }]);
+    setExercise([...exercise, { exerciseType: "", sets: [{ kg: "", count: "" }], areaDb: "" }]);
+    navigate("/exercise-choice");
   };
 
   const onClick = async () => {
-    if (exercises.every(exercise => exercise.exerciseType !== '' && exercise.sets.every(set => set.count))) {
+    if (exercise.every(exercise => exercise.exerciseType !== '' && exercise.sets.every(set => set.count))) {
       try {
         const date = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
         const userId = currentUser?.uid;
@@ -186,7 +194,7 @@ const ExerciseRecords = () => {
 
         await setDoc(dateDocRef, { 날짜: date });
 
-        const exercisePromises = exercises.map((exercise) => {
+        const exercisePromises = exercise.map((exercise) => {
           const exercisesCollectionRef = collection(dateDocRef, 'exercises');
           const setPromises = exercise.sets.map((set, index) =>
             addDoc(exercisesCollectionRef, {
@@ -224,15 +232,15 @@ const ExerciseRecords = () => {
 
   const onDelete = (exerciseIndex: number, setIndex: number, event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.preventDefault();
-    const newExercises = [...exercises];
+    const newExercises = [...exercise];
     newExercises[exerciseIndex].sets = newExercises[exerciseIndex].sets.filter((_, i) => i !== setIndex);
-    setExercises(newExercises);
+    setExercise(newExercises);
   };
 
   const exerciseDelete = (index: number, event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.preventDefault();
-    const newExercises = exercises.filter((_, i) => i !== index);
-    setExercises(newExercises);
+    const newExercises = exercise.filter((_, i) => i !== index);
+    setExercise(newExercises);
   };
 
   const handleClose = () => {
@@ -250,7 +258,7 @@ const ExerciseRecords = () => {
             <DateChoice onDateChange={handleDateChange} />
           </DateChoiceWrapper>
           <div style={{ color: 'green' }} onClick={addExercise}>+ 운동추가</div>
-          {exercises.map((exercise, exerciseIndex) => (
+          {exercise.map((exercise, exerciseIndex) => (
             <ExerciseWrapper key={exerciseIndex}>
               <ExericseDelete onClick={(event) => exerciseDelete(exerciseIndex, event)}>
                 <AiOutlineDelete />
@@ -261,9 +269,7 @@ const ExerciseRecords = () => {
                   <Input
                     style={{ width: '127px', border: '1px solid #333333' }}
                     onChange={(e) => {
-                      const newExercises = [...exercises];
-                      newExercises[exerciseIndex].exerciseType = e.target.value;
-                      setExercises(newExercises);
+                      onChangeType(exerciseIndex, e)
                     }}
                     value={exercise.exerciseType}
                     type="text"
@@ -273,7 +279,7 @@ const ExerciseRecords = () => {
                 </Label>
               </ExerciseNameWrapper>
               <ListSetButtonWrapper>
-                <SetPlus onClick={() => addSet(exerciseIndex)}><span style={{fontSize:'20px'}}>+ </span> 세트추가</SetPlus>
+                <SetPlus onClick={() => addSet(exerciseIndex)}><span style={{ fontSize: '20px' }}>+ </span> 세트추가</SetPlus>
               </ListSetButtonWrapper>
               <SetList>
                 {exercise.sets.map((set, setIndex) => (
@@ -283,14 +289,14 @@ const ExerciseRecords = () => {
                       type="number"
                       name="kg"
                       value={set.kg}
-                      onChange={(e) => onChange(exerciseIndex, setIndex, e)}
+                      onChange={(e) => onChangeSets(exerciseIndex, setIndex, e)}
                       placeholder="kg"
                     />
                     <Input
                       type="number"
                       name="count"
                       value={set.count}
-                      onChange={(e) => onChange(exerciseIndex, setIndex, e)}
+                      onChange={(e) => onChangeSets(exerciseIndex, setIndex, e)}
                       placeholder="회/분"
                     />
                     <SetDelete onClick={(event) => onDelete(exerciseIndex, setIndex, event)}>-</SetDelete>

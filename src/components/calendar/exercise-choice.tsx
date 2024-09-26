@@ -4,7 +4,8 @@ import styled, { keyframes } from "styled-components";
 import { db } from "../../firebase";
 import MoSlideModal from "../slideModal/mo-slide-modal";
 import { IoSearch } from "react-icons/io5";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useExerciseContext } from "./exercises-context";
 
 const searchWidth = keyframes`
   from {
@@ -118,27 +119,21 @@ interface Exercise {
   area: string;
 }
 
-
-
 const ExericseChoicePage = () => {
   const [exerciseData, setExerciseData] = useState<Exercise[]>([]);
   const [searchBox, setSearchBox] = useState(false);
   const [selectedType, setSelectedType] = useState<string>("전체");
   const [selectedArea, setSelectedArea] = useState<String>("전체");
   const [searchTerm, setSearchTerm] = useState("");
-  const [exercises, setExercises] = useState<{ exerciseType: string; sets: { kg: string; count: string }[]; areaDb: string; }[]>([]);
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([])
+  const {  setExercise } = useExerciseContext();
   const navigate = useNavigate();
-  const location = useLocation();
 
-  useEffect(() => {
-    if (location.state?.exercises) {
-      setSelectedExercises(location.state.exercises);
-    }
 
-    fetchExerciseData();
-  }, [location.state]);
+useEffect(() => {
 
+  fetchExerciseData()
+},[])
 
   const fetchExerciseData = async () => {
     try {
@@ -174,11 +169,13 @@ const ExericseChoicePage = () => {
     const isSelected = selectedExercises.some((selected) => selected.name === exercise.name);
 
     if (isSelected) {
-      setSelectedExercises(selectedExercises.filter((selected) => selected.name !== exercise.name));
-      
+      setSelectedExercises((prevSelectedExercises) =>
+        prevSelectedExercises.filter((selected) => selected.name !== exercise.name)
+      );
     } else {
-      setSelectedExercises([...selectedExercises, exercise]);
+      setSelectedExercises((prevSelectedExercises) => [...prevSelectedExercises, exercise]);
     }
+    console.log(selectedExercises)
   };
 
   const addSelectedExercises = () => {
@@ -188,76 +185,76 @@ const ExericseChoicePage = () => {
       areaDb: exercise.area
     }));
 
-    setExercises([...exercises, ...newExercises]);
+    setExercise((prevExercise) => [...prevExercise, ...newExercises]);
     setSelectedExercises([]);
 
-    navigate('/exercise-records', { state: { exercises: newExercises } });
+    navigate('/exercise-records');
   };
 
-    return (
-        <MoSlideModal onClose={() => { navigate('/records'); }}>
-            <ExerciseChoiceModal>
-                {searchBox ? (
-                    <SearchWrapper>
-                        <IoSearch style={{ width: '20px', height: '20px' }} />
-                        <SearchBox value={searchTerm} onChange={handleSearchChange} placeholder="운동 검색" />
-                    </SearchWrapper>
-                ) : (
-                    <IoSearch onClick={() => setSearchBox(true)} style={{ width: '20px', height: '20px' }} />
-                )}
+  return (
+    <MoSlideModal onClose={() => { navigate('/records'); }}>
+      <ExerciseChoiceModal>
+        {searchBox ? (
+          <SearchWrapper>
+            <IoSearch style={{ width: '20px', height: '20px' }} />
+            <SearchBox value={searchTerm} onChange={handleSearchChange} placeholder="운동 검색" />
+          </SearchWrapper>
+        ) : (
+          <IoSearch onClick={() => setSearchBox(true)} style={{ width: '20px', height: '20px' }} />
+        )}
 
-                <TypeWrapper style={{ gap: "0.5%" }}>
-                    <TypeMenu style={{ width: '15.47%' }} onClick={() => setSelectedType("전체")}
-                        selected={selectedType === "전체"}>전체</TypeMenu>
-                    <TypeMenu style={{ width: '25.79%' }} onClick={() => setSelectedType("맨몸운동")}
-                        selected={selectedType === "맨몸운동"}>맨몸운동</TypeMenu>
-                    <TypeMenu style={{ width: '15.47%' }} onClick={() => setSelectedType("헬스")}
-                        selected={selectedType === "헬스"}>헬스</TypeMenu>
-                    <TypeMenu style={{ width: '15.47%' }} onClick={() => setSelectedType("수영")}
-                        selected={selectedType === "수영"}>수영</TypeMenu>
-                    <TypeMenu style={{ width: '25.79%' }} onClick={() => setSelectedType("구기종목")}
-                        selected={selectedType === "구기종목"}>구기종목</TypeMenu>
-                </TypeWrapper>
-                <TypeWrapper style={{ gap: "0.5%" }}>
-                    <AreaMenu onClick={() => setSelectedArea("전체")}
-                        selected={selectedArea === "전체"}>전체</AreaMenu>
-                    <AreaMenu onClick={() => setSelectedArea("가슴")}
-                        selected={selectedArea === "가슴"}>가슴</AreaMenu>
-                    <AreaMenu onClick={() => setSelectedArea("등")}
-                        selected={selectedArea === "등"}>등</AreaMenu>
-                    <AreaMenu onClick={() => setSelectedArea("하체")}
-                        selected={selectedArea === "하체"}>하체</AreaMenu>
-                    <AreaMenu onClick={() => setSelectedArea("삼두")}
-                        selected={selectedArea === "삼두"}>삼두</AreaMenu>
-                    <AreaMenu onClick={() => setSelectedArea("어깨")}
-                        selected={selectedArea === "어깨"}>어깨</AreaMenu>
-                    <AreaMenu onClick={() => setSelectedArea("유산소")}
-                        selected={selectedArea === "유산소"}>유산소</AreaMenu>
-                </TypeWrapper>
-                <ExerciseList>
-                    {filteredExercises.map((exercise, index) => (
-                        <ExerciseItem
-                            key={index}
-                            onClick={() => handleExerciseSelect(exercise)}
-                            style={{
-                                backgroundColor: selectedExercises.some((selected) => selected.name === exercise.name) ? "#d3d3d3" : "white",
-                                opacity: selectedExercises.some((selected) => selected.name === exercise.name) ? "0.5" : "1",
-                            }}
-                        >
-                            <div>운동이름: {exercise.name}</div>
-                            <div>운동종류: {exercise.type}</div>
-                            <div>운동부위: {exercise.area}</div>
-                        </ExerciseItem>
-                    ))}
+        <TypeWrapper style={{ gap: "0.5%" }}>
+          <TypeMenu style={{ width: '15.47%' }} onClick={() => setSelectedType("전체")}
+            selected={selectedType === "전체"}>전체</TypeMenu>
+          <TypeMenu style={{ width: '25.79%' }} onClick={() => setSelectedType("맨몸운동")}
+            selected={selectedType === "맨몸운동"}>맨몸운동</TypeMenu>
+          <TypeMenu style={{ width: '15.47%' }} onClick={() => setSelectedType("헬스")}
+            selected={selectedType === "헬스"}>헬스</TypeMenu>
+          <TypeMenu style={{ width: '15.47%' }} onClick={() => setSelectedType("수영")}
+            selected={selectedType === "수영"}>수영</TypeMenu>
+          <TypeMenu style={{ width: '25.79%' }} onClick={() => setSelectedType("구기종목")}
+            selected={selectedType === "구기종목"}>구기종목</TypeMenu>
+        </TypeWrapper>
+        <TypeWrapper style={{ gap: "0.5%" }}>
+          <AreaMenu onClick={() => setSelectedArea("전체")}
+            selected={selectedArea === "전체"}>전체</AreaMenu>
+          <AreaMenu onClick={() => setSelectedArea("가슴")}
+            selected={selectedArea === "가슴"}>가슴</AreaMenu>
+          <AreaMenu onClick={() => setSelectedArea("등")}
+            selected={selectedArea === "등"}>등</AreaMenu>
+          <AreaMenu onClick={() => setSelectedArea("하체")}
+            selected={selectedArea === "하체"}>하체</AreaMenu>
+          <AreaMenu onClick={() => setSelectedArea("삼두")}
+            selected={selectedArea === "삼두"}>삼두</AreaMenu>
+          <AreaMenu onClick={() => setSelectedArea("어깨")}
+            selected={selectedArea === "어깨"}>어깨</AreaMenu>
+          <AreaMenu onClick={() => setSelectedArea("유산소")}
+            selected={selectedArea === "유산소"}>유산소</AreaMenu>
+        </TypeWrapper>
+        <ExerciseList>
+          {filteredExercises.map((exercise, index) => (
+            <ExerciseItem
+              key={index}
+              onClick={() => handleExerciseSelect(exercise)}
+              style={{
+                backgroundColor: selectedExercises.some((selected) => selected.name === exercise.name) ? "#d3d3d3" : "white",
+                opacity: selectedExercises.some((selected) => selected.name === exercise.name) ? "0.5" : "1",
+              }}
+            >
+              <div>운동이름: {exercise.name}</div>
+              <div>운동종류: {exercise.type}</div>
+              <div>운동부위: {exercise.area}</div>
+            </ExerciseItem>
+          ))}
 
-                    {selectedExercises.length > 0 && (
-                        <SelectedButton style={{ position: 'fixed', bottom: '40px', left: '0px', width: '100%' }}>
-                            <button onClick={addSelectedExercises}><span>+</span> {selectedExercises.length}개의 선택된 운동 추가</button>
-                        </SelectedButton>
-                    )}
-                </ExerciseList>
-            </ExerciseChoiceModal>
-        </MoSlideModal>
-    )
+          {selectedExercises.length > 0 && (
+            <SelectedButton style={{ position: 'fixed', bottom: '40px', left: '0px', width: '100%' }}>
+              <button onClick={addSelectedExercises}><span>+</span> {selectedExercises.length}개의 선택된 운동 추가</button>
+            </SelectedButton>
+          )}
+        </ExerciseList>
+      </ExerciseChoiceModal>
+    </MoSlideModal>
+  )
 }
 export default ExericseChoicePage

@@ -9,31 +9,35 @@ import BadgeModal from "../badge-modal";
 
 
 const Wrapper = styled.div`
-   width:100%;
-    height:calc(100vh - 190px);
+    width: 100%;
+    height: calc(100vh - 190px);
     overflow-y: scroll;
     box-sizing: border-box;
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 15px;
 `;
 const DailyGoalsWrapper = styled.div`
     height:60vh;
     overflow-y:scroll;
 `;
 const DailyGoal = styled.div<{ completed: boolean }>`
-    width: 80%;
-    height: 50px;
+    width: 100%;
+    height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 15px 0px;
-    background-color: ${props => (props.completed ? '#CEDCEC' : '#CEDCEC')};
-    padding: 0 10px;
-    border-radius: 15px;
-    box-sizing: border-box;
-    opacity:${props => (props.completed ? "0.5" : '1')};
-    font-size:18px;
-    font-weight:700;
-    color: ${props => (props.completed ? '#333333' : "#333333")};
-    border: 1px solid lightgray;
+    background-color: ${props => (props.completed ? '#e6f7ff' : '#fff')};
+    padding: 0 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+    opacity: ${props => (props.completed ? "0.6" : '1')};
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
 `;
 const CompletCountWrapper = styled.div`
     width: 153px;

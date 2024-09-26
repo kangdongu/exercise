@@ -26,6 +26,7 @@ import InbodyDetails from './components/inbody/inbody-details';
 import InbodyGoals from './components/inbody/inbody-goals';
 import ExericseChoicePage from './components/calendar/exercise-choice';
 import ExerciseRecords from './components/calendar/exercise-records';
+import { ExerciseProvider } from './components/calendar/exercises-context';
 
 const Wrapper = styled.div`
 `;
@@ -84,8 +85,16 @@ function App() {
                 <JoinedRoom />
               </ChallengeProvider>
             } />
-            <Route path='/exercise-records' element={<ExerciseRecords />} />
-            <Route path='/exercise-choice' element={<ExericseChoicePage />} />
+            <Route path='/exercise-records' element={
+              <ExerciseProvider>
+                <ExerciseRecords />
+              </ExerciseProvider>
+            } />
+            <Route path='/exercise-choice' element={
+              <ExerciseProvider>
+                <ExericseChoicePage />
+              </ExerciseProvider>
+            } />
             <Route path='/inbody-details' element={<InbodyDetails />} />
             <Route path='/inbody-goals' element={<InbodyGoals />} />
             <Route path="/start-page" element={<StartPage />} />
