@@ -118,6 +118,11 @@ interface Exercise {
   type: string;
   area: string;
 }
+interface SelectedExercise {
+  exerciseType: string;
+  sets: { kg: string; count: string }[];
+  areaDb: string;
+}
 
 const ExericseChoicePage = () => {
   const [exerciseData, setExerciseData] = useState<Exercise[]>([]);
@@ -125,13 +130,14 @@ const ExericseChoicePage = () => {
   const [selectedType, setSelectedType] = useState<string>("전체");
   const [selectedArea, setSelectedArea] = useState<String>("전체");
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([])
-  const {  setExercise } = useExerciseContext();
+  const [selectedExercises, setSelectedExercises] = useState<SelectedExercise[]>([])
+  const { exercise, setExercise } = useExerciseContext();
   const navigate = useNavigate();
 
-
 useEffect(() => {
-
+  setSelectedExercises(exercise)
+},[])
+useEffect(() => {
   fetchExerciseData()
 },[])
 
@@ -165,27 +171,38 @@ useEffect(() => {
     exercise.name.includes(searchTerm)
   );
 
-  const handleExerciseSelect = (exercise: Exercise) => {
-    const isSelected = selectedExercises.some((selected) => selected.name === exercise.name);
-
-    if (isSelected) {
-      setSelectedExercises((prevSelectedExercises) =>
-        prevSelectedExercises.filter((selected) => selected.name !== exercise.name)
-      );
-    } else {
-      setSelectedExercises((prevSelectedExercises) => [...prevSelectedExercises, exercise]);
+  const handleExerciseSelect = (exercise:Exercise) => {
+    
+    const handleExercise : SelectedExercise = {
+      exerciseType : exercise.name,
+      sets: [{ kg:"", count:""}],
+      areaDb: exercise.area,
     }
+
+    setSelectedExercises((prevSelectedExercises) => {
+      const isSelected = prevSelectedExercises.some(
+        (selected) => selected.exerciseType === handleExercise.exerciseType
+      );
+  
+      if (isSelected) {
+        return prevSelectedExercises.filter(
+          (selected) => selected.exerciseType !== handleExercise.exerciseType
+        );
+      } else {
+        return [...prevSelectedExercises, handleExercise];
+      }
+    });
     console.log(selectedExercises)
   };
 
   const addSelectedExercises = () => {
     const newExercises = selectedExercises.map((exercise) => ({
-      exerciseType: exercise.name,
-      sets: [{ kg: "", count: "" }],
-      areaDb: exercise.area
+      exerciseType: exercise.exerciseType,
+      sets: exercise.sets, 
+      areaDb: exercise.areaDb, 
     }));
 
-    setExercise((prevExercise) => [...prevExercise, ...newExercises]);
+    setExercise(newExercises);
     setSelectedExercises([]);
 
     navigate('/exercise-records');
@@ -237,8 +254,8 @@ useEffect(() => {
               key={index}
               onClick={() => handleExerciseSelect(exercise)}
               style={{
-                backgroundColor: selectedExercises.some((selected) => selected.name === exercise.name) ? "#d3d3d3" : "white",
-                opacity: selectedExercises.some((selected) => selected.name === exercise.name) ? "0.5" : "1",
+                backgroundColor: selectedExercises.some((selected) => selected.exerciseType === exercise.name) ? "#d3d3d3" : "white",
+                opacity: selectedExercises.some((selected) => selected.exerciseType === exercise.name) ? "0.5" : "1",
               }}
             >
               <div>운동이름: {exercise.name}</div>

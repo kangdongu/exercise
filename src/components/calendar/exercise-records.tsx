@@ -44,12 +44,6 @@ const RecordsWrapper = styled.div`
   box-sizing:border-box;
   padding-bottom:70px;
 `;
-const Label = styled.label`
-   display: block;
-  margin: 10px 0;
-  font-size: 16px;
-  color: #333;
-`;
 const Input = styled.input`
  width: 80px;
   padding: 5px;
@@ -133,6 +127,9 @@ const ExericseDelete = styled.div`
     width:25px;
     height:25px;
   }
+`;
+const InputTitle = styled.input`
+
 `;
 
 
@@ -264,10 +261,8 @@ const ExerciseRecords = () => {
                 <AiOutlineDelete />
               </ExericseDelete>
               <ExerciseNameWrapper>
-                <Label>
-                  운동종류:{" "}
-                  <Input
-                    style={{ width: '127px', border: '1px solid #333333' }}
+                  <InputTitle
+                    style={{ border: 'none', fontSize:'16px', fontWeight:'600', padding:'0' }}
                     onChange={(e) => {
                       onChangeType(exerciseIndex, e)
                     }}
@@ -276,7 +271,6 @@ const ExerciseRecords = () => {
                     name="exerciseType"
                     placeholder="운동 직접입력"
                   />
-                </Label>
               </ExerciseNameWrapper>
               <ListSetButtonWrapper>
                 <SetPlus onClick={() => addSet(exerciseIndex)}><span style={{ fontSize: '20px' }}>+ </span> 세트추가</SetPlus>
