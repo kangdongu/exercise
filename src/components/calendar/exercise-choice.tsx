@@ -136,8 +136,6 @@ const ExericseChoicePage = () => {
 
 useEffect(() => {
   setSelectedExercises(exercise)
-},[])
-useEffect(() => {
   fetchExerciseData()
 },[])
 

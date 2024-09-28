@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 const RecordsWrapper = styled.div`
 @media screen and (max-width: 700px) {
   position:relative;
-  width:100%;
+  width:95%;
   top:0;
   left:0;
   transform:translate(0px,0px);
@@ -43,6 +43,18 @@ const RecordsWrapper = styled.div`
   padding:10px 10px;
   box-sizing:border-box;
   padding-bottom:70px;
+`;
+const ExercisePlus = styled.div`
+  color:#53A85B;
+  background-color:white;
+  padding:8px 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin:5px auto;
+  width:100%;
+  text-align:center;
+  font-size:18px;
+  font-weight:600;
+  border:5px;
 `;
 const Input = styled.input`
  width: 80px;
@@ -110,12 +122,13 @@ const ExerciseNameWrapper = styled.div`
 `;
 
 const ExerciseWrapper = styled.div`
-  width:95%;
+  width:100%;
   position:relative;
   background-color:white;
   margin: 15px auto;
   padding:15px;
   border-radius:10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 `;
 const ExericseDelete = styled.div`
   position:absolute;
@@ -172,7 +185,7 @@ const ExerciseRecords = () => {
   };
 
   const addExercise = () => {
-    setExercise([...exercise, { exerciseType: "", sets: [{ kg: "", count: "" }], areaDb: "" }]);
+    setExercise([...exercise]);
     navigate("/exercise-choice");
   };
 
@@ -254,7 +267,7 @@ const ExerciseRecords = () => {
           <DateChoiceWrapper>
             <DateChoice onDateChange={handleDateChange} />
           </DateChoiceWrapper>
-          <div style={{ color: 'green' }} onClick={addExercise}>+ 운동추가</div>
+          <ExercisePlus onClick={addExercise}>+ 운동추가</ExercisePlus>
           {exercise.map((exercise, exerciseIndex) => (
             <ExerciseWrapper key={exerciseIndex}>
               <ExericseDelete onClick={(event) => exerciseDelete(exerciseIndex, event)}>
