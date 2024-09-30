@@ -5174,6 +5174,7 @@ ${e}`,Xce=Object.getOwnPropertyDescriptor(Function.prototype,"toString"),Zce=Obj
   width:100%;
   justify-content:center;
   bottom:50px;
+  left:0;
 `,qde=w.button`
     background-color;
     padding:8px 15px;
