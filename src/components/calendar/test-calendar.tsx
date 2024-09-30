@@ -360,8 +360,6 @@ const TestCalendar = () => {
         }
     };
 
-
-
     useEffect(() => {
         if (value instanceof Date || (Array.isArray(value) && value.length === 2 && value.every(v => v instanceof Date))) {
             setValue(value as Date | [Date, Date]);
@@ -393,15 +391,6 @@ const TestCalendar = () => {
             setClickDate(formattedDate);
         }
     };
-
-    // const congratulations = () => {
-    //     setShowCongratulations(true);
-    //     setTimeout(() => {
-    //         setShowCongratulations(false);
-    //     }, 3000);
-    // }
-
-
 
     return (
         <Wrapper>

@@ -20,6 +20,7 @@ import { IoIosMenu } from "react-icons/io";
 import MenuModal from "../components/menu/menu";
 import BellModal from "../components/bell";
 import ThisWeekRecords from "../components/this-week-records";
+import ExerciseData from "../components/exerciserecords/exercise-data";
 
 const Wrapper = styled.div`
     width:100vw;
@@ -360,6 +361,7 @@ export default function Home() {
                 <GroupChallenge GroupModal={() => handleNavigation('/group-challenge')} />
                 <Achievements achievmeentsClick={() => handleNavigation('/achievements')} />
                 <Efficacy efficacyClick={() => handleNavigation('/efficacy')} />
+                <ExerciseData exDataClick={() => handleNavigation("/exercise-data")} />
             </GridWrapper>
             {showAchievements && (
                 <AchievementModal handleModalConfirm={handleModalConfirm} achievementName={achievementName} />

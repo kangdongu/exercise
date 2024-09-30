@@ -93,7 +93,18 @@ const SearchBox = styled.input`
   padding:5px;
   font-size:16px;
 `;
-const SelectedButton = styled.div`
+const SelectedButton = styled.button`
+    padding:8px 15px;
+    background-color:blue;
+    color:white;
+    font-size:16px;
+    border-radius:7px;
+     border:none;
+    span{
+      font-size:25px;
+    }
+`;
+const SelectedButtonWrapper = styled.div`
   width:100%;
   position:fixed;
   bottom:40px;
@@ -101,16 +112,17 @@ const SelectedButton = styled.div`
   display:flex;
   justify-content: center;
   align-items:center;
-  button{
-    padding:8px 15px;
-    background-color:blue;
+`;
+const GetDataButton = styled.button`
+    padding:8px 12px;
+    background-color:gray;
     color:white;
     font-size:16px;
     border-radius:7px;
+    border:none;
     span{
       font-size:25px;
     }
-  }
 `;
 
 interface Exercise {
@@ -134,10 +146,10 @@ const ExericseChoicePage = () => {
   const { exercise, setExercise } = useExerciseContext();
   const navigate = useNavigate();
 
-useEffect(() => {
-  setSelectedExercises(exercise)
-  fetchExerciseData()
-},[])
+  useEffect(() => {
+    setSelectedExercises(exercise)
+    fetchExerciseData()
+  }, [])
 
   const fetchExerciseData = async () => {
     try {
@@ -169,11 +181,11 @@ useEffect(() => {
     exercise.name.includes(searchTerm)
   );
 
-  const handleExerciseSelect = (exercise:Exercise) => {
-    
-    const handleExercise : SelectedExercise = {
-      exerciseType : exercise.name,
-      sets: [{ kg:"", count:""}],
+  const handleExerciseSelect = (exercise: Exercise) => {
+
+    const handleExercise: SelectedExercise = {
+      exerciseType: exercise.name,
+      sets: [{ kg: "", count: "" }],
       areaDb: exercise.area,
     }
 
@@ -181,7 +193,7 @@ useEffect(() => {
       const isSelected = prevSelectedExercises.some(
         (selected) => selected.exerciseType === handleExercise.exerciseType
       );
-  
+
       if (isSelected) {
         return prevSelectedExercises.filter(
           (selected) => selected.exerciseType !== handleExercise.exerciseType
@@ -196,8 +208,8 @@ useEffect(() => {
   const addSelectedExercises = () => {
     const newExercises = selectedExercises.map((exercise) => ({
       exerciseType: exercise.exerciseType,
-      sets: exercise.sets, 
-      areaDb: exercise.areaDb, 
+      sets: exercise.sets,
+      areaDb: exercise.areaDb,
     }));
 
     setExercise(newExercises);
@@ -205,6 +217,10 @@ useEffect(() => {
 
     navigate('/exercise-records');
   };
+
+  const getData = () => {
+    navigate('/exercise-data', { state: { getData: true } })
+  }
 
   return (
     <MoSlideModal onClose={() => { navigate('/records'); }}>
@@ -261,12 +277,14 @@ useEffect(() => {
               <div>운동부위: {exercise.area}</div>
             </ExerciseItem>
           ))}
-
-          {selectedExercises.length > 0 && (
-            <SelectedButton style={{ position: 'fixed', bottom: '40px', left: '0px', width: '100%' }}>
-              <button onClick={addSelectedExercises}><span>+</span> {selectedExercises.length}개의 선택된 운동 추가</button>
-            </SelectedButton>
-          )}
+          <SelectedButtonWrapper>
+            
+            {selectedExercises.length > 0 ? (
+              <SelectedButton onClick={addSelectedExercises}><span>+</span> {selectedExercises.length}개의 선택된 운동 추가</SelectedButton>
+            ):(
+              <GetDataButton onClick={getData}><span>+</span> 운동불러오기</GetDataButton>
+            )}
+          </SelectedButtonWrapper>
         </ExerciseList>
       </ExerciseChoiceModal>
     </MoSlideModal>

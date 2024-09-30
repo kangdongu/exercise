@@ -492,12 +492,12 @@ const Calendar = () => {
                 : null}
             {calendarClick && window.innerWidth <= 700 ? (
                 <div>
-                    <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} />
+                    <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} getData />
                 </div>
             ) : null}
             {calendarClick && window.innerWidth >= 700 ? (
                 <div>
-                    <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} />
+                    <CalendarClickModal setCalendarClick={setCalendarClick} clickDate={clickDate} getData />
                 </div>
             ) : null}
 

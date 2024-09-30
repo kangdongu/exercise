@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { auth, db } from '../../firebase';
-import { collection, doc, getDocs } from 'firebase/firestore';
+import { collection, doc, getDocs, orderBy, query } from 'firebase/firestore';
 import styled from 'styled-components';
 import MoSlideLeft from '../slideModal/mo-slide-left';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+import { useExerciseContext } from './exercises-context';
 
 interface ExerciseData {
   이름: string;
@@ -16,6 +18,7 @@ interface ExerciseData {
 interface CalendarClickModalProps {
   setCalendarClick: (value: boolean) => void;
   clickDate: string;
+  getData: boolean;
 }
 
 
@@ -38,6 +41,7 @@ const ContentWrapper = styled.div`
   width: 100%;
   margin: 0 auto;
   display: flex;
+  margin-bottom:40px;
   flex-direction: column;
 `;
 const ExerciseList = styled.div`
@@ -77,63 +81,127 @@ const DayArea = styled.span`
   border-radius: 5px;
   margin-bottom: 10px;
 `;
+const GetDataButtonWrapper = styled.div`
+  position:fixed;
+  display:flex;
+  width:100%;
+  justify-content:center;
+  bottom:50px;
+`;
+const GetDataButton = styled.button`
+    background-color;
+    padding:8px 15px;
+    background-color:blue;
+    color:white;
+    font-size:16px;
+    border-radius:7px;
+`;
 
-
-const CalendarClickModal: React.FC<CalendarClickModalProps> = ({ setCalendarClick, clickDate }) => {
+const CalendarClickModal: React.FC<CalendarClickModalProps> = ({ setCalendarClick, clickDate, getData }) => {
   const [exerciseRecords, setExerciseRecords] = useState<{ [key: string]: ExerciseData[] }>({});
   const [exerciseAreas, setExerciseAreas] = useState<string[]>([]);
   const [formatDate, setFormatDate] = useState<string>("")
   const user = auth.currentUser;
+  const [getDataButton, setGetDataButton] = useState(false);
+  const navigate = useNavigate();
+  const { exercise, setExercise } = useExerciseContext()
+
 
   useEffect(() => {
     const formatClickDate = format(clickDate, "yyyy년 MM월 dd일")
     setFormatDate(formatClickDate)
-  })
+  }, [])
+
+  useEffect(() => {
+    if (getData === true) {
+      setGetDataButton(true);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchExerciseRecords = async () => {
       try {
         const currentUserUID = user?.uid;
-          if(!currentUserUID){
-            alert("로그인을 확인해주세요")
-            return;
+        if (!currentUserUID) {
+          alert("로그인을 확인해주세요")
+          return;
+        }
+
+        const recordsDocRef = doc(db, 'records', currentUserUID);
+        const recordsCollectionRef = doc(collection(recordsDocRef, "운동기록"), clickDate)
+        const exercisesCollectionRef = query(collection(recordsCollectionRef, "exercises"), orderBy("세트", "asc"));
+
+        const recordsQuerySnapshot = await getDocs(exercisesCollectionRef);
+
+        const records: { [key: string]: ExerciseData[] } = {};
+        const areas: string[] = [];
+
+        recordsQuerySnapshot.forEach(doc => {
+          const data = doc.data() as ExerciseData;
+          if (!records[data.종류]) {
+            records[data.종류] = [];
           }
+          records[data.종류].push(data);
+          if (!areas.includes(data.운동부위)) {
+            areas.push(data.운동부위);
+          }
+        });
 
-          const recordsDocRef = doc(db, 'records', currentUserUID);
-          const recordsCollectionRef = doc(collection(recordsDocRef, "운동기록"), clickDate)
-          const exercisesCollectionRef = collection(recordsCollectionRef, "exercises");
+        setExerciseRecords(records);
+        setExerciseAreas(areas);
 
-          const recordsQuerySnapshot = await getDocs(exercisesCollectionRef);
-
-          const records: { [key: string]: ExerciseData[] } = {};
-          const areas: string[] = [];
-
-          recordsQuerySnapshot.forEach(doc => {
-            const data = doc.data() as ExerciseData;
-            if (!records[data.종류]) {
-              records[data.종류] = [];
-            }
-            records[data.종류].push(data);
-            if (!areas.includes(data.운동부위)) {
-              areas.push(data.운동부위);
-            }
-          });
-
-          setExerciseRecords(records);
-          setExerciseAreas(areas);
-        
       } catch (error) {
         console.error('Error fetching exercise records:', error);
       }
     };
 
     fetchExerciseRecords();
-  }, [clickDate]);
+  }, []);
+
+  const pushData = async () => {
+    try {
+      const currentUserUID = user?.uid;
+      if (!currentUserUID) {
+        alert("로그인을 확인해주세요");
+        return;
+      }
+      setExercise([])
+      const userDocRef = doc(db, 'records', currentUserUID);
+      const dateDocRef = doc(collection(userDocRef, '운동기록'), clickDate);
+
+      const exerciseCollectionRef = query(collection(dateDocRef, "exercises"), orderBy("세트", "asc"));
+      const exercisesQuerySnapshot = await getDocs(exerciseCollectionRef);
+
+      const exerciseMap: { [key: string]: { exerciseType: string, sets: { kg: string, count: string }[], areaDb: string } } = {};
+
+      exercisesQuerySnapshot.forEach(doc => {
+        const data = doc.data();
+        if (exerciseMap[data.종류]) {
+          exerciseMap[data.종류].sets.push({ kg: data.무게, count: data.횟수 });
+        } else {
+          exerciseMap[data.종류] = {
+            exerciseType: data.종류,
+            sets: [{ kg: data.무게, count: data.횟수 }],
+            areaDb: data.운동부위,
+          };
+        }
+      });
+
+      setExercise(ex => [...ex, ...Object.values(exerciseMap)]);
+      console.log(exerciseMap);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  if (exercise.length !== 0) {
+    navigate("/exercise-records", { state: { clickDate } })
+  }
 
   return (
     <MoSlideLeft onClose={() => setCalendarClick(false)}>
       <Wrapper>
-      <div style={{fontSize:'20px', fontWeight:'600'}}>{formatDate}</div>
+        <div style={{ fontSize: '20px', fontWeight: '600' }}>{formatDate}</div>
         <ContentWrapper>
           <AreaList>
             <h1>운동 부위</h1>
@@ -152,6 +220,11 @@ const CalendarClickModal: React.FC<CalendarClickModalProps> = ({ setCalendarClic
             ))}
           </ExerciseList>
         </ContentWrapper>
+        {getDataButton && (
+          <GetDataButtonWrapper>
+            <GetDataButton onClick={pushData}>해당 기록으로 운동기록하기</GetDataButton>
+          </GetDataButtonWrapper>
+        )}
       </Wrapper>
     </MoSlideLeft>
   );

@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { auth, db } from "../../firebase";
@@ -6,7 +6,7 @@ import DateChoice from "../date-picker";
 import { format } from 'date-fns';
 import MoSlideLeft from "../slideModal/mo-slide-left";
 import { AiOutlineDelete } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useExerciseContext } from "./exercises-context";
 
 
@@ -151,19 +151,54 @@ const ExerciseRecords = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const navigate = useNavigate();
   const { exercise, setExercise } = useExerciseContext();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.clickDate) {
+      const fetchExerciseData = async () => {
+        try {
+          const currentUserUID = currentUser?.uid;
+          if (!currentUserUID) {
+            alert("로그인을 확인해주세요");
+            return;
+          }
+          setExercise([])
+          if (exercise.length === 0) {
+            const userDocRef = doc(db, 'records', currentUserUID);
+            const dateDocRef = doc(collection(userDocRef, '운동기록'), location.state?.clickDate);
+
+            const exerciseCollectionRef = query(collection(dateDocRef, "exercises"), orderBy("세트", "asc"));
+            const exercisesQuerySnapshot = await getDocs(exerciseCollectionRef);
+
+            const exerciseMap: { [key: string]: { exerciseType: string, sets: { kg: string, count: string }[], areaDb: string } } = {};
+            console.log(exerciseMap)
+
+            exercisesQuerySnapshot.forEach(doc => {
+              const data = doc.data();
+              if (exerciseMap[data.종류]) {
+                exerciseMap[data.종류].sets.push({ kg: data.무게, count: data.횟수 });
+              } else {
+                exerciseMap[data.종류] = {
+                  exerciseType: data.종류,
+                  sets: [{ kg: data.무게, count: data.횟수 }],
+                  areaDb: data.운동부위,
+                };
+              }
+            });
+            console.log(exerciseMap)
+            setExercise([...Object.values(exerciseMap)]);
+          }
+          } catch (error) {
+            console.error(error);
+          }
+        };
+      fetchExerciseData();
+    }
+  }, []);
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
   };
-
-  useEffect(() => {
-    if (!Array.isArray(exercise)) {
-      console.error('exercise is not an array', exercise);
-    } else {
-      console.log('exercise is an array:', exercise);
-    }
-  }, [exercise]);
-
 
   const onChangeType = (exerciseIndex: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const newExercises = [...exercise];
@@ -274,16 +309,16 @@ const ExerciseRecords = () => {
                 <AiOutlineDelete />
               </ExericseDelete>
               <ExerciseNameWrapper>
-                  <InputTitle
-                    style={{ border: 'none', fontSize:'16px', fontWeight:'600', padding:'0' }}
-                    onChange={(e) => {
-                      onChangeType(exerciseIndex, e)
-                    }}
-                    value={exercise.exerciseType}
-                    type="text"
-                    name="exerciseType"
-                    placeholder="운동 직접입력"
-                  />
+                <InputTitle
+                  style={{ border: 'none', fontSize: '16px', fontWeight: '600', padding: '0' }}
+                  onChange={(e) => {
+                    onChangeType(exerciseIndex, e)
+                  }}
+                  value={exercise.exerciseType}
+                  type="text"
+                  name="exerciseType"
+                  placeholder="운동 직접입력"
+                />
               </ExerciseNameWrapper>
               <ListSetButtonWrapper>
                 <SetPlus onClick={() => addSet(exerciseIndex)}><span style={{ fontSize: '20px' }}>+ </span> 세트추가</SetPlus>

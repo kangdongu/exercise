@@ -27,6 +27,7 @@ import InbodyGoals from './components/inbody/inbody-goals';
 import ExericseChoicePage from './components/calendar/exercise-choice';
 import ExerciseRecords from './components/calendar/exercise-records';
 import { ExerciseProvider } from './components/calendar/exercises-context';
+import ExerciseDataContent from './components/exerciserecords/exercise-data-content';
 
 const Wrapper = styled.div`
 `;
@@ -79,6 +80,11 @@ function App() {
               } />
               <Route path="achievements" element={<AchievementsContent />} />
               <Route path="efficacy" element={<EfficacyContent />} />
+              <Route path="exercise-data" element={
+                <ExerciseProvider>
+                  <ExerciseDataContent />
+                </ExerciseProvider>
+              } />
             </Route>
             <Route path="/group-challenge/:challengeId" element={
               <ChallengeProvider>
