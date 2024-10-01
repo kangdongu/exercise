@@ -36,7 +36,6 @@ interface ExerciseData {
 
 const ExerciseDataContent = () => {
     const navigate = useNavigate();
-    const [exerciseDate, setExerciseDate] = useState<string[]>([])
     const [exerciseData, setExerciseData] = useState<ExerciseData[]>([])
     const [dataDetailsModal, setDataDetailsModal] = useState<boolean>(false)
     const [detailDate, setDetailDate] = useState<string>("")
@@ -64,6 +63,8 @@ const ExerciseDataContent = () => {
 
                 const recordsQuerySnapshot = await getDocs(query(recordsCollectionRef));
 
+                let exerciseDate: string[] = []
+
                 if (!recordsQuerySnapshot.empty) {
                     const recordUniqueDates = new Set<string>();
 
@@ -72,31 +73,15 @@ const ExerciseDataContent = () => {
                         recordUniqueDates.add(date)
                     })
                     const recordUniqueDatesArray = Array.from(recordUniqueDates);
-                    setExerciseDate(recordUniqueDatesArray)
-                }
-            } catch (error) {
-                alert("데이터를 가져올 수 없습니다.")
-            }
-        }
-        fetchExerciseRecords()
-    }, [])
-
-        const fetchRecordsData = async () => {
-            try {
-                const currentUserUID = currentUser?.uid;
-                if (!currentUserUID) {
-                    alert("로그인을 확인해주세요")
-                    return;
+                    exerciseDate.push(...recordUniqueDatesArray)
+                    console.log(exerciseDate)
                 }
 
-                const recordsDocRef = doc(db, "records", currentUserUID);
                 const allExercises: ExerciseData[] = [];
-                console.log(exerciseDate)
+
                 for (const date of exerciseDate) {
                     const recordsCollectionRef = doc(collection(recordsDocRef, "운동기록"), date);
-                    console.log(recordsCollectionRef)
                     const exerciseCollectionRef = collection(recordsCollectionRef, "exercises");
-                    console.log(exerciseCollectionRef)
                     const exercisesQuerySnapshot = await getDocs(exerciseCollectionRef)
 
                     if (!exercisesQuerySnapshot.empty) {
@@ -105,21 +90,16 @@ const ExerciseDataContent = () => {
                         allExercises.push({ date, exercises: filterExercises });
                     }
                 }
-
                 setExerciseData(allExercises);
-
             } catch (error) {
-                alert("데이터를 가져올 수 없습니다.")
+                console.log(`데이터를 가져올 수 없습니다.: ${error}`)
             }
         }
-        if(exerciseDate.length !== 0){
-            fetchRecordsData()
-        }
-    
+        fetchExerciseRecords()
+    }, [])
 
     const dataDetails = (date: string) => {
         setDetailDate(date);
-        console.log(detailDate)
         setDataDetailsModal(true);
     }
     const backNavigate = () => {

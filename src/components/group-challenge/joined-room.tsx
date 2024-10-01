@@ -17,6 +17,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import LoadingScreen from "../loading-screen";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Congratulations from "../congratulations";
+import ImgCrop from "../image-crop/content-image-crop";
 
 const WrapperAnimation = keyframes`
     0% { opacity: 1; }
@@ -145,7 +146,6 @@ const ReadyFile = styled.div`
 `;
 const ReadyImg = styled.img`
     width:100%;
-    height:300px;
 `;
 const PhotoWrapper = styled.div`
     display:flex;
@@ -248,6 +248,8 @@ const JoinedRoom: React.FC = () => {
     const [showCongratulations, setShowCongratulations] = useState(false)
     const [showEndModal, setShowEndModal] = useState(true);
     const navigate = useNavigate();
+    const [imgCropModal, setImgCropModal] = useState(false)
+    const [cropImg, setCropImg] = useState<string>("")
 
     useEffect(() => {
         const fetchChallenge = async () => {
@@ -305,7 +307,7 @@ const JoinedRoom: React.FC = () => {
         setTimeout(() => {
             setShowEndModal(false);
         }, 4000);
-    },[])
+    }, [])
 
     const createChallengeButton = async () => {
         const currentUser = auth.currentUser;
@@ -354,6 +356,7 @@ const JoinedRoom: React.FC = () => {
                 setPreviewUrl(reader.result as string);
             };
             reader.readAsDataURL(selectedFile);
+            setImgCropModal(true);
         }
     };
 
@@ -445,6 +448,10 @@ const JoinedRoom: React.FC = () => {
     const dDay = differenceInDays(parseISO(challenge.종료날짜), new Date());
     const dDayText = dDay >= 0 ? `D-${dDay}` : `D+${Math.abs(dDay)}`;
 
+    const cropperdImg = (croppedImageUrl:string) => {
+        setCropImg(croppedImageUrl)
+    }
+
     return (
         <Wrapper>
             <Back onClick={() => navigate(-1)}>
@@ -452,6 +459,8 @@ const JoinedRoom: React.FC = () => {
             </Back>
             <Title>{challenge.그룹챌린지제목}</Title>
             <h4 style={{ marginBottom: "5px", marginTop: "20px" }}>챌린지정보</h4>
+
+            {/* 방 설명 */}
             <GroupViewWrapper>
                 <ViewContent>
                     <ViewDdayWrapper>
@@ -466,27 +475,33 @@ const JoinedRoom: React.FC = () => {
                 </ViewContent>
                 <ViewButton><IoIosArrowForward /></ViewButton>
             </GroupViewWrapper>
+
+            {/* 메뉴선택 */}
             <RoomMenuWrapper>
                 <RoomMenu selected={selectedMenu === 'mychallenge'} onClick={() => setSelectedMenu('mychallenge')}>내가 한 인증</RoomMenu>
                 <RoomMenu selected={selectedMenu === 'ourchallenge'} onClick={() => setSelectedMenu('ourchallenge')}>모두의 인증</RoomMenu>
                 <RoomMenu selected={selectedMenu === "people"} onClick={() => { setSelectedMenu("people") }}>참가자</RoomMenu>
             </RoomMenuWrapper>
 
-            {selectedMenu === "mychallenge" && (
+            {/* 선택한 메뉴에 맞는 컴포넌트 출력 */}
+            {selectedMenu === "mychallenge" ? (
                 <MyChallenge challenge={challenge} photoMyData={photoMyData} />
+            ) : (
+                selectedMenu === "ourchallenge" ? (
+                    <OurChallenge challenge={challenge} photoData={photoData} />
+                ) : (
+                    <GroupUser challenge={challenge} />
+                )
             )}
-            {selectedMenu === "ourchallenge" && (
-                <OurChallenge challenge={challenge} photoData={photoData} />
-            )}
-            {selectedMenu === "people" && (
-                <GroupUser challenge={challenge} />
-            )}
+
             {selectedMenu === "mychallenge" || selectedMenu === "ourchallenge" ? (
                 <ChallengeTitleWrapper>
                     <ChallengeTitle>인증사진</ChallengeTitle>
                     <CreateChallenge onClick={createChallengeButton}>+</CreateChallenge>
                 </ChallengeTitleWrapper>
             ) : null}
+
+            {/* 인증한 사진들 출력 */}
             <PhotoWrapper>
                 {selectedMenu === "mychallenge" && photoMyData.map((photo) => (
                     <PhotoUpload onClick={() => handlePhotoClick(photo)} key={photo.id} src={photo.인증사진} alt="User Photo" />
@@ -497,6 +512,7 @@ const JoinedRoom: React.FC = () => {
                 ))}
             </PhotoWrapper>
 
+            {/* 인증사진 올리는 모달 */}
             {crateChallenge ? (
                 <MoSlideLeft onClose={() => { setCreateChallenge(false) }}>
                     <CreateWrapper>
@@ -509,9 +525,12 @@ const JoinedRoom: React.FC = () => {
                             </AttachFileButton>
                         </PhotoChoiceWrapper>
                         <AttachFileInput onChange={onFileChange} type="file" id="file" accept="image" />
+                        {imgCropModal && (
+                            <ImgCrop originalImg={previewUrl} onClose={() => setImgCropModal(false)} onSave={cropperdImg} />
+                        )}
                         {previewUrl && (
                             <ReadyFile>
-                                <ReadyImg src={previewUrl} alt="Selected" />
+                                <ReadyImg src={cropImg} alt="Selected" />
                             </ReadyFile>
                         )}
                         <h4>오늘의 목표달성 내용작성하기</h4>
@@ -520,6 +539,8 @@ const JoinedRoom: React.FC = () => {
                     </CreateWrapper>
                 </MoSlideLeft>
             ) : null}
+
+
             {viewPhoto ? (
                 <MoSlideLeft onClose={() => setViewPhoto(null)}>
                     <ViewDetails photo={viewPhoto} />

@@ -9,12 +9,10 @@ function createImage(url: string): Promise<HTMLImageElement> {
     });
   }
   
-  // 회전 각도를 라디안 값으로 변환하는 함수
   function getRadianAngle(degreeValue: number) {
     return (degreeValue * Math.PI) / 180;
   }
   
-  // 회전된 이미지의 크기를 계산하는 함수
   function rotateSize(width: number, height: number, rotation: number) {
     const rotRad = getRadianAngle(rotation);
     return {
@@ -25,7 +23,6 @@ function createImage(url: string): Promise<HTMLImageElement> {
     };
   }
   
-  // 이미지를 자르고 결과를 Base64 형식으로 반환하는 함수
   export default async function getCroppedImg(
     imageSrc: string,
     pixelCrop: { x: number; y: number; width: number; height: number },
@@ -40,7 +37,7 @@ function createImage(url: string): Promise<HTMLImageElement> {
       throw new Error('Could not get canvas context');
     }
   
-    const rotRad = getRadianAngle(rotation); // 회전 각도를 라디안으로 변환
+    const rotRad = getRadianAngle(rotation); 
   
     // 회전된 이미지의 크기를 계산
     const { width: bBoxWidth, height: bBoxHeight } = rotateSize(

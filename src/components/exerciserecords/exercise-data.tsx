@@ -1,6 +1,7 @@
 import styled from "styled-components"
-import { FaRegUser } from "react-icons/fa";
+// import { FaRegUser } from "react-icons/fa";
 import { IoArrowForwardCircle } from "react-icons/io5";
+import { MdOutlineDateRange } from "react-icons/md";
 
 const Wrapper = styled.div`
     border-radius: 10px;
@@ -42,7 +43,7 @@ interface exDataProps {
 const ExerciseData: React.FC<exDataProps> = ({ exDataClick }) => {
     return (
         <Wrapper onClick={exDataClick}>
-            <FaRegUser style={{ width: "50px", height: "50px", color: "#4CA7D8", marginBottom: '15px' }} />
+            <MdOutlineDateRange style={{ width: "50px", height: "50px", color: "#4CA7D8", marginBottom: '15px' }} />
             <PersonalWrapper>
                 <TextWrapper>
                     <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>운동 데이터</div>

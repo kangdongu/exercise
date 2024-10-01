@@ -95,7 +95,7 @@ const SearchBox = styled.input`
 `;
 const SelectedButton = styled.button`
     padding:8px 15px;
-    background-color:blue;
+    background-color:#FC286E;
     color:white;
     font-size:16px;
     border-radius:7px;

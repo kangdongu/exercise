@@ -168,7 +168,7 @@ const ChoiceData: React.FC<ChoiceDataProps> = ({ clickDate }) => {
               </AreaList>
             </ContentWrapper>
             {clickModal && (
-              <CalendarClickModal setCalendarClick={setClickModal} clickDate={clickDate} getData={false} />
+              <CalendarClickModal setCalendarClick={setClickModal} clickDate={clickDate} getData={true} />
             )}
           </Wrapper>
         )}

@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import MoSlideLeft from '../slideModal/mo-slide-left';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
-import { useExerciseContext } from './exercises-context';
 
 interface ExerciseData {
   이름: string;
@@ -87,11 +86,12 @@ const GetDataButtonWrapper = styled.div`
   width:100%;
   justify-content:center;
   bottom:50px;
+  left:0;
 `;
 const GetDataButton = styled.button`
     background-color;
     padding:8px 15px;
-    background-color:blue;
+    background-color:#FC286E;
     color:white;
     font-size:16px;
     border-radius:7px;
@@ -104,7 +104,6 @@ const CalendarClickModal: React.FC<CalendarClickModalProps> = ({ setCalendarClic
   const user = auth.currentUser;
   const [getDataButton, setGetDataButton] = useState(false);
   const navigate = useNavigate();
-  const { exercise, setExercise } = useExerciseContext()
 
 
   useEffect(() => {
@@ -151,50 +150,14 @@ const CalendarClickModal: React.FC<CalendarClickModalProps> = ({ setCalendarClic
         setExerciseAreas(areas);
 
       } catch (error) {
-        console.error('Error fetching exercise records:', error);
+        console.error(error);
       }
     };
 
     fetchExerciseRecords();
   }, []);
 
-  const pushData = async () => {
-    try {
-      const currentUserUID = user?.uid;
-      if (!currentUserUID) {
-        alert("로그인을 확인해주세요");
-        return;
-      }
-      setExercise([])
-      const userDocRef = doc(db, 'records', currentUserUID);
-      const dateDocRef = doc(collection(userDocRef, '운동기록'), clickDate);
-
-      const exerciseCollectionRef = query(collection(dateDocRef, "exercises"), orderBy("세트", "asc"));
-      const exercisesQuerySnapshot = await getDocs(exerciseCollectionRef);
-
-      const exerciseMap: { [key: string]: { exerciseType: string, sets: { kg: string, count: string }[], areaDb: string } } = {};
-
-      exercisesQuerySnapshot.forEach(doc => {
-        const data = doc.data();
-        if (exerciseMap[data.종류]) {
-          exerciseMap[data.종류].sets.push({ kg: data.무게, count: data.횟수 });
-        } else {
-          exerciseMap[data.종류] = {
-            exerciseType: data.종류,
-            sets: [{ kg: data.무게, count: data.횟수 }],
-            areaDb: data.운동부위,
-          };
-        }
-      });
-
-      setExercise(ex => [...ex, ...Object.values(exerciseMap)]);
-      console.log(exerciseMap);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  if (exercise.length !== 0) {
+  const pushData = () => {
     navigate("/exercise-records", { state: { clickDate } })
   }
 

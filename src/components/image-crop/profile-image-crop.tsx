@@ -95,7 +95,7 @@ const ProfileImageCropper: React.FC<ProfileImageCropperProps> = ({
   const currentUser = auth.currentUser;
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<{ x: number; y: number; width: number; height: number; } | null>(null);
 
-  const onCropComplete = useCallback((croppedAreaPixels: { x: number; y: number; width: number; height: number }) => {
+  const onCropComplete = useCallback((_ : { x: number; y: number; width: number; height: number }, croppedAreaPixels: { x: number; y: number; width: number; height: number }) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, [setCroppedAreaPixels]);
 
@@ -106,7 +106,6 @@ const ProfileImageCropper: React.FC<ProfileImageCropperProps> = ({
     try {
       const croppedBase64Image = await getCroppedImg(croppedImage, croppedAreaPixels);
 
-      // Firebase Storage에 Base64 이미지 업로드
       const storageRef = ref(storage, `avatars/${currentUser?.uid}`);
       await uploadString(storageRef, croppedBase64Image, 'data_url');
       const downloadURL = await getDownloadURL(storageRef);

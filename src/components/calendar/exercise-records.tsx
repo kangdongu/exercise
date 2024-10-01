@@ -171,7 +171,6 @@ const ExerciseRecords = () => {
             const exercisesQuerySnapshot = await getDocs(exerciseCollectionRef);
 
             const exerciseMap: { [key: string]: { exerciseType: string, sets: { kg: string, count: string }[], areaDb: string } } = {};
-            console.log(exerciseMap)
 
             exercisesQuerySnapshot.forEach(doc => {
               const data = doc.data();
@@ -185,7 +184,6 @@ const ExerciseRecords = () => {
                 };
               }
             });
-            console.log(exerciseMap)
             setExercise([...Object.values(exerciseMap)]);
           }
           } catch (error) {
