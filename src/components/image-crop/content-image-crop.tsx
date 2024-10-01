@@ -86,6 +86,7 @@ const ImgCrop: React.FC<ImgCropProps> = ({ originalImg, onClose, onSave }) => {
             try {
                 const croppedImageUrl = await getCroppedImg(originalImg, croppedAreaPixels);
                 onSave(croppedImageUrl);
+                onClose()
             } catch (error) {
                 console.error("Error cropping image: ", error);
             }

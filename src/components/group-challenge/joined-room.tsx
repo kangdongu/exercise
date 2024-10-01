@@ -360,15 +360,6 @@ const JoinedRoom: React.FC = () => {
         }
     };
 
-
-
-    const uploadFile = async (file: File): Promise<string> => {
-        const fileRef = ref(storage, `groupchallengephotos/${challengeId}/${file.name}`);
-        await uploadBytes(fileRef, file);
-        const fileURL = await getDownloadURL(fileRef);
-        return fileURL;
-    };
-
     const createChallenge = async () => {
         if (isCreating) return;
 
@@ -386,8 +377,11 @@ const JoinedRoom: React.FC = () => {
         const day = format(startDate, "EEE", { locale: ko })
 
         let fileURL = "";
-        if (file) {
-            fileURL = await uploadFile(file);
+
+        if (cropImg) {
+            const croppedBlob = await fetch(cropImg).then(res => res.blob());
+
+            fileURL = await uploadFile(croppedBlob);
         }
 
         try {
@@ -416,6 +410,15 @@ const JoinedRoom: React.FC = () => {
         }
     }
 
+    const uploadFile = async (blob: Blob): Promise<string> => {
+
+        const fileRef = ref(storage, `groupchallengephotos/${challengeId}/${Date.now()}.jpg`);
+
+        await uploadBytes(fileRef, blob);
+
+        const fileURL = await getDownloadURL(fileRef);
+        return fileURL;
+    };
 
 
     const handlePhotoClick = (photo: Photo) => {
@@ -448,7 +451,8 @@ const JoinedRoom: React.FC = () => {
     const dDay = differenceInDays(parseISO(challenge.종료날짜), new Date());
     const dDayText = dDay >= 0 ? `D-${dDay}` : `D+${Math.abs(dDay)}`;
 
-    const cropperdImg = (croppedImageUrl:string) => {
+    const cropperdImg = (croppedImageUrl: string) => {
+        console.log(cropImg)
         setCropImg(croppedImageUrl)
     }
 
