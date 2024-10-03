@@ -42,7 +42,7 @@ const Efficacy: React.FC<efficacyProps> = ({ efficacyClick }) => {
             <CiDumbbell style={{ width: "50px", height: "50px", color: "#6F9F75", marginBottom: '15px' }} />
             <EfficacyWrapper>
                 <TextWrapper>
-                    <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }} >운동별 정보</div>
+                    <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }} >운동별정보</div>
                     <span>운동별 효능에 대해 알아보세요</span>
                 </TextWrapper>
                 <IoArrowForwardCircle />

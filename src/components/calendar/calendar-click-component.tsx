@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import MoSlideLeft from '../slideModal/mo-slide-left';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { FiEdit } from "react-icons/fi";
 
 interface ExerciseData {
   이름: string;
@@ -23,12 +24,12 @@ interface CalendarClickModalProps {
 
 const Wrapper = styled.div`
   @media screen and (max-width: 700px) {
-    width: 95%;
+    width: 100%;
   }
-  width: 80%;
+  width: 100%;
   height: calc(100vh - 40px);
   overflow-y:scroll;
-  background-color: white;
+  background-color: #f8f8f8;
   z-index: 99;
   padding: 20px;
   box-sizing: border-box;
@@ -51,7 +52,7 @@ const ExerciseList = styled.div`
 const ExerciseItem = styled.div`
   margin-bottom: 15px;
   padding: 15px;
-  background-color: #f1f1f1;
+  background-color: white;
   border-radius: 8px;
 `;
 
@@ -157,6 +158,10 @@ const CalendarClickModal: React.FC<CalendarClickModalProps> = ({ setCalendarClic
     fetchExerciseRecords();
   }, []);
 
+  const recordsEdit = () => {
+    navigate("/exercise-records", { state: { clickDate, edit: true } })
+  }
+
   const pushData = () => {
     navigate("/exercise-records", { state: { clickDate } })
   }
@@ -164,7 +169,10 @@ const CalendarClickModal: React.FC<CalendarClickModalProps> = ({ setCalendarClic
   return (
     <MoSlideLeft onClose={() => setCalendarClick(false)}>
       <Wrapper>
-        <div style={{ fontSize: '20px', fontWeight: '600' }}>{formatDate}</div>
+        <div style={{ display: 'flex' }}>
+          <div style={{ fontSize: '20px', fontWeight: '600' }}>{formatDate}</div>
+          <FiEdit onClick={recordsEdit} style={{ marginLeft: 'auto', width: '20px', height: '20px' }} />
+        </div>
         <ContentWrapper>
           <AreaList>
             <h1>운동 부위</h1>

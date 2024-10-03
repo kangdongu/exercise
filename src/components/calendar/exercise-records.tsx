@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDocs, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { auth, db } from "../../firebase";
@@ -8,7 +8,6 @@ import MoSlideLeft from "../slideModal/mo-slide-left";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useExerciseContext } from "./exercises-context";
-
 
 const Wrapper = styled.div`
 @media screen and (max-width: 700px) {
@@ -152,9 +151,21 @@ const ExerciseRecords = () => {
   const navigate = useNavigate();
   const { exercise, setExercise } = useExerciseContext();
   const location = useLocation();
+  const [editRecords, setEditRecords] = useState(false)
+  const [clickDateprop, setClickDateprop] = useState("")
 
   useEffect(() => {
-    if (location.state?.clickDate) {
+    if (location.state?.edit && location.state?.clickDate) {
+      setEditRecords(true)
+      setClickDateprop(location.state?.clickDate)
+    }
+  }, [])
+
+  console.log(exercise)
+
+  useEffect(() => {
+    if (location.state?.clickDate && exercise.length === 0) {
+      console.log()
       const fetchExerciseData = async () => {
         try {
           const currentUserUID = currentUser?.uid;
@@ -186,10 +197,10 @@ const ExerciseRecords = () => {
             });
             setExercise([...Object.values(exerciseMap)]);
           }
-          } catch (error) {
-            console.error(error);
-          }
-        };
+        } catch (error) {
+          console.error(error);
+        }
+      };
       fetchExerciseData();
     }
   }, []);
@@ -219,7 +230,20 @@ const ExerciseRecords = () => {
 
   const addExercise = () => {
     setExercise([...exercise]);
-    navigate("/exercise-choice");
+    navigate("/exercise-choice", { state: { clickDateprop, edit: editRecords } });
+  };
+
+  const deleteExercises = async (dateDocRef:any) => {
+    try {
+      const exercisesCollectionRef = collection(dateDocRef, "exercises");
+      const exercisesSnapshot = await getDocs(exercisesCollectionRef);
+  
+      const deletePromises = exercisesSnapshot.docs.map((doc) => deleteDoc(doc.ref));
+      await Promise.all(deletePromises);
+
+    } catch (error) {
+      console.error("운동 세트 삭제 중 오류 발생: ", error);
+    }
   };
 
   const onClick = async () => {
@@ -233,9 +257,14 @@ const ExerciseRecords = () => {
         }
 
         const userDocRef = doc(db, 'records', userId);
-        const dateDocRef = doc(collection(userDocRef, '운동기록'), date);
+        const dateDocRef = doc(collection(userDocRef, '운동기록'), editRecords ? clickDateprop : date);
 
-        await setDoc(dateDocRef, { 날짜: date });
+        if (editRecords) {
+          await deleteExercises(dateDocRef);
+          await deleteDoc(dateDocRef);
+        }
+
+        await setDoc(dateDocRef, { 날짜: editRecords ? clickDateprop : date });
 
         const exercisePromises = exercise.map((exercise) => {
           const exercisesCollectionRef = collection(dateDocRef, 'exercises');
@@ -272,6 +301,24 @@ const ExerciseRecords = () => {
     }
   };
 
+  const testDelecte = async () => {
+    try {
+      const userId = currentUser?.uid
+      if (!userId) {
+        return;
+      }
+      const userDocRef = doc(db, 'records', userId);
+      const dateDocRef = doc(collection(userDocRef, '운동기록'), clickDateprop);
+
+      if (editRecords) {
+        await deleteDoc(dateDocRef);
+      }
+
+    } catch (error) {
+
+    }
+  }
+
 
   const onDelete = (exerciseIndex: number, setIndex: number, event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.preventDefault();
@@ -287,7 +334,12 @@ const ExerciseRecords = () => {
   };
 
   const handleClose = () => {
-    navigate('/exercise-choice');
+    navigate('/exercise-choice', { state: { clickDateprop, edit: editRecords } });
+  };
+
+  const editTitle = (clickDate: string) => {
+    const titleDate = format(clickDate, "yyyy년 MM월 dd일")
+    return titleDate;
   };
 
   return (
@@ -297,8 +349,13 @@ const ExerciseRecords = () => {
           <div style={{ display: 'flex', alignItems: 'center', padding: '10px 0px' }}>
             <h3 style={{ fontSize: '18px', margin: '0' }}>운동기록</h3>
           </div>
+          <h3 onClick={testDelecte}>테스트</h3>
           <DateChoiceWrapper>
-            <DateChoice onDateChange={handleDateChange} />
+            {editRecords ? (
+              <h3>{editTitle(location.state?.clickDate)} 운동 수정</h3>
+            ) : (
+              <DateChoice onDateChange={handleDateChange} />
+            )}
           </DateChoiceWrapper>
           <ExercisePlus onClick={addExercise}>+ 운동추가</ExercisePlus>
           {exercise.map((exercise, exerciseIndex) => (

@@ -46,7 +46,7 @@ const ExerciseData: React.FC<exDataProps> = ({ exDataClick }) => {
             <MdOutlineDateRange style={{ width: "50px", height: "50px", color: "#4CA7D8", marginBottom: '15px' }} />
             <PersonalWrapper>
                 <TextWrapper>
-                    <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>운동 데이터</div>
+                    <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>운동데이터</div>
                     <span>이때 까지의 운동데이터를 확인해보세요</span>
                 </TextWrapper>
                 <IoArrowForwardCircle />

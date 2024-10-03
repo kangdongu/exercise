@@ -64,10 +64,6 @@ const SubmitButton = styled.button`
     transition: background-color 0.3s;
     display: block;
     margin: 0 auto;
-
-    &:hover {
-        background-color: #0056b3;
-    }
 `;
 
 const InbodyGoals = () => {
@@ -136,14 +132,13 @@ const InbodyGoals = () => {
         try {
             let goalDocRef;
             const growthDirection = goalGrowth(growthData, growthType, Number(goalValue)) > 0 ? "증가" : "감소";
+            console.log(goalDocId)
             if (goalDocId) {
                 goalDocRef = doc(db, "inbody-goals", goalDocId);
                 await updateDoc(goalDocRef, {
                     [`목표${type}`]: goalValue,
                     [`${type}목표`]: growthDirection,
-                    [`현재${type}`]: type === "몸무게" ? weightData[weightData.length - 1].weight : "",
-                    [`현재${type}`]: type === "골격근량" ? muscleData[muscleData.length - 1].muscle : "",
-                    [`현재${type}`]: type === "체지방" ? fatData[fatData.length - 1].fat : "",
+                    [`현재${type}`]: type === "몸무게" ? weightData[weightData.length - 1].weight : type === "골격근량" ?  muscleData[muscleData.length - 1].muscle : fatData[fatData.length - 1].fat,
                 });
             } else {
                 const newGoalDoc = await addDoc(collection(db, "inbody-goals"), {

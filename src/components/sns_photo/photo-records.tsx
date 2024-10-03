@@ -7,6 +7,7 @@ import DateChoice from "../date-picker";
 import { format } from 'date-fns';
 import PhotoUpload from "./rander-photo";
 import MoSlideModal from "../slideModal/mo-slide-modal";
+import ImgCrop from "../image-crop/content-image-crop";
 
 
 const Wrapper = styled.div`
@@ -62,13 +63,12 @@ const SubmitBtn = styled.input`
     }
 `;
 const ReadyFile = styled.div`
-    width:100%;
-    height:350px;
+    width:90%;
+    margin:20px auto;
     overflow:hidden;
 `;
 const ReadyImg = styled.img`
     width:100%;
-    height:350px;
 `;
 const PhotoWrapper = styled.div`
     @media screen and (max-width: 700px) {
@@ -204,6 +204,8 @@ export default function PhotoRecords() {
     const [editView, setEditView] = useState(false);
     const [userProfile, setUserProfile] = useState<{ 프로필사진: string, 닉네임: string } | null>(null);
     const [isCreating, setIsCreating] = useState(false);
+    const [imgCropModal, setImgCropModal] = useState(false)
+    const [cropImg, setCropImg] = useState("")
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -248,7 +250,8 @@ export default function PhotoRecords() {
                 setPreviewUrl(reader.result as string);
             };
             reader.readAsDataURL(selectedFile);
-        }
+            setImgCropModal(true)
+        }   
     };
 
     const viewCloseModal = () => {
@@ -282,6 +285,7 @@ export default function PhotoRecords() {
         if (previewUrl === null) {
             alert("사진을 등록해주세요.");
         } else {
+
             try {
                 setLoading(true);
                 const date = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
@@ -298,10 +302,12 @@ export default function PhotoRecords() {
 
                 const docId = docRef.id;
 
-                if (file) {
+                if (cropImg) {
+                    const croppedBlob = await fetch(cropImg).then(res => res.blob());
+
                     const locationRef = ref(storage, `photo/${user.uid}-${user.displayName}/${docId}`);
-                    const result = await uploadBytes(locationRef, file);
-                    const url = await getDownloadURL(result.ref);
+                    await uploadBytes(locationRef, croppedBlob);
+                    const url = await getDownloadURL(locationRef);
 
                     await updateDoc(docRef, { 사진: url });
                 }
@@ -441,6 +447,11 @@ export default function PhotoRecords() {
         }
     }
 
+    const cropperdImg = (croppedImageUrl: string) => {
+        console.log(cropImg)
+        setCropImg(croppedImageUrl)
+    }
+
     return (
         <Wrapper>
             <Header>
@@ -467,7 +478,9 @@ export default function PhotoRecords() {
                                 <AttachFileInput onChange={onFileChange} type="file" id="file" accept="image" />
                                 <SubmitBtn type="submit" value={isLoading ? "등록중.." : "완료"} />
                             </Form>
-
+                                {imgCropModal && (
+                                    <ImgCrop originalImg={previewUrl} onClose={() => setImgCropModal(false)} onSave={cropperdImg} />
+                                )}
                         </ModalContent>
                     </ModalBackdrop>
                 </MoSlideModal>

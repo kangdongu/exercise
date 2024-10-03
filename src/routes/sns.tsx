@@ -425,7 +425,7 @@ export default function PublicPhotosPage() {
       <TextTitle>
         <h4 style={{ textAlign: "center", fontSize: "25px", color: "#939393" }}>사람들과 기록 공유하기</h4>
       </TextTitle>
-      <div style={{height:'calc(100vh - 133px)', backgroundColor:'#f8f8f8'}}>
+      <div style={{ height: 'calc(100vh - 133px)', backgroundColor: '#f8f8f8' }}>
         <PhotoWrapper>
           {publicPhotos.map((photo) => (
             <PhotoUpload
@@ -453,7 +453,9 @@ export default function PublicPhotosPage() {
                   </UserProfilePhoto>
                   <UserNickname>{selectedPhotoDetails.닉네임}</UserNickname>
                 </UserDataWrapper>
-                <ViewImg src={selectedPhotoDetails.사진} alt="Selected Photo" />
+                <div style={{border:'0.5px solie lightgray'}}>
+                  <ViewImg src={selectedPhotoDetails.사진} alt="Selected Photo" />
+                </div>
                 <div style={{ paddingLeft: "5px" }}>
                   <p>{selectedPhotoDetails.날짜}</p>
                   <p>{selectedPhotoDetails.메모}</p>

@@ -74,7 +74,6 @@ const ExerciseDataContent = () => {
                     })
                     const recordUniqueDatesArray = Array.from(recordUniqueDates);
                     exerciseDate.push(...recordUniqueDatesArray)
-                    console.log(exerciseDate)
                 }
 
                 const allExercises: ExerciseData[] = [];
@@ -123,7 +122,8 @@ const ExerciseDataContent = () => {
                             <div style={{ textAlign: 'center' }}>
                                 <Date>{formattedDate(item.date)}</Date>
                             </div>
-                            <div onClick={() => dataDetails(item.date)} style={{ backgroundColor: 'white', height: '80px', padding: '10px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', marginBottom: '20px' }}>
+                            <div onClick={() => dataDetails(item.date)} style={{ backgroundColor: 'white', height: '90px', padding: '10px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', marginBottom: '20px' }}>
+                                <h3 style={{margin:'0',marginBottom:'10px'}}>{formattedDate(item.date)}</h3>
                                 {item.exercises.map((exercise, exIndex) => (
                                     <DataContentWrapper key={exIndex}>
                                         <span>{exercise.type} </span>

@@ -4,7 +4,7 @@ import styled, { keyframes } from "styled-components";
 import { db } from "../../firebase";
 import MoSlideModal from "../slideModal/mo-slide-modal";
 import { IoSearch } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useExerciseContext } from "./exercises-context";
 
 const searchWidth = keyframes`
@@ -145,6 +145,16 @@ const ExericseChoicePage = () => {
   const [selectedExercises, setSelectedExercises] = useState<SelectedExercise[]>([])
   const { exercise, setExercise } = useExerciseContext();
   const navigate = useNavigate();
+  const location = useLocation()
+  const [clickDate, setClickDate] = useState("")
+  const [editRecords, setEditRecords] = useState(false)
+
+  useEffect(() => {
+    if (location.state?.edit && location.state?.clickDateprop) {
+      setClickDate(location.state?.clickDateprop)
+      setEditRecords(location.state?.edit)
+    }
+  }, [])
 
   useEffect(() => {
     setSelectedExercises(exercise)
@@ -202,7 +212,6 @@ const ExericseChoicePage = () => {
         return [...prevSelectedExercises, handleExercise];
       }
     });
-    console.log(selectedExercises)
   };
 
   const addSelectedExercises = () => {
@@ -214,8 +223,7 @@ const ExericseChoicePage = () => {
 
     setExercise(newExercises);
     setSelectedExercises([]);
-
-    navigate('/exercise-records');
+    navigate('/exercise-records', { state: { clickDate, edit: editRecords } });
   };
 
   const getData = () => {
@@ -278,10 +286,10 @@ const ExericseChoicePage = () => {
             </ExerciseItem>
           ))}
           <SelectedButtonWrapper>
-            
+
             {selectedExercises.length > 0 ? (
               <SelectedButton onClick={addSelectedExercises}><span>+</span> {selectedExercises.length}개의 선택된 운동 추가</SelectedButton>
-            ):(
+            ) : (
               <GetDataButton onClick={getData}><span>+</span> 운동불러오기</GetDataButton>
             )}
           </SelectedButtonWrapper>

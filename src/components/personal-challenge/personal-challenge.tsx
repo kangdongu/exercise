@@ -45,7 +45,7 @@ const PersonalChallenge: React.FC<PersonalProps> = ({ personalClick }) => {
             <FaRegUser style={{ width: "50px", height: "50px", color: "#4CA7D8", marginBottom: '15px' }} />
             <PersonalWrapper>
                 <TextWrapper>
-                    <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>개인 챌린지</div>
+                    <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: '5px' }}>개인챌린지</div>
                     <span>혼자만의 습관을 세워보세요</span>
                 </TextWrapper>
                 <IoArrowForwardCircle />

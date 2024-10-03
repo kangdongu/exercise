@@ -4,7 +4,6 @@ import { db, auth } from '../../firebase';
 import { addDoc, collection, doc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { format } from 'date-fns';
 import { Line } from "react-chartjs-2";
-import { Chart, registerables } from 'chart.js';
 import AchievementModal from "../achievement-alert";
 import { useNavigate } from "react-router-dom";
 
@@ -315,9 +314,6 @@ export default function Inbody() {
     const handleModalConfirm = () => {
         setShowAchievements(false)
     }
-
-
-    Chart.register(...registerables);
 
     const detailsMemory = (type: string) => {
         navigate('/inbody-details', { state: { type } });
