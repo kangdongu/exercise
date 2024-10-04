@@ -123,16 +123,6 @@ const TestCalendar = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    useEffect(() => {
-      if (location.state?.congratulations) {
-        setShowCongratulations(true);
-        setTimeout(() => setShowCongratulations(false), 3000);
-      }
-  
-      if (location.state?.recordsComplete) {
-        recordsComplete();
-      }
-    }, [location.state]);
 
     useEffect(() => {
         const fetchRecords = async () => {
@@ -142,6 +132,7 @@ const TestCalendar = () => {
                     alert("로그인을 확인해주세요");
                     return;
                 }
+                let exerciseDate = []
 
                 const recordsDocRef = doc(db, "records", userId);
 
@@ -158,6 +149,7 @@ const TestCalendar = () => {
                     })
                     const recordUniqueDatesArray = Array.from(recordUniqueDates);
                     setExerciseDate(recordUniqueDatesArray)
+                    exerciseDate.push(...recordUniqueDatesArray)
                 }
 
                 const inbodysRef = collection(db, "inbody");
@@ -176,6 +168,12 @@ const TestCalendar = () => {
                     setInbodyDate(inbodyUniqueDatesArray);
                 }
 
+                if (location.state?.congratulations && location.state?.recordsComplete) {
+                    setShowCongratulations(true);
+                    setTimeout(() => setShowCongratulations(false), 3000);
+                    recordsComplete(exerciseDate);
+                  }
+
             } catch (error) {
                 console.log("데이터를 가져오는 중 오류가 발생했습니다: ", error);
             }
@@ -184,8 +182,7 @@ const TestCalendar = () => {
     }, []);
 
 
-
-    const recordsComplete = async () => {
+    const recordsComplete = async (exerciseDate:string[]) => {
         const today = new Date();
         const formattedDate = format(today, 'yyyy-MM-dd');
 
@@ -219,6 +216,8 @@ const TestCalendar = () => {
         await updateDoc(userDoc.ref, {
             운동일수: exerciseDate.length
         });
+
+        console.log(exerciseDate.length)
 
         // 뱃지 획득 로직
         await checkAndAwardBadge(exerciseDate.length);

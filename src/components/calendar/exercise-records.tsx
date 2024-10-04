@@ -161,8 +161,6 @@ const ExerciseRecords = () => {
     }
   }, [])
 
-  console.log(exercise)
-
   useEffect(() => {
     if (location.state?.clickDate && exercise.length === 0) {
       console.log()

@@ -119,7 +119,7 @@ export default function Home() {
                                 const characterDoc = characterSnapshot.docs[0];
                                 const stepsRef = collection(characterDoc.ref, "steps");
 
-                                const stepSnapshot = await getDocs(query(stepsRef, where("선택단계", "==", userDoc.data().선택단계)));
+                                const stepSnapshot = await getDocs(query(stepsRef, where("단계", "==", userDoc.data().단계)));
 
                                 if (stepSnapshot && !stepSnapshot.empty) {
                                     const stepDoc = stepSnapshot.docs[0];

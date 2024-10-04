@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import styled from 'styled-components';
-import { ref, getDownloadURL, uploadString } from 'firebase/storage';
+import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import { updateProfile } from 'firebase/auth';
 import { collection, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { auth, db, storage } from '../../firebase';
@@ -105,12 +105,21 @@ const ProfileImageCropper: React.FC<ProfileImageCropperProps> = ({
 
     try {
       const croppedBase64Image = await getCroppedImg(croppedImage, croppedAreaPixels);
+      
 
-      const storageRef = ref(storage, `avatars/${currentUser?.uid}`);
-      await uploadString(storageRef, croppedBase64Image, 'data_url');
-      const downloadURL = await getDownloadURL(storageRef);
+      // const storageRef = ref(storage, `avatars/${currentUser?.uid}`);
+      // await uploadString(storageRef, croppedBase64Image, 'data_url');
+      // const downloadURL = await getDownloadURL(storageRef);
 
-      await updateProfile(currentUser!, { photoURL: downloadURL });
+      let fileURL = "";
+
+      if (croppedBase64Image) {
+          const croppedBlob = await fetch(croppedBase64Image).then(res => res.blob());
+
+          fileURL = await uploadFile(croppedBlob);
+      }
+
+      await updateProfile(currentUser!, { photoURL: fileURL });
 
       const usersRef = collection(db, "user");
       const userQuery = query(usersRef, where("유저아이디", "==", currentUser?.uid));
@@ -118,10 +127,10 @@ const ProfileImageCropper: React.FC<ProfileImageCropperProps> = ({
 
       if (!querySnapshot.empty) {
         const userDocRef = querySnapshot.docs[0].ref; 
-        await updateDoc(userDocRef, { 프로필사진: downloadURL });
+        await updateDoc(userDocRef, { 프로필사진: fileURL });
       }
 
-      setUserImg(downloadURL);
+      setUserImg(fileURL);
       alert('프로필 이미지가 성공적으로 업데이트되었습니다!');
       onClose();
     } catch (error) {
@@ -129,6 +138,16 @@ const ProfileImageCropper: React.FC<ProfileImageCropperProps> = ({
       alert('이미지를 업로드하는 중 오류가 발생했습니다.');
     }
   };
+
+  const uploadFile = async (blob: Blob): Promise<string> => {
+
+    const storageRef = ref(storage, `avatars/${currentUser?.uid}`);
+
+    await uploadBytes(storageRef, blob);
+
+    const fileURL = await getDownloadURL(storageRef);
+    return fileURL;
+};
 
   return (
     <Wrapper>

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components"
 import { auth, db } from "../firebase";
-import { collection, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
+import { collection, doc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import WeekDates from "../components/week-records";
 import { format } from "date-fns";
 import { FaArrowUp } from "react-icons/fa";
@@ -258,6 +258,7 @@ export default function Profile() {
 
       try {
         const currentUserUID = user.uid;
+
         const today = new Date();
         const formattedDate = format(today, 'yyyy-MM-dd');
 
@@ -269,7 +270,12 @@ export default function Profile() {
           const todayExercise = userDoc.data().오늘운동;
 
           if (todayExercise === false) {
-            const recordsCollectionRef = collection(db, "records");
+            if(!currentUserUID){
+              return;
+            }
+            const recordsDocRef = doc(db, "records", currentUserUID);
+            const recordsCollectionRef = collection(recordsDocRef, "운동기록");
+
             const querySnapshot = await getDocs(
               query(recordsCollectionRef, where("날짜", "==", formattedDate), where("유저아이디", "==", currentUserUID))
             );

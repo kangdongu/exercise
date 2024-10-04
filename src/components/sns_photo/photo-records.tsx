@@ -470,7 +470,7 @@ export default function PhotoRecords() {
                                 <DateChoice onDateChange={handleDateChange} />
                                 {previewUrl && (
                                     <ReadyFile>
-                                        <ReadyImg src={previewUrl} alt="Selected" />
+                                        <ReadyImg src={cropImg} alt="Selected" />
                                     </ReadyFile>
                                 )}
                                 <Memo rows={5} maxLength={180} onChange={onChange} value={memo} placeholder="오늘의 운동은 어땠나요?" />

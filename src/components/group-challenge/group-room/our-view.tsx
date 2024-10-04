@@ -88,6 +88,7 @@ const OurViewDetails: React.FC<ourDetailProps> = ({ photo }) => {
     const [userNickname, setNickname] = useState("");
     const [currentUserUID, setCurrentUserUID] = useState("");
     const [userProfilePicURL, setUserProfilePicURL] = useState<string | null>(null);
+    const [photoProfile, setPhotoProfile] = useState("")
 
     useEffect(() => {
         const user = auth.currentUser;
@@ -105,7 +106,6 @@ const OurViewDetails: React.FC<ourDetailProps> = ({ photo }) => {
                 if (photoDoc.exists()) {
                     const photoData = photoDoc.data();
                     setLikes(photoData.좋아요유저 || []);
-                    console.log("좋아요유저:", photoData.좋아요유저);
                 }
             } catch (error) {
                 console.error("좋아요유저를 가져오는 중 오류가 발생했습니다:", error);
@@ -176,6 +176,13 @@ const OurViewDetails: React.FC<ourDetailProps> = ({ photo }) => {
                         setNickname(userNickname);
                     } else {
                         console.error("사용자 문서가 존재하지 않습니다.");
+                    }
+                    const profileSnapshot = await getDocs(
+                        query(usersCollectionRef, where("유저아이디", "==", photo.유저아이디))
+                    )
+                    if(!profileSnapshot.empty){
+                        const recordProfile = profileSnapshot.docs[0].data().프로필사진;
+                        setPhotoProfile(recordProfile)
                     }
                 }
             } catch (error) {
@@ -248,8 +255,8 @@ const OurViewDetails: React.FC<ourDetailProps> = ({ photo }) => {
         <Wrapper>
             <UserProfileWrapper>
                 <UserprogileImg>
-                    {photo.프로필사진 !== "" ? (
-                        <img style={{width:'100%'}} src={photo.프로필사진} />
+                    {photoProfile !== "" ? (
+                        <img style={{width:'100%'}} src={photoProfile} />
                     ): (
                         <FaUserAlt style={{width:'35px',height:'35px', marginLeft:'7.5px', marginTop:'15px'}} />
                     )}
