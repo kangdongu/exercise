@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components"
-import GroupCreate from "./group-create";
+import GroupCreate from "./group-create/group-create";
 import GroupGlasses from "./group-glasses";
 import { IoSearch } from "react-icons/io5";
 import { CiLock } from "react-icons/ci";
