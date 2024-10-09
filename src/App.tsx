@@ -28,6 +28,7 @@ import ExericseChoicePage from './components/calendar/exercise-choice';
 import ExerciseRecords from './components/calendar/exercise-records';
 import { ExerciseProvider } from './components/calendar/exercises-context';
 import ExerciseDataContent from './components/exerciserecords/exercise-data-content';
+import { BadgesProvider } from './components/badge/badges-context';
 
 const Wrapper = styled.div`
 `;
@@ -67,7 +68,11 @@ function App() {
             <Route path="/gender" element={<GenderChoice />} />
             <Route path="/" element={<ProtectedRoute><SettingLayout /></ProtectedRoute>}>
               <Route index element={<Home />} />
-              <Route path="profile" element={<Profile />} />
+              <Route path="profile" element={
+                <BadgesProvider>
+                  <Profile />
+                </BadgesProvider>
+              } />
               <Route path="records" element={<Records />} />
               <Route path="sns" element={<Sns />} />
               <Route path="timer" element={<TimerContent />} />

@@ -1,7 +1,6 @@
 import styled from "styled-components"
 
 const Wrapper = styled.div`
-
 `;
 const TitleWrapper = styled.div`
 
@@ -36,8 +35,11 @@ const ContentText = styled.textarea`
 `;
 const ButtonWrapper = styled.div`
     display:flex;
+    width:100%;
     padding:20px;
-
+    position:fixed;
+    left:0;
+    bottom:40px;
 `;
 const Button = styled.button`
    width:100px;

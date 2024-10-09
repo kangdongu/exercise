@@ -14,6 +14,8 @@ import { TiPlus } from "react-icons/ti";
 import { FaExchangeAlt } from "react-icons/fa";
 import ProfileImageCropper from "../components/image-crop/profile-image-crop";
 import CharacterChoice from "../components/character-choice";
+import BadgesChoiceModal from "../components/badge/badge-choice-modal";
+import { useBadgesContext } from "../components/badge/badges-context";
 
 const Wrapper = styled.div`
   width:100vw;
@@ -206,7 +208,7 @@ const BellAndMenu = styled.div`
 `;
 
 
-interface Badges {
+export interface Badges {
   유저아이디: string[];
   뱃지이름: string;
   뱃지설명: string;
@@ -229,6 +231,8 @@ export default function Profile() {
   const [cropperModal, setCropperModal] = useState(false);
   const imgInput = useRef<HTMLInputElement | null>(null);
   const [characterChoice, setCharacterChoice] = useState(false);
+  const [badgesChoice, setBadgesChoice] = useState(false)
+  const { selectedBadges, setSelectedBadges } = useBadgesContext();
 
   useEffect(() => {
     setBellAlerm(true)
@@ -268,9 +272,11 @@ export default function Profile() {
         if (!userQuerySnapshot.empty) {
           const userDoc = userQuerySnapshot.docs[0];
           const todayExercise = userDoc.data().오늘운동;
+          const selectedBadges = userDoc.data().선택뱃지;
+          setSelectedBadges(selectedBadges)
 
           if (todayExercise === false) {
-            if(!currentUserUID){
+            if (!currentUserUID) {
               return;
             }
             const recordsDocRef = doc(db, "records", currentUserUID);
@@ -345,7 +351,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchBadges = async () => {
       try {
-        const q = query(collection(db, "badges"), orderBy("순서", "desc"))
+        const q = query(collection(db, "badges"), where("유저아이디", "array-contains", user?.uid), orderBy("순서", "desc"))
         const querySnapshot = await getDocs(q);
 
         const badgesArray: Badges[] = querySnapshot.docs.map((doc) => ({
@@ -355,8 +361,10 @@ export default function Profile() {
           뱃지이미지: doc.data().뱃지이미지
         }))
         setBadge(badgesArray)
-      } catch {
+        console.log(badgesArray)
 
+      } catch (error) {
+        console.log(error)
       }
     }
     fetchBadges()
@@ -368,7 +376,7 @@ export default function Profile() {
     }
   }, []);
 
-  const filteredBadges = badges.filter(badge => badge.유저아이디.includes(user?.uid || ''))
+  const filteredBadges = badges.slice(0, 8)
 
   if (loading) {
     return (
@@ -452,9 +460,14 @@ export default function Profile() {
             </AvatarMent>
           </CharacterWrapper>
           <BadgeWrapper>
-            {filteredBadges.map((badge) => (
+            {selectedBadges.length > 0 && selectedBadges.map((badge, index) => (
+              <ImgWrapper key={index}>
+                <BadgeImg onClick={() => setBadgesChoice(true)} src={badge} />
+              </ImgWrapper>
+            ))}
+            {selectedBadges.length == 0 && filteredBadges.map((badge) => (
               <ImgWrapper key={badge.뱃지이름}>
-                <BadgeImg src={badge.뱃지이미지} />
+                <BadgeImg onClick={() => setBadgesChoice(true)} src={badge.뱃지이미지} />
               </ImgWrapper>
             ))}
           </BadgeWrapper>
@@ -485,7 +498,10 @@ export default function Profile() {
         )
       }
       {characterChoice && (
-        <CharacterChoice modal={characterChoice} change={() => fetchGender()} onClose={() => setCharacterChoice(false)}  />
+        <CharacterChoice modal={characterChoice} change={() => fetchGender()} onClose={() => setCharacterChoice(false)} />
+      )}
+      {badgesChoice && (
+        <BadgesChoiceModal onClose={() => setBadgesChoice(false)} badgesList={badges} />
       )}
     </Wrapper>
   )

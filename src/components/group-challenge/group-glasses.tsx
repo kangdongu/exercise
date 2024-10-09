@@ -2,6 +2,9 @@ import { differenceInDays, parseISO } from "date-fns";
 import styled from "styled-components"
 import { CiLock } from "react-icons/ci";
 import { FaUserAlt } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { auth, db } from "../../firebase";
 
 const Wrapper = styled.div`
     width:100vw;
@@ -132,18 +135,39 @@ interface Challenge {
     종료날짜: string;
     요일선택: string[];
     유저아이디: string[];
-    방장프로필:string;
     방장닉네임:string;
     인원수:number;
     기간종료:boolean;
+    카테고리:string;
 }
 interface GlassesProps {
     onBack: () => void;
     challenge: Challenge;
 }
+
 const GroupGlasses: React.FC<GlassesProps> = ({ onBack, challenge }) => {
     const dDay = differenceInDays(parseISO(challenge.종료날짜), new Date());
     const dDayText = dDay >= 0 ? `D-${dDay}` : `D+${Math.abs(dDay)}`;
+    const [profile, setProfile] = useState("")
+    const currentUser = auth.currentUser;
+
+    useEffect(() => {
+        const fetchUser = async() => {
+            try{
+                const usersRef = collection(db, "user");
+                const userQuerySnapshot = await getDocs(query(usersRef, where("유저아이디", "==", currentUser?.uid)));
+
+                if (!userQuerySnapshot.empty) {
+                    const doc = userQuerySnapshot.docs[0];
+                    setProfile(doc.data().프로필사진)
+                }
+            }catch(error){
+                console.log(error)
+            }
+        }
+        fetchUser()
+    },[])
+    
 
     return (
         <Wrapper>
@@ -154,8 +178,8 @@ const GroupGlasses: React.FC<GlassesProps> = ({ onBack, challenge }) => {
                 </Back>
                 <ManagerProfileWrapper>
                     <ProfileImgWrapper>
-                        {challenge.방장프로필 !== "" ? (
-                             <ProfileImg src={challenge.방장프로필} />
+                        {profile !== "" ? (
+                             <ProfileImg src={profile} />
                         ):(
                             <FaUserAlt style={{width:"60px", height:'60px', marginLeft:'10px', marginTop:"20px", color:'gray'}} />
                         )}
@@ -165,6 +189,7 @@ const GroupGlasses: React.FC<GlassesProps> = ({ onBack, challenge }) => {
                         {challenge.방장닉네임}
                     </ProfileNicknameWrapper>
                 </ManagerProfileWrapper>
+                {challenge.카테고리}
                 <PeopleSecret>
                     {challenge.비밀방여부 ? (
                         <Secret>

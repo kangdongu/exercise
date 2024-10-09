@@ -332,10 +332,10 @@ interface Challenge {
     요일선택: string[];
     유저아이디: string[];
     비밀번호: string;
-    방장프로필: string;
     방장닉네임: string;
     인원수: number;
     기간종료: boolean;
+    카테고리:string;
 }
 
 const GroupList = () => {

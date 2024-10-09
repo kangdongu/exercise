@@ -15,10 +15,10 @@ export interface Challenge {
     요일선택: string[];
     유저아이디: string[];
     비밀번호: any;
-    방장프로필: string;
     방장닉네임: string;
     인원수: number;
     기간종료: boolean;
+    카테고리:string;
 }
 
 interface ChallengeContextType {
@@ -58,6 +58,7 @@ export const ChallengeProvider = ({ children }: { children: ReactNode }) => {
                 방장닉네임: doc.data().방장닉네임,
                 인원수: doc.data().인원수,
                 기간종료: doc.data().기간종료,
+                카테고리: doc.data().카테고리,
             }));
 
             const today = new Date();

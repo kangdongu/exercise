@@ -125,7 +125,6 @@ const CharacterChoice: React.FC<CharacterProps> = ({ modal, onClose, change }) =
 
         const userDoc = userQuerySnapshot.docs[0];
         const gender = userDoc.data().성별;
-        console.log(gender)
         const charactersRef = collection(db, "characters");
         const characterSnapshot = await getDocs(
           query(charactersRef, where("성별", "==", gender === "남자" ? "남성" : "여성"))
@@ -145,7 +144,6 @@ const CharacterChoice: React.FC<CharacterProps> = ({ modal, onClose, change }) =
           );
 
           setCharacters(allCharacters.flat());
-          console.log(characters, allCharacters)
         }
       } catch (error) {
         console.log(error);

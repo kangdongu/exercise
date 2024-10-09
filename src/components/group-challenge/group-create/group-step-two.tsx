@@ -5,9 +5,12 @@ const Wrapper = styled.div`
 `;
 const ButtonWrapper = styled.div`
     display:flex;
+    width:100%;
     margin-top:20px;
     gap:20px;
     margin-bottom:30px;
+    position:fixed;
+    bottom:40px;
     justify-content: space-around;
 `;
 const Button = styled.button`
@@ -78,6 +81,7 @@ const GroupCreateStepTwo: React.FC<StepTwoProps> = ({ nextStep, prevStep, select
     const calculateSelectedWeek = () => {
         return `${selectedDays.length}`;
     };
+    
     const handleDayClick = (day: string) => {
         let updatedDays;
         updatedDays = selectedDays.includes(day)

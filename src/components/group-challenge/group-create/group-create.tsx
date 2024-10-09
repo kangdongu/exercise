@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components"
 import { auth, db } from "../../../firebase";
 import { addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
-import {  format } from "date-fns";
+import { format } from "date-fns";
 import { Challenge, useChallenges } from "../group-context";
 import PeopleModal from "../people-modal";
 import AchievementModal from "../../achievement-alert";
@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from 'framer-motion';
 import GroupCreateStepOne from "./group-step-one";
 import GroupCreateStepTwo from "./group-step-two";
+import GroupCreateStepFour from "./group-step-four";
 import GroupCreateStepThree from "./group-step-three";
 
 const Wrapper = styled.div`
@@ -35,11 +36,11 @@ const Back = styled.div`
 const StepWrapper = styled.div`
     display:flex;
     position:relative;
-    gap:5px;
+    gap:15px;
     span{
         background-color:#f1f1f1;
-        width:20px;
-        height:20px;
+        width:25px;
+        height:25px;
         border-radius:50%;
     }
 `;
@@ -69,6 +70,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
     const navigate = useNavigate()
     const currentUser = auth.currentUser
     const [move, setMove] = useState(0);
+    const [selectedCategory, setSelectedCategory] = useState("해당없음");
     const [currentStep, setCurrentStep] = useState(1);
 
 
@@ -128,6 +130,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                 방장닉네임: nickname,
                 인원수: peopleCount,
                 기간종료: false,
+                카테고리: selectedCategory,
             };
 
             try {
@@ -228,7 +231,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
         setCurrentStep((prevStep) => prevStep - 1);
         moveLeft()
     };
-    const updateDays =(updateDays:string[]) => {
+    const updateDays = (updateDays: string[]) => {
         setSelectedDays(updateDays)
     }
 
@@ -254,12 +257,15 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
             setPeopleCount(value === '' ? 0 : numericValue);
         }
     };
-    const onPassword = (passwordProps:string) => {
+    const onPassword = (passwordProps: string) => {
         setPassword(passwordProps)
     }
-    const onRePassword = (rePasswordProps:string) => {
+    const onRePassword = (rePasswordProps: string) => {
         setRePassword(rePasswordProps)
     }
+    const handleCategoryChange = (category: string) => {
+        setSelectedCategory(category);
+    };
 
     return (
         <Wrapper>
@@ -273,12 +279,13 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                 <span></span>
                 <span></span>
                 <span></span>
+                <span></span>
                 <motion.div
-                    animate={{ x: move * 25 }}
+                    animate={{ x: move * 40 }}
                     transition={{ duration: 0.5 }}
                     style={{
-                        width: "20px",
-                        height: "20px",
+                        width: "25px",
+                        height: "25px",
                         backgroundColor: "red",
                         borderRadius: "50%",
                         position: "absolute",
@@ -303,6 +310,13 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
 
             {currentStep === 3 && <GroupCreateStepThree
                 prevStep={prevStep}
+                nextStep={nextStep}
+                selectedCategory={selectedCategory}
+                onCategoryChange={handleCategoryChange}
+            />}
+
+            {currentStep === 4 && <GroupCreateStepFour
+                prevStep={prevStep}
                 createRoom={createRoom}
                 secret={secretCheckToggle}
                 SecretCheckClick={SecretCheckClick}
@@ -315,7 +329,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                 passwordProps={onPassword}
                 rePasswordProps={onRePassword}
             />}
-            
+
             {isPeopleModalOpen && (
                 <PeopleModal
                     onClose={() => setIsPeopleModalOpen(false)}
