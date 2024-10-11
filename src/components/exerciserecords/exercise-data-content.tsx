@@ -6,6 +6,7 @@ import { auth, db } from "../../firebase";
 import { collection, doc, getDocs, query } from "firebase/firestore";
 import { format } from "date-fns";
 import CalendarClickModal from "../calendar/calendar-click-component";
+import LoadingScreen from "../loading-screen";
 
 const Wrapper = styled.div`
     width:100%;
@@ -28,6 +29,19 @@ const DataWrapper = styled.div`
 const DataContentWrapper = styled.span`
 
 `;
+const MoreButton = styled.button`
+    border:none;
+    background-color:white;
+    font-size:16px;
+`;
+const MoreButtonWrapper = styled.div`
+    width:100%;
+    margin: 5px auto;
+    height:50px;
+    background-color:white;
+    display:flex;
+    justify-content: center;
+`;
 
 interface ExerciseData {
     date: string;
@@ -41,7 +55,9 @@ const ExerciseDataContent = () => {
     const [detailDate, setDetailDate] = useState<string>("")
     const currentUser = auth.currentUser;
     const location = useLocation();
-    const [getDate, setGetDate] = useState(false)
+    const [getDate, setGetDate] = useState(false);
+    const [isLoding, setLoading] = useState(true);
+    const [moreData, setMoreData] = useState(false)
 
     useEffect(() => {
         if (location.state?.getDate) {
@@ -92,6 +108,8 @@ const ExerciseDataContent = () => {
                 setExerciseData(allExercises);
             } catch (error) {
                 console.log(`데이터를 가져올 수 없습니다.: ${error}`)
+            } finally {
+                setLoading(false)
             }
         }
         fetchExerciseRecords()
@@ -117,13 +135,13 @@ const ExerciseDataContent = () => {
         <MoSlideModal onClose={backNavigate}>
             <Wrapper>
                 <ContentWrapper>
-                    {exerciseData.map((item, index) => (
+                    {exerciseData.slice(-10).map((item, index) => (
                         <DataWrapper key={index}>
                             <div style={{ textAlign: 'center' }}>
                                 <Date>{formattedDate(item.date)}</Date>
                             </div>
-                            <div onClick={() => dataDetails(item.date)} style={{ borderRadius:'7px', backgroundColor: 'white', height: '90px', padding: '10px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', marginBottom: '20px' }}>
-                                <h3 style={{margin:'0',marginBottom:'10px'}}>{formattedDate(item.date)}</h3>
+                            <div onClick={() => dataDetails(item.date)} style={{ borderRadius: '7px', backgroundColor: 'white', height: '90px', padding: '10px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', marginBottom: '20px' }}>
+                                <h3 style={{ margin: '0', marginBottom: '10px' }}>{formattedDate(item.date)}</h3>
                                 {item.exercises.map((exercise, exIndex) => (
                                     <DataContentWrapper key={exIndex}>
                                         <span>{exercise.type} </span>
@@ -132,9 +150,36 @@ const ExerciseDataContent = () => {
                             </div>
                         </DataWrapper>
                     ))}
+                    <MoreButtonWrapper>
+                        <MoreButton onClick={() => setMoreData(true)}>더 많은 운동 정보보기</MoreButton>
+                    </MoreButtonWrapper>
                 </ContentWrapper>
                 {dataDetailsModal && (
                     <CalendarClickModal setCalendarClick={() => setDataDetailsModal(false)} clickDate={detailDate} getData={true} />
+                )}
+                {moreData &&  (
+                    <MoSlideModal onClose={() => setMoreData(false)}>
+                        <div style={{width:"100%", height:'calc(100vh - 80px)', overflowY:'scroll', margin:"0 auto", backgroundColor:'#f1f1f1', padding:'10px 10px'}}>
+                        {exerciseData.map((item, index) => (
+                        <DataWrapper key={index}>
+                            <div style={{ textAlign: 'center' }}>
+                                <Date>{formattedDate(item.date)}</Date>
+                            </div>
+                            <div onClick={() => dataDetails(item.date)} style={{ borderRadius: '7px', backgroundColor: 'white', height: '90px', padding: '10px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', marginBottom: '20px' }}>
+                                <h3 style={{ margin: '0', marginBottom: '10px' }}>{formattedDate(item.date)}</h3>
+                                {item.exercises.map((exercise, exIndex) => (
+                                    <DataContentWrapper key={exIndex}>
+                                        <span>{exercise.type} </span>
+                                    </DataContentWrapper>
+                                ))}
+                            </div>
+                        </DataWrapper>
+                    ))}
+                    </div>
+                    </MoSlideModal>
+                )}
+                {isLoding && (
+                    <LoadingScreen />
                 )}
             </Wrapper>
         </MoSlideModal>

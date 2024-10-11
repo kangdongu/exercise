@@ -28,7 +28,7 @@ const GlassesWrapper = styled.div`
     top:50%;
     left:50%;
     transform: translate(-50%,-60%);
-    padding: 0px 7px;
+    padding: 15px;
     box-sizing: border-box
     z-index:100;
 `;
@@ -123,6 +123,9 @@ const ProfileNicknameWrapper = styled.div`
     font-size:20px;
     font-weight:600;
 `;
+const CategoryWrapper = styled.div`
+
+`;
 
 interface Challenge {
     id: string;
@@ -189,7 +192,6 @@ const GroupGlasses: React.FC<GlassesProps> = ({ onBack, challenge }) => {
                         {challenge.방장닉네임}
                     </ProfileNicknameWrapper>
                 </ManagerProfileWrapper>
-                {challenge.카테고리}
                 <PeopleSecret>
                     {challenge.비밀방여부 ? (
                         <Secret>
@@ -201,6 +203,10 @@ const GroupGlasses: React.FC<GlassesProps> = ({ onBack, challenge }) => {
                     <ChallengeTitle>{challenge.그룹챌린지제목}</ChallengeTitle>
                     <ChallengeContent>{challenge.그룹챌린지내용}</ChallengeContent>
                 </ChallengeContentWrapper>
+                <CategoryWrapper>
+                    <h4 style={{marginBottom:'0'}}>카테고리</h4>
+                    <div>{challenge.카테고리}</div>
+                </CategoryWrapper>
                 <DateWrapper>
                     <h4>챌린지 기간</h4>
                     <DateEnd>

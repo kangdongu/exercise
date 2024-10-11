@@ -183,7 +183,7 @@ const AchievementsContent = () => {
       <Wrapper>
         <MenuWrapper>
           <Menu selected={selectedMenu === 'total'} onClick={() => setSelectedMenu('total')}>전체 도전과제</Menu>
-          <Menu selected={selectedMenu === 'attainment'} onClick={() => setSelectedMenu('attainment')}>달성한 도전과제</Menu>
+          {/* <Menu selected={selectedMenu === 'attainment'} onClick={() => setSelectedMenu('attainment')}>달성한 도전과제</Menu> */}
         </MenuWrapper>
 
         {filteredAchievements.length === 0 && selectedMenu === 'attainment' ? (

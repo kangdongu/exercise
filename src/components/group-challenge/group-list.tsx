@@ -354,7 +354,7 @@ const GroupList = () => {
     const [showAchievements, setShowAchievements] = useState(false)
     const [filter, setFilter] = useState(false);
     const [filterOn, setFilterOn] = useState(false);
-    const [selectedFilter, setSelectedFilter] = useState<string | null>("all");
+    const [selectedFilter, setSelectedFilter] = useState<string | null>("ongoing");
     const [selectedSecret, setSelectedSecret] = useState<string | null>("all");
     const [selectedFull, setSelectedFull] = useState<string | null>("all")
     const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>(["상관없음"]);
@@ -595,6 +595,7 @@ const GroupList = () => {
         }
     }, [selectedFilter, selectedSecret, selectedFull, selectedWeekdays]);
 
+
     const filteredChallenges = () => {
         let filtered = challenges;
         if (selectedRender === "join" && user) {
@@ -676,7 +677,7 @@ const GroupList = () => {
                                     </span>
                                     <PeopleJoinWrapper>
                                         <PeopleWrapper>{challenge.유저아이디.length}/{challenge.인원수}</PeopleWrapper>
-                                        <JoinButton onClick={() => joinClick(challenge)} disabled={isExpired}>
+                                        <JoinButton style={{backgroundColor: challenge.유저아이디.includes(user?.uid ?? '') ? "#009cfc" : "gray"}} onClick={() => joinClick(challenge)} disabled={isExpired}>
                                             {challenge.유저아이디.includes(user?.uid ?? '') ? "인증" : "가입"}
                                         </JoinButton>
                                     </PeopleJoinWrapper>

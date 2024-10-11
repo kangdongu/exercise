@@ -361,7 +361,6 @@ export default function Profile() {
           뱃지이미지: doc.data().뱃지이미지
         }))
         setBadge(badgesArray)
-        console.log(badgesArray)
 
       } catch (error) {
         console.log(error)
@@ -465,7 +464,7 @@ export default function Profile() {
                 <BadgeImg onClick={() => setBadgesChoice(true)} src={badge} />
               </ImgWrapper>
             ))}
-            {selectedBadges.length == 0 && filteredBadges.map((badge) => (
+            {selectedBadges.length < 1 && filteredBadges.map((badge) => (
               <ImgWrapper key={badge.뱃지이름}>
                 <BadgeImg onClick={() => setBadgesChoice(true)} src={badge.뱃지이미지} />
               </ImgWrapper>

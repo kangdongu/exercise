@@ -102,16 +102,16 @@ const BadgesChoiceModal: React.FC<BadgeChoice> = ({ onClose, badgesList }) => {
         }
     }
 
-    const badgesChange = async() => {
-        if(!currentUser?.uid){
+    const badgesChange = async () => {
+        if (!currentUser?.uid) {
             return;
         }
         const userQuery = query(collection(db, "user"), where("유저아이디", "==", currentUser?.uid));
         const userQuerySnapshot = await getDocs(userQuery);
-        if(!userQuerySnapshot.empty){
+        if (!userQuerySnapshot.empty) {
             const userRef = userQuerySnapshot.docs[0]
-            await updateDoc(userRef.ref,{
-                선택뱃지:selectedBadges
+            await updateDoc(userRef.ref, {
+                선택뱃지: selectedBadges
             })
         }
         onClose()
@@ -128,7 +128,11 @@ const BadgesChoiceModal: React.FC<BadgeChoice> = ({ onClose, badgesList }) => {
                                 <img style={{ width: '30px' }} src={badge}></img>
                             </div>
                         ))}
+                        {selectedBadges.length < 1 && (
+                            <span>뱃지를 선택해주세요</span>
+                        )}
                     </div>
+
                 </ChoiceBadges>
                 <BadgesList>
                     <div style={{ width: '100%', display: 'flex', flexWrap: 'wrap', paddingLeft: '2.4%' }}>

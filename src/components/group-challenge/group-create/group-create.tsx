@@ -36,7 +36,7 @@ const Back = styled.div`
 const StepWrapper = styled.div`
     display:flex;
     position:relative;
-    gap:15px;
+    gap:10px;
     span{
         background-color:#f1f1f1;
         width:25px;
@@ -281,7 +281,7 @@ const GroupCreate: React.FC<CreateProps> = ({ onBack }) => {
                 <span></span>
                 <span></span>
                 <motion.div
-                    animate={{ x: move * 40 }}
+                    animate={{ x: move * 35 }}
                     transition={{ duration: 0.5 }}
                     style={{
                         width: "25px",
