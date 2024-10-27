@@ -235,6 +235,12 @@ const ProfileEdit: React.FC<profileEditProps> = ({ onClose }) => {
         fetchUser()
     }, [])
 
+    if (loading) {
+        return (
+            <LoadingScreen />
+        );
+    }
+
 
     const nickNameEditClick = () => {
         setNicknameEdit(true);
@@ -328,13 +334,6 @@ const ProfileEdit: React.FC<profileEditProps> = ({ onClose }) => {
             imgFile: null
         });
     };
-
-
-    if (loading) {
-        return (
-            <LoadingScreen />
-        );
-    }
 
     return (
         <Wrapper>

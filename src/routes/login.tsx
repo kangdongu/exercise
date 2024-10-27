@@ -1,6 +1,6 @@
 import styled from "styled-components"
-import GithubButton from "../components/github-login";
-import GoogleButton from "../components/gogle-login";
+import GithubButton from "../components/login/github-login";
+import GoogleButton from "../components/login/gogle-login";
 // import { FaArrowRight } from "react-icons/fa";
 // import { useNavigate } from "react-router-dom";
 
@@ -57,16 +57,6 @@ const Size = styled.div`
     text-align:center;
     width:412px;
 `;
-// const Interviewer = styled.div`
-//     width:90%;
-//     height:50px;
-//     background-color:white;
-//     display: flex;
-//     align-items: center;
-//     justify-content: space-around;
-//     margin: 0 auto;
-//     border-radius:10px;
-// `;
 
 
 export const Error = styled.span`
@@ -81,11 +71,6 @@ export const Switcher = styled.span`
 `;
 
 export default function Login() {
-    // const navigate = useNavigate()
-
-    // const createAccount = () => {
-    //     navigate("/create-account")
-    // }
 
     return (
         <Wrapper>

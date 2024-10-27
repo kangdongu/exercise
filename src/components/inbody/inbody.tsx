@@ -4,7 +4,7 @@ import { db, auth } from '../../firebase';
 import { addDoc, collection, doc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { format } from 'date-fns';
 import { Line } from "react-chartjs-2";
-import AchievementModal from "../achievement-alert";
+import AchievementModal from "../achievements/achievement-alert";
 import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`

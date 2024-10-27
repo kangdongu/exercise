@@ -2,7 +2,7 @@ import { addDoc, collection, doc, getDocs, query, setDoc, updateDoc, where } fro
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { auth, db } from "../../firebase";
-import DateChoice from "../date-picker";
+import DateChoice from "../date-pick/date-picker";
 import { format } from 'date-fns';
 import MoSlideModal from "../slideModal/mo-slide-modal";
 import { IoSearch } from "react-icons/io5";

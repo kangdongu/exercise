@@ -4,8 +4,8 @@ import { collection, query, where, getDocs, doc, updateDoc, increment, arrayUnio
 import { auth, db } from "../../firebase";
 import { format } from "date-fns";
 import { FaCheck } from "react-icons/fa";
-import AchievementModal from "../achievement-alert";
-import BadgeModal from "../badge-modal";
+import AchievementModal from "../achievements/achievement-alert";
+import BadgeModal from "../badge/badge-modal";
 
 
 const Wrapper = styled.div`

@@ -56,6 +56,7 @@ const CloseView = styled.div`
 
 const ViewImg = styled.img`
   width: 100%;
+  border:0.5px solid #f1f1f1;
 `;
 
 const ViewWrapper = styled.div`

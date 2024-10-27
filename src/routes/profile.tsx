@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components"
 import { auth, db } from "../firebase";
 import { collection, doc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
-import WeekDates from "../components/week-records";
+import WeekDates from "../components/profile/week-records";
 import { format } from "date-fns";
 import { FaArrowUp } from "react-icons/fa";
 import LoadingScreen from "../components/loading-screen";
@@ -13,7 +13,7 @@ import BellModal from "../components/bell";
 import { TiPlus } from "react-icons/ti";
 import { FaExchangeAlt } from "react-icons/fa";
 import ProfileImageCropper from "../components/image-crop/profile-image-crop";
-import CharacterChoice from "../components/character-choice";
+import CharacterChoice from "../components/profile/character-choice";
 import BadgesChoiceModal from "../components/badge/badge-choice-modal";
 import { useBadgesContext } from "../components/badge/badges-context";
 

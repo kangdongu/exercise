@@ -1,106 +1,61 @@
-/* 기본 스타일 */
-.react-calendar__month-view__days__day--weekend {
-    color: inherit !important; /* 기본 색상으로 덮어쓰기 */
+.react-calendar__tile--weekday{
+    color:#333333;
 }
-.fc {
-    font-size: 12px; /* 기본 폰트 크기 */
+.react-calendar__tile--saturday {
+    color: #009FFF; 
+    font-weight: bold;
+  }
+.react-calendar__tile-sunday {
+    color:#d10000;
+    font-weight:bold;
 }
-
-.fc-day-sun a {
-    color: red;
+.react-calendar__month-view__days__day--neighboringMonth, .react-calendar__decade-view__years__year--neighboringDecade, .react-calendar__century-view__decades__decade--neighboringCentury{
+    opacity: 0.6;
+    color:#333333;
 }
-
-.fc-day-sat a {
-    color: blue;
+.react-calendar{
+    width:100%;
+    border-radius:10px;
+    padding:5px;
+    padding-top:0px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border:none;
 }
-.react-calendar__month-view__days__day--weekend:nth-child(7n) {
-    color: blue !important;
+.react-calendar__month-view__weekdays__weekday{
+    font-size: 14px;
 }
-
-/* 일요일을 빨간색으로 지정 */
-.react-calendar__month-view__days__day--weekend:nth-child(1) {
-    color: red !important;
+.react-calendar__navigation button:disabled{
+    background-color:white;
+    color:#333333;
+    font-size:18px;
+    font-weight:bold;
 }
-
-.fc-event {
-    background-color: #FF286F; 
-    color: white; 
-    border: none; 
-    border-radius: 5px; 
-    padding: 2px 5px; 
+.react-calendar__tile--active:enabled:hover, .react-calendar__tile--active:enabled:focus {
+    background: #1087ff;
 }
-.fc-day-sat .fc-event {
-    color: blue !important; /* 토요일 이벤트 텍스트 색상을 파란색으로 강제 적용 */
+abbr[title] {
+    text-decoration: none;
 }
-
-.fc-daygrid-day.fc-day-today {
-    background-color: #ffe0e0; 
-    border-radius: 5px; 
+.react-calendar__tile{
+    padding: 8px 6.6667px;
 }
-
-.fc-daygrid-day-frame {
-    padding: 1px 5px;
+.react-calendar__navigation button:enabled:hover, .react-calendar__navigation button:enabled:focus {
+    background-color: white;
 }
-.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events{
-    overflow:hidden;
-    max-height:30px;
+.react-calendar__navigation button {
+    min-width: 44px;
+    background: none;
+    font-size:20px;
 }
-
-/* 모바일 화면 스타일 */
-@media screen and (max-width: 700px) {
-    .fc-prev-button, .fc-next-button {
-        width: 25px;
-        height: 25px;
-        font-size: 10px;
-    }
-    
-    .fc-button-group {
-        height: 30px;
-    }
-    
-    .fc-toolbar-title {
-        font-size: 1.2em;
-        margin-bottom: 10px;
-    }
-    
-    .fc-daygrid-day-number {
-        font-size: 10px;
-        color: #333333 !important;
-    }
-    
-    .fc-daygrid-day {
-        height: 30px;
-    }
-    
-    .fc-daygrid-event {
-        font-size: 8px;
-        padding: 1px;
-    }
-
-    .fc-toolbar-chunk .fc-button {
-        color: white;
-        border: none; 
-        border-radius: 5px; 
-        height: 25px;
-        padding: 3px 7px; 
-        font-size: 10px;
-    }
-
-    .fc .fc-toolbar-title {
-        font-size: 20px;
-    }
-    
-    .fc .fc-toolbar.fc-header-toolbar {
-        margin-bottom: 10px;
-        height: 25px;
-    }
-
-    .fc-daygrid-day-frame {
-        padding: 1px;
-    }
-}
-
-/* 추가 일반 스타일 */
-.fc-header-toolbar {
-    height: 30px;
-}
+.react-calendar__tile--active {
+    background-color: #d3e4ff !important;
+    color: #333 !important;
+    border: 1px solid #a3c4ff !important; 
+  }
+  
+  .react-calendar__tile--active:enabled:hover,
+  .react-calendar__tile--active:enabled:focus {
+    background-color: #c3d8ff !important; 
+    color: #333 !important; 
+    border: 1px solid #91b6ff !important; 
+  }

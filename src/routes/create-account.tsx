@@ -4,8 +4,8 @@ import { useState } from "react";
 import styled from "styled-components"
 import { auth } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
-import GithubButton from "../components/github-login";
-import GoogleButton from "../components/gogle-login";
+import GithubButton from "../components/login/github-login";
+import GoogleButton from "../components/login/gogle-login";
 
 const Wrapper = styled.div`
 @media screen and (max-width: 700px) {

@@ -12,7 +12,7 @@ import { useChallenges } from "./group-context";
 import { FaArrowUp } from "react-icons/fa";
 import MoSlideModal from "../slideModal/mo-slide-modal";
 import { useNavigate } from "react-router-dom";
-import AchievementModal from "../achievement-alert";
+import AchievementModal from "../achievements/achievement-alert";
 import { CiFilter } from "react-icons/ci";
 import FilterComponent from "./filter";
 

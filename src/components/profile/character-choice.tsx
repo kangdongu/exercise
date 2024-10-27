@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { auth, db } from "../firebase";
+import { auth, db } from "../../firebase";
 import { collection, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { FaLock } from "react-icons/fa";
 

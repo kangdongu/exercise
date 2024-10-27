@@ -3,11 +3,13 @@ import styled from "styled-components"
 import { auth, db, storage } from "../../firebase";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import DateChoice from "../date-picker";
+import DateChoice from "../date-pick/date-picker";
 import { format } from 'date-fns';
 import PhotoUpload from "./rander-photo";
 import MoSlideModal from "../slideModal/mo-slide-modal";
 import ImgCrop from "../image-crop/content-image-crop";
+import { compressImage } from "../image-compression";
+import { BiDotsHorizontalRounded } from "react-icons/bi";
 
 
 const Wrapper = styled.div`
@@ -146,19 +148,22 @@ overflow-y:scroll;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     box-sizing:border-box;
 `;
-const CloseView = styled.div`
-    float:right;
-    font-size:18px;
-    cursor:pointer;
-    margin-bottom:10px;
-`;
 const ViewImg = styled.img`
     width:100%;
+    border:0.5px solid #f1f1f1;
+    margin-bottom:10px;
 `;
 const ViewWrapper = styled.div`
-    width:80%;
+    width:95%;
     margin: 0 auto;
     overflow-y:scroll;
+    position:relative;
+    svg{
+        width:35px;
+        height:35px;
+        position:absolute;
+        right:0px;
+    }
 `;
 const Select = styled.select`
     height:30px;
@@ -169,25 +174,31 @@ const Option = styled.option`
 
 `;
 const DeleteBtn = styled.div`
-    background-color:red;
+    background-color:#f1f1f1;
     width:100px;
     height:30px;
+    line-height:30px;
     cursor:pointer;
-    color:white;
+    text-align:center;
+    border-bottom:0.5px solid #333333;
 `;
 const EditPost = styled.div`
-    background-color:blue;
+    background-color:#f1f1f1;
     width:100px;
     height:30px;
+    line-height:30px;
+    text-align:center;
+    cursor:pointer;
+`;
+const EditComplete = styled.button`
+    background-color:blue;
+    padding: 10px 15px;
+    font-size:16px;
+    border:none;
     cursor:pointer;
     color:white;
-`;
-const EditComplete = styled.div`
-background-color:blue;
-width:100px;
-height:30px;
-cursor:pointer;
-color:white;
+    float:right;
+    border-radius:5px;
 `;
 
 export default function PhotoRecords() {
@@ -206,6 +217,7 @@ export default function PhotoRecords() {
     const [isCreating, setIsCreating] = useState(false);
     const [imgCropModal, setImgCropModal] = useState(false)
     const [cropImg, setCropImg] = useState("")
+    const [meatbollBtn, setMeatbollBtn] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -251,7 +263,7 @@ export default function PhotoRecords() {
             };
             reader.readAsDataURL(selectedFile);
             setImgCropModal(true)
-        }   
+        }
     };
 
     const viewCloseModal = () => {
@@ -282,12 +294,19 @@ export default function PhotoRecords() {
 
         if (!user || isLoading) return;
 
+        if (!memo.trim()) {
+            alert("메모를 입력해주세요.");
+            setIsCreating(false);
+            return;
+        }
+
         if (previewUrl === null) {
-            alert("사진을 등록해주세요.");
+            alert("사진을 선택해주세요.");
         } else {
 
             try {
                 setLoading(true);
+
                 const date = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
                 const docRef = await addDoc(collection(db, "photo"), {
                     날짜: date,
@@ -305,8 +324,13 @@ export default function PhotoRecords() {
                 if (cropImg) {
                     const croppedBlob = await fetch(cropImg).then(res => res.blob());
 
+                    const compressBlob = await compressImage(croppedBlob)
+                    if (!compressBlob) {
+                        return;
+                    }
+
                     const locationRef = ref(storage, `photo/${user.uid}-${user.displayName}/${docId}`);
-                    await uploadBytes(locationRef, croppedBlob);
+                    await uploadBytes(locationRef, compressBlob);
                     const url = await getDownloadURL(locationRef);
 
                     await updateDoc(docRef, { 사진: url });
@@ -407,11 +431,8 @@ export default function PhotoRecords() {
             console.error(e);
         }
     };
-    const editPost = () => {
 
 
-        setEditView(true);
-    }
     const editCompleteEvent = async () => {
         try {
             const user = auth.currentUser;
@@ -439,6 +460,7 @@ export default function PhotoRecords() {
                 setSelectedOption("");
                 viewCloseModal();
                 setEditView(false);
+                setMeatbollBtn(false)
             } else {
                 console.error("해당하는 사진이 없습니다.");
             }
@@ -458,7 +480,7 @@ export default function PhotoRecords() {
                 <Title>Photos</Title>
                 <Plus onClick={openModal}>+</Plus>
             </Header>
-            {isModalOpen && window.innerWidth <= 700 ? (
+            {isModalOpen ? (
                 <MoSlideModal onClose={() => setIsModalOpen(false)}>
                     <ModalBackdrop>
                         <ModalContent>
@@ -478,87 +500,48 @@ export default function PhotoRecords() {
                                 <AttachFileInput onChange={onFileChange} type="file" id="file" accept="image" />
                                 <SubmitBtn type="submit" value={isLoading ? "등록중.." : "완료"} />
                             </Form>
-                                {imgCropModal && (
-                                    <ImgCrop originalImg={previewUrl} onClose={() => setImgCropModal(false)} onSave={cropperdImg} />
-                                )}
+                            {imgCropModal && (
+                                <ImgCrop originalImg={previewUrl} onClose={() => setImgCropModal(false)} onSave={cropperdImg} />
+                            )}
                         </ModalContent>
                     </ModalBackdrop>
                 </MoSlideModal>
             ) : null}
-            {isModalOpen && window.innerWidth > 700 ? (
-                <ModalBackdrop>
-                    <ModalContent>
-                        <Form onSubmit={onSubmit}>
-                            <Select value={selectedOption} onChange={handleOptionChange}>
-                                <Option value="나만보기">나만보기</Option>
-                                <Option value="전체공개">전체공개</Option>
-                            </Select>
-                            <DateChoice onDateChange={handleDateChange} />
-                            <Memo rows={5} maxLength={180} onChange={onChange} value={memo} placeholder="오늘의 운동은 어땠나요?" />
-                            <AttachFileButton htmlFor="file">{file ? "선택 완료" : "+ 사진 선택"}</AttachFileButton>
-                            <AttachFileInput onChange={onFileChange} type="file" id="file" accept="image" />
-                            <SubmitBtn type="submit" value={isLoading ? "등록중.." : "사진등록"} />
-                        </Form>
-                        <button onClick={closeModal}>닫기</button>
-                        {previewUrl && (
-                            <ReadyFile>
-                                <ReadyImg src={previewUrl} alt="Selected" />
-                            </ReadyFile>
-                        )}
-                    </ModalContent>
-                </ModalBackdrop>
-            ) : null}
+
             <PhotoWrapper>
                 {userPhotos.map((photo) => (
                     <PhotoUpload onClick={() => handlePhotoClick(photo.id)} key={photo.id} src={photo.photoUrl} alt="User Photo" />
                 ))}
             </PhotoWrapper>
-            {viewDetails && window.innerWidth <= 700 ? (
+            {viewDetails ? (
                 <MoSlideModal onClose={() => { setViewDetails(false) }}>
                     <ModalBackdrop>
                         <ViewContent>
                             {selectedPhotoDetails && (
                                 <ViewWrapper>
+                                    <div style={{ position: 'absolute', right: '0px' }}>
+                                        <BiDotsHorizontalRounded onClick={() => setMeatbollBtn(props => !props)} />
+                                        {meatbollBtn && (
+                                            <div style={{ position: 'absolute', top: '35px', right: '0px', border: '0.5px solid #333333' }}>
+                                                <DeleteBtn onClick={deleteClick}>삭제</DeleteBtn>
+                                                {editView ? <EditPost onClick={() => setEditView(props => !props)}>수정취소</EditPost> : <EditPost onClick={() => setEditView(props => !props)}>수정</EditPost>}
+                                            </div>
+                                        )}
+                                    </div>
+
                                     <ViewImg src={selectedPhotoDetails.사진} alt="Selected Photo" />
-                                    {editView ? <Select value={selectedOption} onChange={handleOptionChange}>
+                                    {editView ? <Select style={{float:'right'}} value={selectedOption} onChange={handleOptionChange}>
                                         <Option value="나만보기">나만보기</Option>
                                         <Option value="전체공개">전체공개</Option>
-                                    </Select> : <Select value={selectedPhotoDetails.옵션} onChange={handleOptionChange}>
-                                        <Option value={selectedPhotoDetails.옵션}>{selectedPhotoDetails.옵션}</Option>
-                                    </Select>}
-                                    <p>{selectedPhotoDetails.날짜}</p>
+                                    </Select> : <div style={{float:'right', fontSize:"16px"}}>{selectedPhotoDetails.옵션}</div>}
+                                    <p style={{margin:'0px'}}>{format(selectedPhotoDetails.날짜, 'yyyy월 MM월 dd일') }</p>
                                     {editView ? <Memo rows={5} maxLength={180} onChange={onChange} value={memo} placeholder={selectedPhotoDetails.메모} /> : <p>{selectedPhotoDetails.메모}</p>}
-                                    <DeleteBtn onClick={deleteClick}>삭제</DeleteBtn>
-                                    {editView ? null : <EditPost onClick={editPost}>수정</EditPost>}
                                     {editView ? <EditComplete onClick={editCompleteEvent}>수정완료</EditComplete> : null}
                                 </ViewWrapper>
                             )}
                         </ViewContent>
                     </ModalBackdrop>
                 </MoSlideModal>
-            ) : null}
-            {viewDetails && window.innerWidth > 700 ? (
-                <ModalBackdrop>
-                    <ViewContent>
-                        {selectedPhotoDetails && (
-                            <ViewWrapper>
-                                <CloseView onClick={viewCloseModal}>닫기</CloseView>
-                                {editView ? <Select value={selectedOption} onChange={handleOptionChange}>
-                                    <Option value="나만보기">나만보기</Option>
-                                    <Option value="전체공개">전체공개</Option>
-                                </Select> : <Select value={selectedPhotoDetails.옵션} onChange={handleOptionChange}>
-                                    <Option value={selectedPhotoDetails.옵션}>{selectedPhotoDetails.옵션}</Option>
-                                </Select>}
-                                <ViewImg src={selectedPhotoDetails.사진} alt="Selected Photo" />
-                                <p>{selectedPhotoDetails.날짜}</p>
-                                {editView ? <Memo rows={5} maxLength={180} onChange={onChange} value={memo} placeholder={selectedPhotoDetails.메모} /> : <p>{selectedPhotoDetails.메모}</p>}
-                                <DeleteBtn onClick={deleteClick}>삭제</DeleteBtn>
-                                <EditPost onClick={editPost}>수정</EditPost>
-                                {editView ? <EditComplete onClick={editCompleteEvent}>수정완료</EditComplete> : null}
-                            </ViewWrapper>
-                        )}
-                    </ViewContent>
-                </ModalBackdrop>
             ) : null}
         </Wrapper>
     )

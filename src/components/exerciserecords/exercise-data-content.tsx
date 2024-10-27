@@ -57,13 +57,16 @@ const ExerciseDataContent = () => {
     const location = useLocation();
     const [getDate, setGetDate] = useState(false);
     const [isLoding, setLoading] = useState(true);
-    const [moreData, setMoreData] = useState(false)
+    const [moreData, setMoreData] = useState(false);
+
 
     useEffect(() => {
         if (location.state?.getDate) {
             setGetDate(true);
         }
     }, [location.state]);
+
+
 
     useEffect(() => {
         const fetchExerciseRecords = async () => {
@@ -106,14 +109,16 @@ const ExerciseDataContent = () => {
                     }
                 }
                 setExerciseData(allExercises);
+                setLoading(false)
             } catch (error) {
                 console.log(`데이터를 가져올 수 없습니다.: ${error}`)
-            } finally {
-                setLoading(false)
             }
         }
         fetchExerciseRecords()
-    }, [])
+    }, [])    
+    if(isLoding){
+        return <LoadingScreen />
+    }
 
     const dataDetails = (date: string) => {
         setDetailDate(date);
@@ -177,9 +182,6 @@ const ExerciseDataContent = () => {
                     ))}
                     </div>
                     </MoSlideModal>
-                )}
-                {isLoding && (
-                    <LoadingScreen />
                 )}
             </Wrapper>
         </MoSlideModal>

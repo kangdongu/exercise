@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import DateChoiceFuture from "../../date-pick";
+import DateChoiceFuture from "../../date-pick/date-pick";
 import { useState } from "react";
 import { differenceInDays } from "date-fns";
 import { FiPlus } from "react-icons/fi";

@@ -1,11 +1,10 @@
 import { QueryDocumentSnapshot, collection, getDocs, DocumentData, doc } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
-import { auth, db } from '../firebase';
+import { auth, db } from '../../firebase';
 import { startOfWeek, endOfWeek, format, subWeeks } from 'date-fns';
 import { Line } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
 import styled from 'styled-components';
-import ThisWeekRecords from './this-week-records';
 
 const Wrapper = styled.div`
 @media screen and (max-width: 700px) {
@@ -21,17 +20,8 @@ const LineWrapper = styled.div`
   margin: 0 auto;
   margin-top:25px;
 `;
-const NowWeekWrapper = styled.div`
-  width:100%;
-  background-color:white;
-  border-radius:10px;
-  margin-bottom:20px;
-  padding: 10px 15px;
-`;
 
 const WeekDates = () => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
   const [exerciseCount, setExerciseCount] = useState(0);
   const [exerciseCountsByWeek, setExerciseCountsByWeek] = useState<number[]>([]);
   const currentUserUID = auth.currentUser?.uid;
@@ -40,8 +30,6 @@ const WeekDates = () => {
     const today = new Date();
     const monday = startOfWeek(today, { weekStartsOn: 1 });
     const sunday = endOfWeek(today, { weekStartsOn: 1 });
-    setStartDate(monday);
-    setEndDate(sunday);
 
     const startDateStr = format(monday, 'yyyy-MM-dd');
     const endDateStr = format(sunday, 'yyyy-MM-dd');
@@ -57,7 +45,7 @@ const WeekDates = () => {
           const uniqueDates = new Set();
 
           exerciseQuerySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
-            const date = doc.id; // 날짜가 문서 ID로 저장됨
+            const date = doc.id;
             if (date >= startDateStr && date <= endDateStr) {
               uniqueDates.add(date);
             }
@@ -97,7 +85,7 @@ const WeekDates = () => {
           const uniqueDates = new Set();
 
           exerciseQuerySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
-            const date = doc.id; // 날짜가 문서 ID로 저장됨
+            const date = doc.id;
             if (date >= startStr && date <= endStr) {
               uniqueDates.add(date);
             }
@@ -148,13 +136,6 @@ const WeekDates = () => {
           />
         </LineWrapper>
       </div>
-      <h4 style={{ margin: "10px 0px" }}>이번주 운동</h4>
-      <NowWeekWrapper>
-        <p>월요일: {format(startDate, 'yyyy-MM-dd')}</p>
-        <p>일요일: {format(endDate, 'yyyy-MM-dd')}</p>
-        <ThisWeekRecords />
-        <p style={{fontSize:'20px'}}>이번주 현재 {exerciseCount}일 운동하셨습니다.</p>
-      </NowWeekWrapper>
     </Wrapper>
   );
 }

@@ -5,7 +5,7 @@ import { addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where }
 import { format } from "date-fns";
 import { Challenge, useChallenges } from "../group-context";
 import PeopleModal from "../people-modal";
-import AchievementModal from "../../achievement-alert";
+import AchievementModal from "../../achievements/achievement-alert";
 import { useNavigate } from "react-router-dom";
 import { motion } from 'framer-motion';
 import GroupCreateStepOne from "./group-step-one";

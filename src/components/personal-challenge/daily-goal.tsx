@@ -3,9 +3,9 @@ import { useState } from "react";
 import { addDoc, arrayUnion, collection, doc, getDocs, increment, query, updateDoc, where } from "firebase/firestore";
 import { format } from "date-fns";
 import { auth, db } from "../../firebase";
-import DateChoiceToday from "../date-picker-today";
-import AchievementModal from "../achievement-alert";
-import BadgeModal from "../badge-modal";
+import DateChoiceToday from "../date-pick/date-picker-today";
+import AchievementModal from "../achievements/achievement-alert";
+import BadgeModal from "../badge/badge-modal";
 
 const Wrapper = styled.div`
     height:calc(100vh - 228px);

@@ -2,7 +2,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, setDoc, up
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { auth, db } from "../../firebase";
-import DateChoice from "../date-picker";
+import DateChoice from "../date-pick/date-picker";
 import { format } from 'date-fns';
 import MoSlideLeft from "../slideModal/mo-slide-left";
 import { AiOutlineDelete } from "react-icons/ai";

@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import TimerWrapper from "../components/timer/timer";
-import PersonalChallenge from "../components/personal-challenge/personal-challenge";
 import GroupChallenge from "../components/group-challenge/group-challenge";
 import Badge from "../components/badge/badge";
 import Achievements from "../components/achievements/achievements";
@@ -11,8 +10,8 @@ import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { FaUserAlt } from "react-icons/fa";
-import AchievementModal from "../components/achievement-alert";
-import BadgeModal from "../components/badge-modal";
+import AchievementModal from "../components/achievements/achievement-alert";
+import BadgeModal from "../components/badge/badge-modal";
 import LoadingScreen from "../components/loading-screen";
 import { format, isBefore, startOfToday } from "date-fns";
 import { GoBell } from "react-icons/go";
@@ -357,11 +356,11 @@ export default function Home() {
             <GridWrapper>
                 <TimerWrapper timerClick={() => handleNavigation('/timer')} />
                 <Badge badgeClick={() => handleNavigation('/badge')} />
-                <PersonalChallenge personalClick={() => handleNavigation('/personal-challenge')} />
+                <ExerciseData exDataClick={() => handleNavigation("/exercise-data")} />
                 <GroupChallenge GroupModal={() => handleNavigation('/group-challenge')} />
                 <Achievements achievmeentsClick={() => handleNavigation('/achievements')} />
                 <Efficacy efficacyClick={() => handleNavigation('/efficacy')} />
-                <ExerciseData exDataClick={() => handleNavigation("/exercise-data")} />
+                
             </GridWrapper>
             {showAchievements && (
                 <AchievementModal handleModalConfirm={handleModalConfirm} achievementName={achievementName} />
