@@ -4992,7 +4992,7 @@ self.addEventListener('message', async (e) => {
 `,Ege=S.div`
 @media screen and (max-width: 700px) {
    width:100%;
-   height:calc(100vh - 80px);
+   height:calc(100vh - 100px);
     padding:10px;
     margin: 0 auto;
 }
